@@ -1,6 +1,5 @@
 'use client'
 
-import { ArrowRight } from 'lucide-react'
 import { useLang } from '@/lib/i18n/context'
 
 const PILLARS = [
