@@ -48,6 +48,7 @@ function SensorCard({
   status,
   statusColor,
   className,
+  style,
 }: {
   icon: React.ReactNode
   label: string
@@ -55,10 +56,12 @@ function SensorCard({
   status: string
   statusColor: string
   className?: string
+  style?: React.CSSProperties
 }) {
   return (
     <div
       className={`absolute glass rounded-xl px-4 py-3 min-w-[140px] animate-float-up ${className}`}
+      style={style}
     >
       <div className="flex items-center gap-2 mb-1">
         <span className="text-[#00B4D8]">{icon}</span>
