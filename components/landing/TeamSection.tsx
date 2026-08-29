@@ -2,6 +2,7 @@
 
 import { User, Mail, Instagram, Phone } from 'lucide-react'
 import { useLang } from '@/lib/i18n/context'
+import type { Lang } from '@/types'
 
 interface TeamMember {
   name: string
