@@ -1,6 +1,6 @@
 'use client'
 
-import { User, Mail } from 'lucide-react'
+import { User, Mail, Phone } from 'lucide-react'
 import { useLang } from '@/lib/i18n/context'
 import type { Lang } from '@/types'
 
@@ -10,39 +10,49 @@ interface TeamMember {
   desc: { id: string; en: string }
   color: string
   email?: string
+  phone?: string
 }
 
 const TEAM: TeamMember[] = [
   {
-    name: 'Dzikron Zaidan',
+    name: 'Dzikron Zaidan Ahmad',
     role: { id: 'CEO (Team Leader)', en: 'CEO (Team Leader)' },
     desc: { id: 'Brand & Eksekutif', en: 'Brand & Executive' },
     color: '#F05A22',
     email: 'hydrone.id@gmail.com',
+    phone: '081548158100',
   },
   {
-    name: 'Farid Wimbadi',
+    name: 'Farid Wimbadi Nugraha',
     role: { id: 'CTO', en: 'CTO' },
     desc: { id: 'Mekanik & Teknologi', en: 'Mechanics & Technology' },
     color: '#22C55E',
+    email: 'f.wimbadi@gmail.com',
+    phone: '085868383180',
   },
   {
-    name: 'Evan Fadillah',
+    name: 'Evan Fadillah Nur Santosa',
     role: { id: 'CPO', en: 'CPO' },
     desc: { id: 'Produk & Firmware', en: 'Product & Firmware' },
     color: '#8B5CF6',
+    email: 'evanfadillah445@gmail.com',
+    phone: '081228662047',
   },
   {
-    name: 'Raisa Qarira',
+    name: 'Raisa Qarira Santosa',
     role: { id: 'CRO', en: 'CRO' },
     desc: { id: 'Riset & Data', en: 'Research & Data' },
     color: '#1A56DB',
+    email: 'raisasa.qs@gmail.com',
+    phone: '085727178769',
   },
   {
-    name: 'Marsya Razanah',
+    name: 'Marsya Razanah Khansa',
     role: { id: 'CMO', en: 'CMO' },
     desc: { id: 'Pemasaran & Visi', en: 'Marketing & Vision' },
     color: '#F59E0B',
+    email: 'marsyarazanah10@gmail.com',
+    phone: '081227917676',
   },
 ]
 
@@ -59,33 +69,46 @@ const T = {
 
 function MemberCard({ member, lang }: { member: TeamMember; lang: Lang }) {
   return (
-    <div className="bg-[#111827] border border-[#1E2D50] rounded-[20px] p-6 text-center hover:border-[#1A56DB] transition-all duration-300">
+    <div className="bg-[#111827] border border-[#1E2D50] rounded-[20px] p-6 text-center hover:border-[#1A56DB] transition-all duration-300 h-full flex flex-col">
       {/* Avatar */}
       <div
-        className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center"
+        className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center shrink-0"
         style={{ backgroundColor: member.color + '20', border: `2px solid ${member.color}40` }}
       >
         <User size={28} style={{ color: member.color }} />
       </div>
 
-      <h3 className="text-[#F8FAFF] font-bold text-base font-[family-name:var(--font-space-grotesk)]">{member.name}</h3>
-      <span
-        className="inline-block text-xs font-semibold px-3 py-1 rounded-full mt-2 mb-2"
-        style={{ color: member.color, backgroundColor: member.color + '15', border: `1px solid ${member.color}30` }}
-      >
-        {member.role[lang]}
-      </span>
-      <p className="text-[#8B9EC7] text-sm">{member.desc[lang]}</p>
-
-      {member.email && (
-        <a
-          href={`mailto:${member.email}`}
-          className="inline-flex items-center gap-1.5 mt-4 text-xs text-[#8B9EC7] hover:text-[#1A56DB] transition-colors min-h-[36px]"
+      <h3 className="text-[#F8FAFF] font-bold text-base font-[family-name:var(--font-space-grotesk)] leading-tight">{member.name}</h3>
+      <div className="my-3">
+        <span
+          className="inline-block text-[11px] font-semibold px-3 py-1 rounded-full"
+          style={{ color: member.color, backgroundColor: member.color + '15', border: `1px solid ${member.color}30` }}
         >
-          <Mail size={12} />
-          {member.email}
-        </a>
-      )}
+          {member.role[lang]}
+        </span>
+      </div>
+      <p className="text-[#8B9EC7] text-xs mb-4">{member.desc[lang]}</p>
+
+      <div className="mt-auto flex flex-col gap-2 pt-4 border-t border-[#1E2D50]/50 shrink-0">
+        {member.phone && (
+          <a
+            href={`https://wa.me/62${member.phone.substring(1)}`}
+            className="inline-flex items-center justify-center gap-1.5 text-[10px] sm:text-xs text-[#8B9EC7] hover:text-[#22C55E] transition-colors"
+          >
+            <Phone size={12} />
+            {member.phone}
+          </a>
+        )}
+        {member.email && (
+          <a
+            href={`mailto:${member.email}`}
+            className="inline-flex items-center justify-center gap-1.5 text-[10px] sm:text-xs text-[#8B9EC7] hover:text-[#1A56DB] transition-colors break-all"
+          >
+            <Mail size={12} className="shrink-0" />
+            <span className="truncate">{member.email}</span>
+          </a>
+        )}
+      </div>
     </div>
   )
 }

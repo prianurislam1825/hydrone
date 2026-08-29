@@ -98,38 +98,28 @@ export default function HeroSection() {
               {/* Blue vignette */}
               <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-[#0D1B3E] via-transparent to-[#0D1B3E] z-10 pointer-events-none" />
 
-              <Image
-                src="/ChatGPT_Image_Jun_30_2026_10_44_29_AM.png"
-                alt="Hydrone ROV underwater"
-                fill
-                className="object-cover rounded-3xl"
-                onError={e => {
-                  const target = e.target as HTMLImageElement
-                  target.style.display = 'none'
-                }}
-              />
+              {/* Main Image */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#111827] to-[#1C2A4A] border border-[#1E2D50] flex items-center justify-center p-8">
+                <div className="relative w-full h-full">
+                  <Image
+                    src="/blue-logo-hydrone.png"
+                    alt="Hydrone ROV Logo"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              </div>
 
-              {/* Fallback placeholder */}
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#111827] to-[#1C2A4A] border border-[#1E2D50] flex flex-col items-center justify-center gap-4">
-                <div className="w-24 h-24 rounded-full bg-[#1A56DB]/15 border-2 border-[#1A56DB]/30 flex items-center justify-center animate-orange-glow">
-                  <span className="text-[#1A56DB] font-bold text-4xl font-[family-name:var(--font-space-grotesk)]">H</span>
-                </div>
-                <div className="text-center">
-                  <div className="text-[#F8FAFF] font-bold text-xl font-[family-name:var(--font-space-grotesk)]">HYDRONE ROV</div>
-                  <div className="text-[#8B9EC7] text-xs font-[family-name:var(--font-jetbrains-mono)] mt-1">500 x 200 x 120 mm</div>
-                </div>
-
-                {/* Floating sensor cards */}
-                <div className="absolute -top-3 -right-3 glass rounded-xl px-3 py-2 text-xs animate-float-up">
-                  <div className="text-[#8B9EC7]">pH</div>
-                  <div className="text-[#F8FAFF] font-bold font-[family-name:var(--font-jetbrains-mono)]">7.24</div>
-                  <div className="text-[#22C55E] text-[10px]">Normal</div>
-                </div>
-                <div className="absolute -bottom-3 -left-3 glass rounded-xl px-3 py-2 text-xs animate-float-up" style={{ animationDelay: '1.5s' }}>
-                  <div className="text-[#8B9EC7]">Turbidity</div>
-                  <div className="text-[#F8FAFF] font-bold font-[family-name:var(--font-jetbrains-mono)]">34 NTU</div>
-                  <div className="text-[#22C55E] text-[10px]">Clear</div>
-                </div>
+              {/* Floating sensor cards (with higher z-index) */}
+              <div className="absolute -top-3 -right-3 glass rounded-xl px-3 py-2 text-xs animate-float-up z-20">
+                <div className="text-[#8B9EC7]">pH</div>
+                <div className="text-[#F8FAFF] font-bold font-[family-name:var(--font-jetbrains-mono)]">7.24</div>
+                <div className="text-[#22C55E] text-[10px]">Normal</div>
+              </div>
+              <div className="absolute -bottom-3 -left-3 glass rounded-xl px-3 py-2 text-xs animate-float-up z-20" style={{ animationDelay: '1.5s' }}>
+                <div className="text-[#8B9EC7]">Turbidity</div>
+                <div className="text-[#F8FAFF] font-bold font-[family-name:var(--font-jetbrains-mono)]">34 NTU</div>
+                <div className="text-[#22C55E] text-[10px]">Clear</div>
               </div>
             </div>
           </div>

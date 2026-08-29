@@ -35,10 +35,9 @@ export default function LandingNav() {
           <a href="#" className="flex items-center gap-3 group">
             <div className="relative w-8 h-8 rounded-full overflow-hidden">
               <Image
-                src="/_PFP_Hydrone.png"
+                src="/pfp-hydrone.png"
                 alt="Hydrone"
-                width={32}
-                height={32}
+                fill
                 className="object-contain"
                 onError={e => {
                   const target = e.target as HTMLImageElement
