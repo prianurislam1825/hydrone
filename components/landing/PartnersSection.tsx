@@ -29,9 +29,9 @@ export default function PartnersSection() {
           <span className="eyebrow-rule mx-auto mb-10" />
         </div>
 
-        <div className="flex flex-wrap justify-center items-center gap-10 sm:gap-16 opacity-70 hover:opacity-100 transition-opacity duration-300" data-anim>
+        <div className="flex flex-wrap justify-center items-center gap-10 sm:gap-16 transition-opacity duration-300" data-anim>
           {PARTNERS.map((p, i) => (
-            <div key={i} className="relative w-24 h-24 grayscale hover:grayscale-0 transition-all duration-300 drop-shadow-md">
+            <div key={i} className="relative w-28 h-28 transition-all duration-300 drop-shadow-md hover:scale-105">
               <Image
                 src={p.src}
                 alt={p.name}
