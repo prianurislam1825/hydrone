@@ -1,6 +1,6 @@
 'use client'
 
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, Mail, MessageCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useLang } from '@/lib/i18n/context'
 
@@ -208,12 +208,24 @@ export default function SpecsSection() {
           <p className="text-[#8B9EC7] text-sm mb-6 max-w-lg mx-auto leading-relaxed">
             {T.docNote[lang]}
           </p>
-          <a
-            href="mailto:hydrone.id@gmail.com"
-            className="inline-flex items-center gap-2 px-6 py-3 border border-[#1E2D50] hover:border-[#1A56DB] text-[#8B9EC7] hover:text-[#F8FAFF] font-semibold rounded-xl transition-all min-h-[48px] text-sm hover:bg-white/5"
-          >
-            {T.contact[lang]}
-          </a>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a
+              href="mailto:hydrone.id@gmail.com"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#1E2D50] hover:border-[#1A56DB] text-[#8B9EC7] hover:text-[#F8FAFF] font-semibold rounded-xl transition-all min-h-[48px] text-sm hover:bg-white/5 w-full sm:w-auto"
+            >
+              <Mail size={18} />
+              Email Hydrone
+            </a>
+            <a
+              href="https://wa.me/6281548158100"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#22C55E]/10 border border-[#22C55E]/20 hover:border-[#22C55E] text-[#22C55E] hover:text-[#22C55E] font-semibold rounded-xl transition-all min-h-[48px] text-sm hover:bg-[#22C55E]/20 w-full sm:w-auto"
+            >
+              <MessageCircle size={18} />
+              WhatsApp Zaidan
+            </a>
+          </div>
         </div>
       </div>
     </section>

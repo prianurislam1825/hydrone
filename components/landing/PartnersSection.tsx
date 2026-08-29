@@ -4,10 +4,10 @@ import Image from 'next/image'
 import { useLang } from '@/lib/i18n/context'
 
 const PARTNERS = [
-  { name: 'SMA Negeri 1 Surakarta', src: '/partners/sman1.jpg' },
-  { name: 'SMA Muhammadiyah PK', src: '/partners/smamuh.jpg' },
-  { name: 'IID INNOPA', src: '/partners/innopa.png' },
-  { name: 'Mersiflab', src: '/partners/mersiflab.png' },
+  { name: 'SMA Negeri 1 Surakarta', src: '/partners/sman1.jpg', scale: 'scale-[1.35]' },
+  { name: 'SMA Muhammadiyah PK', src: '/partners/smamuh.jpg', scale: 'scale-100' },
+  { name: 'IID INNOPA', src: '/partners/innopa.png', scale: 'scale-100', invert: true },
+  { name: 'Mersiflab', src: '/partners/mersiflab.png', scale: 'scale-100', invert: true },
 ]
 
 export default function PartnersSection() {
@@ -29,22 +29,24 @@ export default function PartnersSection() {
           <span className="eyebrow-rule mx-auto mb-10" />
         </div>
 
-        <div className="flex flex-wrap justify-center items-center gap-10 sm:gap-16 transition-opacity duration-300" data-anim>
+        <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-12 transition-opacity duration-300" data-anim>
           {PARTNERS.map((p, i) => (
-            <div key={i} className="relative w-28 h-28 transition-all duration-300 drop-shadow-md hover:scale-105">
-              <Image
-                src={p.src}
-                alt={p.name}
-                fill
-                className="object-contain"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement
-                  target.style.display = 'none'
-                  if (target.parentElement) {
-                    target.parentElement.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-[#1C2A4A] rounded-full text-[#8B9EC7] text-[10px] font-bold text-center p-2 border border-[#1E2D50]">${p.name}</div>`
-                  }
-                }}
-              />
+            <div key={i} className="relative w-28 h-28 bg-white rounded-2xl overflow-hidden flex items-center justify-center border-4 border-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-[#1A56DB]/20">
+              <div className={`relative w-full h-full ${p.scale} ${p.invert ? 'brightness-0' : ''}`}>
+                <Image
+                  src={p.src}
+                  alt={p.name}
+                  fill
+                  className="object-contain"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement
+                    target.style.display = 'none'
+                    if (target.parentElement?.parentElement) {
+                      target.parentElement.parentElement.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-[#1C2A4A] text-[#8B9EC7] text-[10px] font-bold text-center p-2">${p.name}</div>`
+                    }
+                  }}
+                />
+              </div>
             </div>
           ))}
         </div>
