@@ -1,163 +1,95 @@
 'use client'
 
-import { User, Mail, Instagram, Phone } from 'lucide-react'
+import { User, Mail } from 'lucide-react'
 import { useLang } from '@/lib/i18n/context'
 import type { Lang } from '@/types'
 
 interface TeamMember {
   name: string
-  title: string
   role: { id: string; en: string }
   desc: { id: string; en: string }
   color: string
-  wa: string
-  ig: string
-  email: string
-  leader?: boolean
+  email?: string
 }
 
 const TEAM: TeamMember[] = [
   {
-    name: 'Marsya Razanah Khansa',
-    title: 'Project Leader',
-    role: { id: 'Ketua Tim', en: 'Team Leader' },
-    desc: {
-      id: 'Memimpin seluruh visi dan pengembangan HYDRONE dari konsep hingga implementasi lapangan.',
-      en: 'Leads the entire vision and development of HYDRONE from concept to field implementation.',
-    },
-    color: '#D4A017',
-    wa: 'https://wa.me/6281227917676',
-    ig: 'https://www.instagram.com/[username_marsya]',
-    email: 'marsyarazanah10@gmail.com',
-    leader: true,
+    name: 'Zaidan',
+    role: { id: 'CEO', en: 'CEO' },
+    desc: { id: 'Brand & Pameran', en: 'Brand & Exhibition' },
+    color: '#F05A22',
+    email: 'dzikronzaidan@gmail.com',
   },
   {
-    name: 'Farid Wimbadi Nugraha',
-    title: 'Hardware Engineer',
-    role: { id: 'Insinyur Perangkat Keras', en: 'Hardware Engineer' },
-    desc: {
-      id: 'Bertanggung jawab atas desain dan implementasi sistem mekanik ROV, termasuk thruster, buoyancy, dan struktur badan alat.',
-      en: 'Responsible for designing and implementing the ROV mechanical systems, including thrusters, buoyancy, and body structure.',
-    },
-    color: '#1565C0',
-    wa: 'https://wa.me/6285868383180',
-    ig: 'https://www.instagram.com/[username_farid]',
-    email: 'f.wimbadi@gmail.com',
-  },
-  {
-    name: 'Evan Fadillah Nur Santosa',
-    title: 'Software Engineer',
-    role: { id: 'Insinyur Perangkat Lunak', en: 'Software Engineer' },
-    desc: {
-      id: 'Mengembangkan firmware ESP32, sistem kendali Arduino, dan dashboard web untuk monitoring real-time.',
-      en: 'Develops ESP32 firmware, Arduino control systems, and the web dashboard for real-time monitoring.',
-    },
-    color: '#43A047',
-    wa: 'https://wa.me/6281228662047',
-    ig: 'https://www.instagram.com/[username_evan]',
-    email: 'evanfadillah445@gmail.com',
-  },
-  {
-    name: 'Raisa Qarira Santosa',
-    title: 'Research Officer',
-    role: { id: 'Penanggung Jawab Riset', en: 'Research Officer' },
-    desc: {
-      id: 'Memimpin penelitian dampak mikroplastik, analisis data kualitas air, dan dokumentasi ilmiah untuk kompetisi.',
-      en: 'Leads microplastic impact research, water quality data analysis, and scientific documentation for competitions.',
-    },
-    color: '#00B4D8',
-    wa: 'https://wa.me/6285727178769',
-    ig: 'https://www.instagram.com/[username_raisa]',
+    name: 'Raisa',
+    role: { id: 'CFO', en: 'CFO' },
+    desc: { id: 'Anggaran & Keuangan', en: 'Budget & Finance' },
+    color: '#1A56DB',
     email: 'raisasa.qs@gmail.com',
   },
   {
-    name: 'Dzikron Zaidan Ahmad',
-    title: 'Systems Integrator',
-    role: { id: 'Integrator Sistem', en: 'Systems Integrator' },
-    desc: {
-      id: 'Mengintegrasikan seluruh subsistem HYDRONE mulai dari sensor, elektronik, hingga sistem komunikasi tether.',
-      en: 'Integrates all HYDRONE subsystems from sensors and electronics to the tether communication system.',
-    },
-    color: '#9C27B0',
-    wa: 'https://wa.me/6281548158100',
-    ig: 'https://www.instagram.com/[username_dzikron]',
-    email: 'dzikronzaidan@gmail.com',
+    name: 'Marsya',
+    role: { id: 'Project Leader', en: 'Project Leader' },
+    desc: { id: 'Visi & Pengembangan', en: 'Vision & Development' },
+    color: '#F59E0B',
+    email: 'marsyarazanah10@gmail.com',
+  },
+  {
+    name: 'Farid',
+    role: { id: 'Hardware Engineer', en: 'Hardware Engineer' },
+    desc: { id: 'Mekanik & Propulsi', en: 'Mechanics & Propulsion' },
+    color: '#22C55E',
+    email: 'f.wimbadi@gmail.com',
+  },
+  {
+    name: 'Evan',
+    role: { id: 'Software Engineer', en: 'Software Engineer' },
+    desc: { id: 'Firmware & Dashboard', en: 'Firmware & Dashboard' },
+    color: '#8B5CF6',
+    email: 'evanfadillah445@gmail.com',
   },
 ]
 
 const T = {
-  sectionLabel: { id: 'Tim Kami', en: 'Our Team' },
-  heading: { id: 'Tim di Balik HYDRONE', en: 'The Team Behind HYDRONE' },
+  eyebrow: { id: 'TIM KAMI', en: 'OUR TEAM' },
+  heading: { id: 'Dibangun oleh Mersiflab', en: 'Built by Mersiflab' },
   sub: {
-    id: 'Pelajar SMA Negeri 1 Surakarta yang berinovasi untuk lingkungan perairan',
-    en: 'Students from SMA Negeri 1 Surakarta innovating for aquatic environments',
+    id: 'Lima pelajar SMA dengan satu misi: membersihkan sungai Indonesia.',
+    en: 'Five high school students with one mission: cleaning Indonesian rivers.',
   },
+  org: { id: 'Dibangun di bawah', en: 'Built under' },
+  comp: { id: 'Untuk', en: 'For' },
 }
 
 function MemberCard({ member, lang }: { member: TeamMember; lang: Lang }) {
   return (
-    <div
-      className={`glass rounded-2xl p-6 flex flex-col items-center text-center transition-all hover:border-white/20 ${
-        member.leader ? 'lg:col-span-1' : ''
-      }`}
-    >
+    <div className="bg-[#111827] border border-[#1E2D50] rounded-[20px] p-6 text-center hover:border-[#1A56DB] transition-all duration-300">
       {/* Avatar */}
       <div
-        className="w-20 h-20 rounded-full flex items-center justify-center mb-4 relative"
-        style={{ backgroundColor: member.color + '25', border: `2px solid ${member.color}50` }}
+        className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center"
+        style={{ backgroundColor: member.color + '20', border: `2px solid ${member.color}40` }}
       >
-        <User size={32} style={{ color: member.color }} />
-        {member.leader && (
-          <div
-            className="absolute -top-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-black"
-            style={{ backgroundColor: member.color }}
-          >
-            ★
-          </div>
-        )}
+        <User size={28} style={{ color: member.color }} />
       </div>
 
-      {/* Badge */}
+      <h3 className="text-[#F8FAFF] font-bold text-base font-[family-name:var(--font-space-grotesk)]">{member.name}</h3>
       <span
-        className="text-xs font-bold px-3 py-1 rounded-full mb-3"
-        style={{ color: member.color, backgroundColor: member.color + '20', border: `1px solid ${member.color}40` }}
+        className="inline-block text-xs font-semibold px-3 py-1 rounded-full mt-2 mb-2"
+        style={{ color: member.color, backgroundColor: member.color + '15', border: `1px solid ${member.color}30` }}
       >
-        {member.title}
+        {member.role[lang]}
       </span>
+      <p className="text-[#8B9EC7] text-sm">{member.desc[lang]}</p>
 
-      {/* Name */}
-      <h3 className="text-white font-bold text-base mb-1">{member.name}</h3>
-      <p className="text-white/50 text-xs mb-3">{member.role[lang]}</p>
-      <p className="text-white/60 text-sm leading-relaxed mb-5">{member.desc[lang]}</p>
-
-      {/* Contact buttons */}
-      <div className="flex gap-2 mt-auto">
-        <a
-          href={member.wa}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 px-3 py-2 bg-[#43A047]/20 hover:bg-[#43A047]/30 text-[#43A047] rounded-lg text-xs font-semibold transition-all min-h-[36px]"
-        >
-          <Phone size={13} />
-          WA
-        </a>
-        <a
-          href={member.ig}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 px-3 py-2 bg-pink-500/20 hover:bg-pink-500/30 text-pink-400 rounded-lg text-xs font-semibold transition-all min-h-[36px]"
-        >
-          <Instagram size={13} />
-          IG
-        </a>
+      {member.email && (
         <a
           href={`mailto:${member.email}`}
-          className="flex items-center gap-1.5 px-3 py-2 bg-[#1565C0]/20 hover:bg-[#1565C0]/30 text-[#90E0EF] rounded-lg text-xs font-semibold transition-all min-h-[36px]"
+          className="inline-flex items-center gap-1.5 mt-4 text-xs text-[#8B9EC7] hover:text-[#1A56DB] transition-colors min-h-[36px]"
         >
-          <Mail size={13} />
-          Email
+          <Mail size={12} />
+          {member.email}
         </a>
-      </div>
+      )}
     </div>
   )
 }
@@ -165,35 +97,38 @@ function MemberCard({ member, lang }: { member: TeamMember; lang: Lang }) {
 export default function TeamSection() {
   const { lang } = useLang()
 
-  const leader = TEAM.find(m => m.leader)
-  const members = TEAM.filter(m => !m.leader)
-
   return (
-    <section id="tim" className="py-24 bg-[#1B3A6B]">
+    <section id="tim" className="py-24 bg-[#0D1B3E]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
         <div className="text-center mb-16" data-anim>
-          <span className="section-label">{T.sectionLabel[lang]}</span>
-          <h2 className="text-3xl sm:text-4xl font-black text-white mt-2">{T.heading[lang]}</h2>
-          <p className="text-white/60 mt-3 max-w-xl mx-auto">{T.sub[lang]}</p>
+          <span className="eyebrow">{T.eyebrow[lang]}</span>
+          <span className="eyebrow-rule mx-auto" />
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#F8FAFF] mt-4">{T.heading[lang]}</h2>
+          <p className="text-[#8B9EC7] mt-3 max-w-md mx-auto">{T.sub[lang]}</p>
         </div>
 
-        {/* Leader card centered */}
-        {leader && (
-          <div className="flex justify-center mb-8" data-anim>
-            <div className="w-full max-w-sm">
-              <MemberCard member={leader} lang={lang} />
-            </div>
-          </div>
-        )}
-
-        {/* Members grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {members.map((member, i) => (
+        {/* Team grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5 mb-16">
+          {TEAM.map((member, i) => (
             <div key={i} data-anim data-delay={`${i * 100}`}>
               <MemberCard member={member} lang={lang} />
             </div>
           ))}
+        </div>
+
+        {/* Organization badge */}
+        <div className="glass rounded-2xl p-8 text-center" data-anim>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
+            <div>
+              <span className="text-[#8B9EC7] text-xs uppercase tracking-wider">{T.org[lang]}</span>
+              <div className="text-[#F8FAFF] font-bold text-lg mt-1 font-[family-name:var(--font-space-grotesk)]">MERSIFLAB</div>
+            </div>
+            <div className="hidden sm:block w-px h-10 bg-[#1E2D50]" />
+            <div>
+              <span className="text-[#8B9EC7] text-xs uppercase tracking-wider">{T.comp[lang]}</span>
+              <div className="text-[#F8FAFF] font-bold text-lg mt-1 font-[family-name:var(--font-space-grotesk)]">IID INNOPA 2026</div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

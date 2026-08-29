@@ -1,33 +1,42 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Space_Grotesk, Inter, JetBrains_Mono } from 'next/font/google'
 import { LangProvider } from '@/lib/i18n/context'
 import './globals.css'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const spaceGrotesk = Space_Grotesk({
+  variable: '--font-space-grotesk',
   subsets: ['latin'],
+  weight: ['500', '700'],
 })
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const inter = Inter({
+  variable: '--font-inter',
   subsets: ['latin'],
+  weight: ['400', '500'],
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: '--font-jetbrains-mono',
+  subsets: ['latin'],
+  weight: ['500'],
 })
 
 export const metadata: Metadata = {
   title: {
-    default: 'HYDRONE - Autonomous Underwater Plastic Collector',
-    template: '%s | HYDRONE',
+    default: 'Hydrone - River Debris Collection ROV',
+    template: '%s | Hydrone',
   },
   description:
-    'HYDRONE adalah ROV bawah air otonom untuk membersihkan sampah plastik makro dan mikroplastik di perairan Indonesia. Dikembangkan oleh tim pelajar SMA Negeri 1 Surakarta.',
-  keywords: ['HYDRONE', 'ROV', 'underwater', 'plastic', 'microplastic', 'Indonesia', 'IID INNOPA'],
-  authors: [{ name: 'Tim HYDRONE - SMA Negeri 1 Surakarta' }],
+    'Hydrone is a student-built underwater ROV that collects river plastic and monitors water quality in real time. Built for IID INNOPA 2026 by Mersiflab.',
+  keywords: ['Hydrone', 'ROV', 'underwater', 'river', 'plastic', 'microplastic', 'IID INNOPA', 'Mersiflab'],
+  authors: [{ name: 'Mersiflab' }],
+  other: { 'theme-color': '#0D1B3E' },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body className="bg-deep-ocean text-white font-sans antialiased">
+    <html lang="id" className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
+      <body className="bg-navy text-brand-white font-sans antialiased">
         <LangProvider>{children}</LangProvider>
       </body>
     </html>

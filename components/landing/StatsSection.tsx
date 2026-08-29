@@ -3,90 +3,64 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLang } from '@/lib/i18n/context'
 
-interface StatItem {
-  target: number
-  suffix: string
-  label: { id: string; en: string }
-  sub: { id: string; en: string }
-  color: string
-  bg: string
-}
-
-const STATS: StatItem[] = [
+const STATS = [
   {
-    target: 2,
+    value: 500,
+    suffix: 'mm',
+    label: { id: 'Panjang Badan', en: 'Body Length' },
+  },
+  {
+    value: 4,
     suffix: '',
-    label: { id: 'Jenis Sampah', en: 'Waste Types' },
-    sub: { id: 'Makro + Mikroplastik', en: 'Macro + Microplastic' },
-    color: '#1565C0',
-    bg: 'bg-blue-50',
+    label: { id: 'Thruster', en: 'Thrusters' },
   },
   {
-    target: 5,
-    suffix: ' µm',
-    label: { id: 'Ukuran Filter Terkecil', en: 'Smallest Filter Size' },
-    sub: { id: 'Teknologi filtrasi presisi', en: 'Precision filtration tech' },
-    color: '#00B4D8',
-    bg: 'bg-cyan-50',
+    value: 0.1,
+    suffix: '\u00b5m',
+    label: { id: 'Presisi Filter', en: 'Filter Precision' },
+    decimals: 1,
   },
   {
-    target: 10,
-    suffix: '',
-    label: { id: 'Fitur', en: 'Features' },
-    sub: { id: 'Terintegrasi dalam 1 Alat', en: 'Integrated in 1 Device' },
-    color: '#43A047',
-    bg: 'bg-green-50',
-  },
-  {
-    target: 20,
-    suffix: ' m',
-    label: { id: 'Jangkauan Kabel Tether', en: 'Tether Cable Range' },
-    sub: { id: 'Kendali fleksibel', en: 'Flexible control' },
-    color: '#D4A017',
-    bg: 'bg-yellow-50',
+    value: 20,
+    suffix: 'm',
+    label: { id: 'Jangkauan Tether', en: 'Tether Range' },
   },
 ]
 
-function AnimatedCounter({ target, suffix, color }: { target: number; suffix: string; color: string }) {
-  const [count, setCount] = useState(0)
-  const ref = useRef<HTMLDivElement>(null)
-  const animated = useRef(false)
+function AnimatedNumber({ target, decimals = 0 }: { target: number; decimals?: number }) {
+  const [val, setVal] = useState(0)
+  const ref = useRef<HTMLSpanElement>(null)
+  const triggered = useRef(false)
 
   useEffect(() => {
     const el = ref.current
     if (!el) return
 
-    const observer = new IntersectionObserver(
+    const obs = new IntersectionObserver(
       entries => {
-        if (entries[0].isIntersecting && !animated.current) {
-          animated.current = true
-          const duration = 1200
+        if (entries[0].isIntersecting && !triggered.current) {
+          triggered.current = true
           const start = performance.now()
-
+          const dur = 1800
           const animate = (now: number) => {
-            const elapsed = now - start
-            const progress = Math.min(elapsed / duration, 1)
-            const eased = 1 - Math.pow(1 - progress, 3)
-            setCount(Math.round(eased * target))
-            if (progress < 1) requestAnimationFrame(animate)
+            const t = Math.min((now - start) / dur, 1)
+            const ease = 1 - Math.pow(1 - t, 3)
+            setVal(ease * target)
+            if (t < 1) requestAnimationFrame(animate)
           }
-
           requestAnimationFrame(animate)
-          observer.disconnect()
         }
       },
-      { threshold: 0.5 },
+      { threshold: 0.3 },
     )
-
-    observer.observe(el)
-    return () => observer.disconnect()
+    obs.observe(el)
+    return () => obs.disconnect()
   }, [target])
 
   return (
-    <div ref={ref} className="text-5xl font-black" style={{ color }}>
-      {count}
-      <span className="text-3xl">{suffix}</span>
-    </div>
+    <span ref={ref} className="font-[family-name:var(--font-space-grotesk)] font-bold text-5xl sm:text-6xl text-[#F8FAFF]">
+      {val.toFixed(decimals)}
+    </span>
   )
 }
 
@@ -94,19 +68,18 @@ export default function StatsSection() {
   const { lang } = useLang()
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-16 bg-[#111827]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-          {STATS.map((stat, i) => (
-            <div
-              key={i}
-              className={`${stat.bg} rounded-2xl p-6 text-center shadow-sm border border-gray-100`}
-              data-anim
-              data-delay={`${i * 100}`}
-            >
-              <AnimatedCounter target={stat.target} suffix={stat.suffix} color={stat.color} />
-              <div className="mt-3 font-bold text-gray-800 text-sm">{stat.label[lang]}</div>
-              <div className="text-gray-500 text-xs mt-1">{stat.sub[lang]}</div>
+          {STATS.map((s, i) => (
+            <div key={i} className="text-center" data-anim data-delay={`${i * 100}`}>
+              <div className="flex items-baseline justify-center gap-1">
+                <AnimatedNumber target={s.value} decimals={s.decimals ?? 0} />
+                <span className="text-[#1A56DB] font-bold text-xl">{s.suffix}</span>
+              </div>
+              <span className="text-[#8B9EC7] text-xs uppercase tracking-widest mt-2 block">
+                {s.label[lang]}
+              </span>
             </div>
           ))}
         </div>

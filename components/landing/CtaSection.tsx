@@ -1,68 +1,45 @@
 'use client'
 
-import { MessageCircle, Mail } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { useLang } from '@/lib/i18n/context'
 
-const TAGS = ['ROV Bawah Air', 'Filter 5µm', 'ESP32 IoT', 'Dual Mode', 'IID INNOPA']
-
 const T = {
-  heading: { id: 'Tertarik Berkolaborasi?', en: 'Interested in Collaborating?' },
-  sub: {
-    id: 'Kami terbuka untuk kemitraan, sponsorship, dan kolaborasi riset bersama HYDRONE. Hubungi kami sekarang.',
-    en: 'We are open to partnerships, sponsorships, and research collaboration with HYDRONE. Contact us now.',
+  badge: { id: 'LIVE DATA STREAM', en: 'LIVE DATA STREAM' },
+  heading: {
+    id: 'Lihat sensor Hydrone streaming secara real-time.',
+    en: 'See Hydrone\'s sensors streaming in real time.',
   },
-  btnWhatsApp: { id: 'Chat WhatsApp', en: 'Chat WhatsApp' },
-  btnEmail: { id: 'Kirim Email', en: 'Send Email' },
+  cta: { id: 'Buka Dashboard', en: 'Open Dashboard' },
 }
 
 export default function CtaSection() {
   const { lang } = useLang()
 
   return (
-    <section className="py-24 bg-gradient-to-br from-[#0A1628] via-[#1B3A6B] to-[#0A1628] relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full bg-[#00B4D8]/5 blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full bg-[#1565C0]/5 blur-3xl" />
-      </div>
+    <section className="py-24 bg-gradient-to-b from-[#0D1B3E] to-[#111827]">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="glass rounded-2xl p-10 sm:p-14 text-center relative overflow-hidden" data-anim>
+          {/* Subtle glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-80 h-40 bg-[#1A56DB]/10 blur-3xl rounded-full pointer-events-none" />
 
-      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Heading */}
-        <div data-anim>
-          <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">{T.heading[lang]}</h2>
-          <p className="text-white/70 text-lg max-w-2xl mx-auto mb-10 leading-relaxed">{T.sub[lang]}</p>
-        </div>
-
-        {/* Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12" data-anim data-delay="100">
-          <a
-            href="https://wa.me/6281227917676"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-3 px-8 py-4 bg-[#43A047] hover:bg-[#388E3C] text-white font-bold rounded-xl transition-all shadow-lg min-h-[56px] text-base"
-          >
-            <MessageCircle size={20} />
-            {T.btnWhatsApp[lang]}
-          </a>
-          <a
-            href="mailto:marsyarazanah10@gmail.com"
-            className="flex items-center justify-center gap-3 px-8 py-4 border-2 border-white/30 hover:border-white/60 text-white font-bold rounded-xl transition-all min-h-[56px] text-base hover:bg-white/5"
-          >
-            <Mail size={20} />
-            {T.btnEmail[lang]}
-          </a>
-        </div>
-
-        {/* Tags */}
-        <div className="flex flex-wrap justify-center gap-3" data-anim data-delay="200">
-          {TAGS.map(tag => (
-            <span
-              key={tag}
-              className="px-4 py-2 rounded-full text-xs font-semibold text-[#00B4D8] bg-[#00B4D8]/10 border border-[#00B4D8]/20"
-            >
-              {tag}
+          <div className="relative z-10">
+            <span className="live-badge justify-center mb-6">
+              <span className="live-dot" />
+              {T.badge[lang]}
             </span>
-          ))}
+
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#F8FAFF] mb-8 max-w-md mx-auto leading-snug">
+              {T.heading[lang]}
+            </h2>
+
+            <a
+              href="/login"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-[#1A56DB] hover:bg-[#1646B8] text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-[#1A56DB]/30 min-h-[56px] text-base"
+            >
+              {T.cta[lang]}
+              <ArrowRight size={18} />
+            </a>
+          </div>
         </div>
       </div>
     </section>
