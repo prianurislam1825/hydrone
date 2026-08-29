@@ -4,8 +4,8 @@ import Image from 'next/image'
 import { useLang } from '@/lib/i18n/context'
 
 const PARTNERS = [
-  { name: 'SMA Negeri 1 Surakarta', src: '/partners/sman1.png' },
-  { name: 'SMA Muhammadiyah PK', src: '/partners/smamuh.png' },
+  { name: 'SMA Negeri 1 Surakarta', src: '/partners/sman1.jpg' },
+  { name: 'SMA Muhammadiyah PK', src: '/partners/smamuh.jpg' },
   { name: 'IID INNOPA', src: '/partners/innopa.png' },
   { name: 'Mersiflab', src: '/partners/mersiflab.png' },
 ]

@@ -209,7 +209,7 @@ export default function SpecsSection() {
             {T.docNote[lang]}
           </p>
           <a
-            href="mailto:marsyarazanah10@gmail.com"
+            href="mailto:hydrone.id@gmail.com"
             className="inline-flex items-center gap-2 px-6 py-3 border border-[#1E2D50] hover:border-[#1A56DB] text-[#8B9EC7] hover:text-[#F8FAFF] font-semibold rounded-xl transition-all min-h-[48px] text-sm hover:bg-white/5"
           >
             {T.contact[lang]}

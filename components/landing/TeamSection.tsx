@@ -14,39 +14,35 @@ interface TeamMember {
 
 const TEAM: TeamMember[] = [
   {
-    name: 'Zaidan',
-    role: { id: 'CEO', en: 'CEO' },
-    desc: { id: 'Brand & Pameran', en: 'Brand & Exhibition' },
+    name: 'Dzikron Zaidan',
+    role: { id: 'CEO (Team Leader)', en: 'CEO (Team Leader)' },
+    desc: { id: 'Brand & Eksekutif', en: 'Brand & Executive' },
     color: '#F05A22',
-    email: 'dzikronzaidan@gmail.com',
+    email: 'hydrone.id@gmail.com',
   },
   {
-    name: 'Raisa',
-    role: { id: 'CFO', en: 'CFO' },
-    desc: { id: 'Anggaran & Keuangan', en: 'Budget & Finance' },
-    color: '#1A56DB',
-    email: 'raisasa.qs@gmail.com',
-  },
-  {
-    name: 'Marsya',
-    role: { id: 'Project Leader', en: 'Project Leader' },
-    desc: { id: 'Visi & Pengembangan', en: 'Vision & Development' },
-    color: '#F59E0B',
-    email: 'marsyarazanah10@gmail.com',
-  },
-  {
-    name: 'Farid',
-    role: { id: 'Hardware Engineer', en: 'Hardware Engineer' },
-    desc: { id: 'Mekanik & Propulsi', en: 'Mechanics & Propulsion' },
+    name: 'Farid Wimbadi',
+    role: { id: 'CTO', en: 'CTO' },
+    desc: { id: 'Mekanik & Teknologi', en: 'Mechanics & Technology' },
     color: '#22C55E',
-    email: 'f.wimbadi@gmail.com',
   },
   {
-    name: 'Evan',
-    role: { id: 'Software Engineer', en: 'Software Engineer' },
-    desc: { id: 'Firmware & Dashboard', en: 'Firmware & Dashboard' },
+    name: 'Evan Fadillah',
+    role: { id: 'CPO', en: 'CPO' },
+    desc: { id: 'Produk & Firmware', en: 'Product & Firmware' },
     color: '#8B5CF6',
-    email: 'evanfadillah445@gmail.com',
+  },
+  {
+    name: 'Raisa Qarira',
+    role: { id: 'CRO', en: 'CRO' },
+    desc: { id: 'Riset & Data', en: 'Research & Data' },
+    color: '#1A56DB',
+  },
+  {
+    name: 'Marsya Razanah',
+    role: { id: 'CMO', en: 'CMO' },
+    desc: { id: 'Pemasaran & Visi', en: 'Marketing & Vision' },
+    color: '#F59E0B',
   },
 ]
 
