@@ -4,10 +4,10 @@ import Image from 'next/image'
 import { useLang } from '@/lib/i18n/context'
 
 const PARTNERS = [
-  { name: 'SMA Negeri 1 Surakarta', src: '/partners/sman1.jpg', scale: 'scale-[1.35]' },
-  { name: 'SMA Muhammadiyah PK', src: '/partners/smamuh.jpg', scale: 'scale-100' },
-  { name: 'IID INNOPA', src: '/partners/innopa.png', scale: 'scale-100', invert: true },
-  { name: 'Mersiflab', src: '/partners/mersiflab.png', scale: 'scale-100', invert: true },
+  { name: 'SMA Negeri 1 Surakarta', src: '/partners/sman1.jpg', scale: 1.35 },
+  { name: 'SMA Muhammadiyah PK', src: '/partners/smamuh.jpg', scale: 1 },
+  { name: 'IID INNOPA', src: '/partners/innopa.png', scale: 1, invert: true },
+  { name: 'Mersiflab', src: '/partners/mersiflab.png', scale: 1, invert: true },
 ]
 
 export default function PartnersSection() {
@@ -32,7 +32,10 @@ export default function PartnersSection() {
         <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-12 transition-opacity duration-300" data-anim>
           {PARTNERS.map((p, i) => (
             <div key={i} className="relative w-28 h-28 bg-white rounded-2xl overflow-hidden flex items-center justify-center border-4 border-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-[#1A56DB]/20">
-              <div className={`relative w-full h-full ${p.scale} ${p.invert ? 'brightness-0' : ''}`}>
+              <div 
+                className={`relative w-full h-full ${p.invert ? 'brightness-0' : ''}`}
+                style={{ transform: `scale(${p.scale})` }}
+              >
                 <Image
                   src={p.src}
                   alt={p.name}

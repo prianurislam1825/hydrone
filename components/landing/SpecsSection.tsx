@@ -214,7 +214,7 @@ export default function SpecsSection() {
               className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-[#1E2D50] hover:border-[#1A56DB] text-[#8B9EC7] hover:text-[#F8FAFF] font-semibold rounded-xl transition-all min-h-[48px] text-sm hover:bg-white/5 w-full sm:w-auto"
             >
               <Mail size={18} />
-              Email Hydrone
+              {T.contact[lang]}
             </a>
             <a
               href="https://wa.me/6281548158100"
@@ -223,7 +223,7 @@ export default function SpecsSection() {
               className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#22C55E]/10 border border-[#22C55E]/20 hover:border-[#22C55E] text-[#22C55E] hover:text-[#22C55E] font-semibold rounded-xl transition-all min-h-[48px] text-sm hover:bg-[#22C55E]/20 w-full sm:w-auto"
             >
               <MessageCircle size={18} />
-              WhatsApp Zaidan
+              {T.contact[lang]}
             </a>
           </div>
         </div>

@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useLang } from '@/lib/i18n/context'
 
@@ -23,8 +24,22 @@ const T = {
   },
 }
 
+const MEDIA = [
+  { type: 'video', src: '/animation.mp4' },
+  { type: 'image', src: '/hydrone-visual.jpg' },
+  { type: 'image', src: '/image1.jpg' }
+]
+
 export default function AboutSection() {
   const { lang } = useLang()
+  const [currentMedia, setCurrentMedia] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentMedia((prev) => (prev + 1) % MEDIA.length)
+    }, 4000)
+    return () => clearInterval(timer)
+  }, [])
 
   return (
     <section id="tentang" className="py-24 bg-[#0D1B3E]">
@@ -42,29 +57,36 @@ export default function AboutSection() {
             </div>
           </div>
 
-          {/* Right: ROV image */}
+          {/* Right: ROV image carousel */}
           <div data-anim="scale">
             <div className="relative rounded-2xl overflow-hidden border border-[#1E2D50] bg-[#111827]">
               <div className="relative aspect-video">
-                <Image
-                  src="/ChatGPT_Image_Jun_30_2026_10_44_29_AM.png"
-                  alt="Hydrone ROV underwater"
-                  fill
-                  className="object-cover"
-                  onError={e => {
-                    const target = e.target as HTMLImageElement
-                    target.style.display = 'none'
-                  }}
-                />
-                {/* Fallback */}
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#111827] to-[#1C2A4A]">
-                  <div className="text-center">
-                    <div className="w-20 h-20 rounded-full bg-[#1A56DB]/15 border border-[#1A56DB]/30 flex items-center justify-center mx-auto mb-4">
-                      <span className="text-[#1A56DB] text-3xl font-bold font-[family-name:var(--font-space-grotesk)]">H</span>
-                    </div>
-                    <div className="text-[#8B9EC7] text-sm">Hydrone ROV Render</div>
+                {MEDIA.map((media, i) => (
+                  <div
+                    key={i}
+                    className={`absolute inset-0 transition-opacity duration-1000 ${
+                      i === currentMedia ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                    }`}
+                  >
+                    {media.type === 'video' ? (
+                      <video
+                        src={media.src}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <Image
+                        src={media.src}
+                        alt="Hydrone ROV Render"
+                        fill
+                        className="object-cover"
+                      />
+                    )}
                   </div>
-                </div>
+                ))}
               </div>
 
               {/* Caption overlay */}
