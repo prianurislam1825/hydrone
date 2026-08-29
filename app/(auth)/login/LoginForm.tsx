@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { Mail, Lock, Eye, EyeOff, AlertTriangle, Activity, Wifi, Shield } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 import { useLang } from '@/lib/i18n/context'
