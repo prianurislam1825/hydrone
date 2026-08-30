@@ -82,13 +82,12 @@ export default function LoginForm() {
 
         <div className="relative z-10 flex flex-col items-center text-center">
           {/* Logo */}
-          <div className="relative w-32 h-32 mb-8 mix-blend-screen opacity-90">
+          <div className="relative w-32 h-32 mb-8 opacity-90">
             <Image
-              src="/pfp-hydrone.png"
+              src="/logo-white.png"
               alt="Hydrone Logo"
               fill
               className="object-contain"
-              style={{ filter: 'invert(1) grayscale(1) brightness(100) contrast(100)' }}
             />
           </div>
 
