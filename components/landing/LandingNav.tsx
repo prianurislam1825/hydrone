@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import Image from 'next/image'
-import { Menu, X } from 'lucide-react'
 import { useLang } from '@/lib/i18n/context'
+import { Menu, X } from 'lucide-react'
+import Image from 'next/image'
+import { useEffect, useState } from 'react'
 
 const NAV_LINKS = [
   { label: { id: 'Beranda', en: 'Home' }, href: '#' },
-  { label: { id: 'Dashboard', en: 'Dashboard' }, href: '/login' },
+  { label: { id: 'Dashboard', en: 'Dashboard' }, href: '/dashboard' },
   { label: { id: 'Tentang', en: 'About' }, href: '#tentang' },
   { label: { id: 'Spesifikasi', en: 'Specs' }, href: '#spesifikasi' },
 ]
