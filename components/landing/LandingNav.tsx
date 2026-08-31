@@ -1,7 +1,8 @@
 'use client'
 
 import { useLang } from '@/lib/i18n/context'
-import { Menu, X } from 'lucide-react'
+import { useTheme } from '@/lib/theme/useTheme'
+import { Menu, Moon, Sun, X } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
@@ -13,7 +14,8 @@ const NAV_LINKS = [
 ]
 
 export default function LandingNav() {
-  const { lang, toggle } = useLang()
+  const { lang, toggle: toggleLang } = useLang()
+  const { theme, toggle: toggleTheme, mounted } = useTheme()
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
@@ -25,12 +27,17 @@ export default function LandingNav() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-[#0D1B3E]/90 backdrop-blur-xl border-b border-[#1E2D50] shadow-lg' : 'bg-transparent'
-      }`}
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      style={{
+        background: scrolled ? 'var(--t-nav-bg)' : 'transparent',
+        borderBottom: scrolled ? '1px solid var(--t-nav-border)' : 'none',
+        backdropFilter: scrolled ? 'blur(12px)' : 'none',
+        boxShadow: scrolled ? '0 2px 24px rgba(0,0,0,0.12)' : 'none',
+      }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
+
           {/* Logo */}
           <a href="#" className="flex items-center gap-3 group">
             <div className="relative w-8 h-8 rounded-full overflow-hidden">
@@ -49,18 +56,24 @@ export default function LandingNav() {
                 }}
               />
             </div>
-            <span className="text-[#F8FAFF] font-bold text-lg tracking-wide font-[family-name:var(--font-space-grotesk)] group-hover:text-[#1A56DB] transition-colors">
+            <span
+              className="font-bold text-lg tracking-wide font-[family-name:var(--font-space-grotesk)] transition-colors group-hover:text-[#1A56DB]"
+              style={{ color: 'var(--t-text)' }}
+            >
               Hydrone
             </span>
           </a>
 
-          {/* Desktop nav */}
+          {/* Desktop nav links */}
           <div className="hidden md:flex items-center gap-1">
             {NAV_LINKS.map(link => (
               <a
                 key={link.href}
                 href={link.href}
-                className="px-3 py-2 text-sm text-[#8B9EC7] hover:text-[#F8FAFF] hover:bg-white/5 rounded-lg transition-all duration-200 min-h-[44px] flex items-center"
+                className="px-3 py-2 text-sm rounded-lg transition-all duration-200 min-h-[44px] flex items-center hover:bg-white/5"
+                style={{ color: 'var(--t-muted)' }}
+                onMouseEnter={e => (e.currentTarget.style.color = 'var(--t-text)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'var(--t-muted)')}
               >
                 {link.label[lang]}
               </a>
@@ -68,17 +81,30 @@ export default function LandingNav() {
           </div>
 
           {/* Right side */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3">
             {/* Language toggle */}
             <button
-              onClick={toggle}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm text-[#8B9EC7] hover:text-[#F8FAFF] transition-all min-h-[44px]"
+              onClick={toggleLang}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm transition-all min-h-[44px]"
+              style={{ color: 'var(--t-muted)' }}
               aria-label="Toggle language"
             >
-              <span className={lang === 'id' ? 'font-bold text-[#F8FAFF]' : 'text-[#8B9EC7]'}>ID</span>
-              <span className="text-[#1E2D50]">/</span>
-              <span className={lang === 'en' ? 'font-bold text-[#F8FAFF]' : 'text-[#8B9EC7]'}>EN</span>
+              <span style={{ fontWeight: lang === 'id' ? 700 : 400, color: lang === 'id' ? 'var(--t-text)' : 'var(--t-muted)' }}>ID</span>
+              <span style={{ color: 'var(--t-border)' }}>/</span>
+              <span style={{ fontWeight: lang === 'en' ? 700 : 400, color: lang === 'en' ? 'var(--t-text)' : 'var(--t-muted)' }}>EN</span>
             </button>
+
+            {/* Theme toggle */}
+            {mounted && (
+              <button
+                onClick={toggleTheme}
+                className="theme-toggle"
+                aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+              >
+                {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+              </button>
+            )}
 
             {/* LIVE badge */}
             <span className="live-badge">
@@ -87,15 +113,25 @@ export default function LandingNav() {
             </span>
           </div>
 
-          {/* Mobile */}
-          <div className="md:hidden flex items-center gap-3">
+          {/* Mobile right */}
+          <div className="md:hidden flex items-center gap-2">
             <span className="live-badge text-xs">
               <span className="live-dot" style={{ width: 6, height: 6 }} />
               LIVE
             </span>
+            {mounted && (
+              <button
+                onClick={toggleTheme}
+                className="theme-toggle"
+                aria-label="Toggle theme"
+              >
+                {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+              </button>
+            )}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 text-[#8B9EC7] hover:text-[#F8FAFF] min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center transition-colors"
+              style={{ color: 'var(--t-muted)' }}
               aria-label="Toggle menu"
             >
               {isOpen ? <X size={22} /> : <Menu size={22} />}
@@ -106,21 +142,26 @@ export default function LandingNav() {
 
       {/* Mobile menu */}
       {isOpen && (
-        <div className="md:hidden bg-[#0D1B3E]/98 backdrop-blur-xl border-t border-[#1E2D50]">
+        <div
+          className="md:hidden border-t backdrop-blur-xl"
+          style={{ background: 'var(--t-nav-bg)', borderColor: 'var(--t-nav-border)' }}
+        >
           <div className="px-4 py-4 space-y-1">
             {NAV_LINKS.map(link => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="block px-4 py-3 text-[#8B9EC7] hover:text-[#F8FAFF] hover:bg-white/5 rounded-lg transition-all min-h-[44px]"
+                className="block px-4 py-3 rounded-lg transition-all min-h-[44px] hover:bg-white/5"
+                style={{ color: 'var(--t-muted)' }}
               >
                 {link.label[lang]}
               </a>
             ))}
             <button
-              onClick={() => { toggle(); setIsOpen(false) }}
-              className="block w-full text-left px-4 py-3 text-[#8B9EC7] hover:text-[#F8FAFF] hover:bg-white/5 rounded-lg min-h-[44px]"
+              onClick={() => { toggleLang(); setIsOpen(false) }}
+              className="block w-full text-left px-4 py-3 rounded-lg min-h-[44px] hover:bg-white/5 transition-all"
+              style={{ color: 'var(--t-muted)' }}
             >
               {lang === 'id' ? 'English' : 'Indonesia'}
             </button>

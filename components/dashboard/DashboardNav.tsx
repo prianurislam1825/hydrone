@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useLang } from '@/lib/i18n/context'
+import { useTheme } from '@/lib/theme/useTheme'
+import { Cpu, Home, Info, LayoutDashboard, Menu, Moon, Sun, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, LayoutDashboard, Home, Info, Cpu } from 'lucide-react'
-import { useLang } from '@/lib/i18n/context'
+import { useEffect, useState } from 'react'
 
 const NAV_LINKS = [
   { label: { id: 'Beranda', en: 'Home' }, href: '/', icon: Home },
@@ -15,19 +16,22 @@ const NAV_LINKS = [
 ]
 
 export default function DashboardNav() {
-  const { lang, toggle } = useLang()
+  const { lang, toggle: toggleLang } = useLang()
+  const { theme, toggle: toggleTheme, mounted } = useTheme()
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
 
-  // Close mobile menu on route change
   useEffect(() => { setIsOpen(false) }, [pathname])
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0D1B3E]/90 backdrop-blur-xl border-b border-[#1E2D50] shadow-lg">
+    <nav
+      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b shadow-lg"
+      style={{ background: 'var(--t-nav-bg)', borderColor: 'var(--t-nav-border)' }}
+    >
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
 
-          {/* ── Logo ─────────────────────────────────────── */}
+          {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group shrink-0">
             <div className="relative w-8 h-8 rounded-full overflow-hidden ring-1 ring-[#1A56DB]/30">
               <Image
@@ -43,12 +47,15 @@ export default function DashboardNav() {
                 }}
               />
             </div>
-            <span className="text-[#F8FAFF] font-bold text-lg tracking-wide font-[family-name:var(--font-space-grotesk)] group-hover:text-[#1A56DB] transition-colors">
+            <span
+              className="font-bold text-lg tracking-wide font-[family-name:var(--font-space-grotesk)] group-hover:text-[#1A56DB] transition-colors"
+              style={{ color: 'var(--t-text)' }}
+            >
               Hydrone
             </span>
           </Link>
 
-          {/* ── Desktop Nav Links ─────────────────────────── */}
+          {/* Desktop nav links */}
           <div className="hidden md:flex items-center gap-0.5">
             {NAV_LINKS.map(link => {
               const isActive = pathname === link.href || (link.href === '/dashboard' && pathname.startsWith('/dashboard'))
@@ -56,11 +63,11 @@ export default function DashboardNav() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`relative px-3.5 py-2 text-sm rounded-lg transition-all duration-200 min-h-[44px] flex items-center gap-2 ${
-                    isActive
-                      ? 'text-[#F8FAFF] bg-[#1A56DB]/15'
-                      : 'text-[#8B9EC7] hover:text-[#F8FAFF] hover:bg-white/5'
-                  }`}
+                  className="relative px-3.5 py-2 text-sm rounded-lg transition-all duration-200 min-h-[44px] flex items-center gap-2"
+                  style={{
+                    color: isActive ? 'var(--t-text)' : 'var(--t-muted)',
+                    background: isActive ? 'rgba(26,86,219,0.12)' : 'transparent',
+                  }}
                 >
                   {link.label[lang]}
                   {isActive && (
@@ -71,18 +78,31 @@ export default function DashboardNav() {
             })}
           </div>
 
-          {/* ── Right Side ────────────────────────────────── */}
-          <div className="hidden md:flex items-center gap-4">
+          {/* Right side */}
+          <div className="hidden md:flex items-center gap-3">
             {/* Language toggle */}
             <button
-              onClick={toggle}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm text-[#8B9EC7] hover:text-[#F8FAFF] transition-all min-h-[44px]"
+              onClick={toggleLang}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm transition-all min-h-[44px]"
+              style={{ color: 'var(--t-muted)' }}
               aria-label="Toggle language"
             >
-              <span className={lang === 'id' ? 'font-bold text-[#F8FAFF]' : ''}>ID</span>
-              <span className="text-[#1E2D50]">/</span>
-              <span className={lang === 'en' ? 'font-bold text-[#F8FAFF]' : ''}>EN</span>
+              <span style={{ fontWeight: lang === 'id' ? 700 : 400, color: lang === 'id' ? 'var(--t-text)' : 'var(--t-muted)' }}>ID</span>
+              <span style={{ color: 'var(--t-border)' }}>/</span>
+              <span style={{ fontWeight: lang === 'en' ? 700 : 400, color: lang === 'en' ? 'var(--t-text)' : 'var(--t-muted)' }}>EN</span>
             </button>
+
+            {/* Theme toggle */}
+            {mounted && (
+              <button
+                onClick={toggleTheme}
+                className="theme-toggle"
+                aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+              >
+                {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+              </button>
+            )}
 
             {/* LIVE badge */}
             <span className="live-badge">
@@ -91,15 +111,21 @@ export default function DashboardNav() {
             </span>
           </div>
 
-          {/* ── Mobile Right ──────────────────────────────── */}
-          <div className="md:hidden flex items-center gap-3">
+          {/* Mobile right */}
+          <div className="md:hidden flex items-center gap-2">
             <span className="live-badge text-xs">
               <span className="live-dot" style={{ width: 6, height: 6 }} />
               LIVE
             </span>
+            {mounted && (
+              <button onClick={toggleTheme} className="theme-toggle" aria-label="Toggle theme">
+                {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+              </button>
+            )}
             <button
               onClick={() => setIsOpen(v => !v)}
-              className="p-2 text-[#8B9EC7] hover:text-[#F8FAFF] min-h-[44px] min-w-[44px] flex items-center justify-center"
+              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
+              style={{ color: 'var(--t-muted)' }}
               aria-label="Toggle menu"
             >
               {isOpen ? <X size={22} /> : <Menu size={22} />}
@@ -108,13 +134,14 @@ export default function DashboardNav() {
         </div>
       </div>
 
-      {/* ── Mobile Menu ───────────────────────────────────── */}
+      {/* Mobile menu */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ${
-          isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-        }`}
+        className={`md:hidden overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
       >
-        <div className="bg-[#0D1B3E]/98 backdrop-blur-xl border-t border-[#1E2D50] px-4 py-4 space-y-1">
+        <div
+          className="border-t px-4 py-4 space-y-1"
+          style={{ background: 'var(--t-nav-bg)', borderColor: 'var(--t-nav-border)' }}
+        >
           {NAV_LINKS.map(link => {
             const isActive = pathname === link.href
             const Icon = link.icon
@@ -123,11 +150,11 @@ export default function DashboardNav() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all min-h-[44px] ${
-                  isActive
-                    ? 'text-[#F8FAFF] bg-[#1A56DB]/15'
-                    : 'text-[#8B9EC7] hover:text-[#F8FAFF] hover:bg-white/5'
-                }`}
+                className="flex items-center gap-3 px-4 py-3 rounded-lg transition-all min-h-[44px] hover:bg-white/5"
+                style={{
+                  color: isActive ? 'var(--t-text)' : 'var(--t-muted)',
+                  background: isActive ? 'rgba(26,86,219,0.12)' : undefined,
+                }}
               >
                 <Icon size={16} />
                 {link.label[lang]}
@@ -135,8 +162,9 @@ export default function DashboardNav() {
             )
           })}
           <button
-            onClick={() => { toggle(); setIsOpen(false) }}
-            className="w-full text-left px-4 py-3 text-[#8B9EC7] hover:text-[#F8FAFF] hover:bg-white/5 rounded-lg min-h-[44px]"
+            onClick={() => { toggleLang(); setIsOpen(false) }}
+            className="w-full text-left px-4 py-3 rounded-lg min-h-[44px] hover:bg-white/5 transition-all"
+            style={{ color: 'var(--t-muted)' }}
           >
             {lang === 'id' ? 'Switch to English' : 'Ganti ke Indonesia'}
           </button>

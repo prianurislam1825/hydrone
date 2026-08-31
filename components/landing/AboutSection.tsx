@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import Image from 'next/image'
 import { useLang } from '@/lib/i18n/context'
+import Image from 'next/image'
+import { useEffect, useState } from 'react'
 
 const T = {
   eyebrow: { id: 'TENTANG HYDRONE', en: 'ABOUT HYDRONE' },
@@ -27,7 +27,7 @@ const T = {
 const MEDIA = [
   { type: 'video', src: '/animation.mp4' },
   { type: 'image', src: '/hydrone-visual.jpg' },
-  { type: 'image', src: '/image1.jpg' }
+  { type: 'image', src: '/image1.jpg' },
 ]
 
 export default function AboutSection() {
@@ -36,67 +36,46 @@ export default function AboutSection() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentMedia((prev) => (prev + 1) % MEDIA.length)
+      setCurrentMedia(prev => (prev + 1) % MEDIA.length)
     }, 4000)
     return () => clearInterval(timer)
   }, [])
 
   return (
-    <section id="tentang" className="py-24 bg-[#0D1B3E]">
+    <section id="tentang" className="py-24" style={{ background: 'var(--t-bg)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left: text */}
           <div data-anim>
             <span className="eyebrow">{T.eyebrow[lang]}</span>
             <span className="eyebrow-rule" />
-
-            <div className="space-y-5 text-[#8B9EC7] leading-relaxed text-base">
+            <div className="space-y-5 leading-relaxed text-base" style={{ color: 'var(--t-muted)' }}>
               <p>{T.p1[lang]}</p>
-              <p className="text-[#F8FAFF] font-medium">{T.p2[lang]}</p>
+              <p className="font-medium" style={{ color: 'var(--t-text)' }}>{T.p2[lang]}</p>
               <p>{T.p3[lang]}</p>
             </div>
           </div>
 
-          {/* Right: ROV image carousel */}
+          {/* Right: ROV media carousel */}
           <div data-anim="scale">
-            <div className="relative rounded-2xl overflow-hidden border border-[#1E2D50] bg-[#111827]">
+            <div className="relative rounded-2xl overflow-hidden border" style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)' }}>
               <div className="relative aspect-video">
                 {MEDIA.map((media, i) => (
                   <div
                     key={i}
-                    className={`absolute inset-0 transition-opacity duration-1000 ${
-                      i === currentMedia ? 'opacity-100 z-10' : 'opacity-0 z-0'
-                    }`}
+                    className={`absolute inset-0 transition-opacity duration-1000 ${i === currentMedia ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
                   >
                     {media.type === 'video' ? (
-                      <video
-                        src={media.src}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        className="w-full h-full object-cover"
-                      />
+                      <video src={media.src} autoPlay loop muted playsInline className="w-full h-full object-cover" />
                     ) : (
-                      <Image
-                        src={media.src}
-                        alt="Hydrone ROV Render"
-                        fill
-                        className="object-cover"
-                      />
+                      <Image src={media.src} alt="Hydrone ROV" fill className="object-cover" />
                     )}
                   </div>
                 ))}
               </div>
-
-              {/* Caption overlay */}
-              <div className="px-5 py-3 border-t border-[#1E2D50] bg-[#111827]">
-                <p className="text-[#8B9EC7] text-xs italic">
-                  {T.caption[lang]}
-                </p>
+              <div className="px-5 py-3 border-t" style={{ borderColor: 'var(--t-border)', background: 'var(--t-surface)' }}>
+                <p className="text-xs italic" style={{ color: 'var(--t-muted)' }}>{T.caption[lang]}</p>
               </div>
-
-              {/* Orange accent line */}
               <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-[#F05A22]" />
             </div>
           </div>

@@ -10,10 +10,7 @@ const PILLARS = [
       </svg>
     ),
     title: { id: 'COLLECT', en: 'COLLECT' },
-    desc: {
-      id: 'Jaring pasif menangkap sampah plastik makro pada setiap operasi.',
-      en: 'Passive net captures macro debris on every run.',
-    },
+    desc: { id: 'Jaring pasif menangkap sampah plastik makro pada setiap operasi.', en: 'Passive net captures macro debris on every run.' },
   },
   {
     icon: (
@@ -22,10 +19,7 @@ const PILLARS = [
       </svg>
     ),
     title: { id: 'FILTER', en: 'FILTER' },
-    desc: {
-      id: 'Filtrasi dua tahap hingga 0.1 mikron untuk mikroplastik.',
-      en: 'Two-stage filtration down to 0.1 microns.',
-    },
+    desc: { id: 'Filtrasi dua tahap hingga 0.1 mikron untuk mikroplastik.', en: 'Two-stage filtration down to 0.1 microns.' },
   },
   {
     icon: (
@@ -34,10 +28,7 @@ const PILLARS = [
       </svg>
     ),
     title: { id: 'MONITOR', en: 'MONITOR' },
-    desc: {
-      id: 'pH, TDS, turbidity, dan suhu real-time via tether.',
-      en: 'Real-time pH, TDS, turbidity and temperature via tether.',
-    },
+    desc: { id: 'pH, TDS, turbidity, dan suhu real-time via tether.', en: 'Real-time pH, TDS, turbidity and temperature via tether.' },
   },
 ]
 
@@ -45,23 +36,29 @@ export default function FeaturesSection() {
   const { lang } = useLang()
 
   return (
-    <section className="py-24 bg-[#0D1B3E]">
+    <section className="py-24" style={{ background: 'var(--t-bg)' }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-3 gap-6">
           {PILLARS.map((p, i) => (
             <div
               key={i}
-              className="group bg-[#111827] border border-[#1E2D50] rounded-[20px] p-6 transition-all duration-300 hover:border-[#1A56DB] hover:-translate-y-1 hover:shadow-lg hover:shadow-[#1A56DB]/10"
+              className="group rounded-[20px] p-6 transition-all duration-300 hover:-translate-y-1 cursor-default"
+              style={{
+                background: 'var(--t-surface)',
+                border: '1px solid var(--t-border)',
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = '#1A56DB'; (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 30px rgba(26,86,219,0.10)' }}
+              onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--t-border)'; (e.currentTarget as HTMLDivElement).style.boxShadow = 'none' }}
               data-anim
               data-delay={`${i * 100}`}
             >
               <div className="text-[#1A56DB] mb-5 group-hover:text-[#F05A22] transition-colors">
                 {p.icon}
               </div>
-              <h3 className="text-[#F8FAFF] font-bold text-lg tracking-wider mb-3 font-[family-name:var(--font-space-grotesk)]">
+              <h3 className="font-bold text-lg tracking-wider mb-3 font-[family-name:var(--font-space-grotesk)]" style={{ color: 'var(--t-text)' }}>
                 {p.title[lang]}
               </h3>
-              <p className="text-[#8B9EC7] text-sm leading-relaxed">
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--t-muted)' }}>
                 {p.desc[lang]}
               </p>
             </div>

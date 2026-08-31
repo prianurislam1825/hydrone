@@ -1,5 +1,5 @@
-import type { Metadata } from 'next'
 import DashboardNav from '@/components/dashboard/DashboardNav'
+import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Dashboard — Live Telemetry',
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-[#0D1B3E] hex-bg">
+    <div className="min-h-screen hex-bg" style={{ background: 'var(--t-bg)' }}>
       <DashboardNav />
       <main className="pt-16">{children}</main>
     </div>

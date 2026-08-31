@@ -1,6 +1,6 @@
-import type { Metadata } from 'next'
-import { Space_Grotesk, Inter, JetBrains_Mono } from 'next/font/google'
 import { LangProvider } from '@/lib/i18n/context'
+import type { Metadata } from 'next'
+import { Inter, JetBrains_Mono, Space_Grotesk } from 'next/font/google'
 import './globals.css'
 
 const spaceGrotesk = Space_Grotesk({
@@ -33,10 +33,24 @@ export const metadata: Metadata = {
   other: { 'theme-color': '#0D1B3E' },
 }
 
+// Inline script — runs before React hydration to prevent flash of wrong theme
+const themeScript = `
+(function() {
+  try {
+    var t = localStorage.getItem('hydrone-theme');
+    if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+  } catch(e) {}
+})();
+`
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id" className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
-      <body className="bg-navy text-brand-white font-sans antialiased">
+      <head>
+        {/* Anti-flash script — must be synchronous before body paint */}
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body style={{ backgroundColor: 'var(--t-bg)', color: 'var(--t-text)' }} className="font-sans antialiased">
         <LangProvider>{children}</LangProvider>
       </body>
     </html>

@@ -1,7 +1,7 @@
 'use client'
 
-import { CheckCircle, Cpu, Cable, Droplets, Gauge } from 'lucide-react'
 import { useLang } from '@/lib/i18n/context'
+import { Cable, CheckCircle, Cpu, Droplets, Gauge } from 'lucide-react'
 
 const FEATURES = [
   { id: 'Tangkap plastik makro dengan jaring pasif', en: 'Capture macroplastic with passive net' },
@@ -20,13 +20,13 @@ const T = {
   tagline: { id: 'Dive. Collect. Protect.', en: 'Dive. Collect. Protect.' },
   sub: { id: 'Bawah Air · Otonom · Monitor Real-time', en: 'Underwater · Autonomous · Real-time Monitoring' },
   desc: {
-    id: 'Sistem pembersih perairan terintegrasi yang menangani sampah plastik makro dan mikroplastik sekaligus, dilengkapi monitoring kualitas air real-time dan kemampuan operasi ganda otonom maupun manual.',
-    en: 'An integrated water cleaning system handling both macroplastic and microplastic simultaneously, with real-time water quality monitoring and dual autonomous or manual operation capability.',
+    id: 'Sistem pembersih perairan terintegrasi yang menangani sampah plastik makro dan mikroplastik sekaligus, dilengkapi monitoring kualitas air real-time.',
+    en: 'An integrated water cleaning system handling both macroplastic and microplastic simultaneously, with real-time water quality monitoring.',
   },
-  modeAutonomousLabel: { id: 'Otonom', en: 'Autonomous' },
-  modeAutonomousDesc: { id: 'ESP32 + sensor navigasi otomatis', en: 'ESP32 + automatic sensor navigation' },
-  modeManualLabel: { id: 'Manual', en: 'Manual' },
-  modeManualDesc: { id: 'Kendali via kabel tether 20m', en: 'Control via 20m tether cable' },
+  modeALabel: { id: 'Otonom', en: 'Autonomous' },
+  modeADesc: { id: 'ESP32 + sensor navigasi otomatis', en: 'ESP32 + automatic sensor navigation' },
+  modeMLabel: { id: 'Manual', en: 'Manual' },
+  modeMDesc: { id: 'Kendali via kabel tether 20m', en: 'Control via 20m tether cable' },
   cta: { id: 'Hubungi Kami', en: 'Contact Us' },
   turbidity: { id: 'Turbidity', en: 'Turbidity' },
   depth: { id: 'Kedalaman', en: 'Depth' },
@@ -36,46 +36,43 @@ export default function ProductSection() {
   const { lang } = useLang()
 
   return (
-    <section id="produk" className="py-24 bg-white">
+    <section id="produk" className="py-24" style={{ background: 'var(--t-white-bg)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Left: Details */}
+          {/* Left */}
           <div data-anim>
-            <span className="section-label" style={{ color: '#00B4D8' }}>{T.sectionLabel[lang]}</span>
-            <h2 className="text-4xl font-black text-[#0D1B2A] mt-2 mb-1">{T.name[lang]}</h2>
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-[#00B4D8] mb-2 block">{T.sectionLabel[lang]}</span>
+            <h2 className="text-4xl font-black mt-2 mb-1" style={{ color: 'var(--t-white-text)' }}>{T.name[lang]}</h2>
             <p className="text-[#00B4D8] font-mono font-bold text-lg mb-1">{T.tagline[lang]}</p>
-            <p className="text-gray-500 text-sm mb-6">{T.sub[lang]}</p>
-            <p className="text-gray-600 leading-relaxed mb-8">{T.desc[lang]}</p>
+            <p className="text-sm mb-6" style={{ color: 'var(--t-white-muted2)' }}>{T.sub[lang]}</p>
+            <p className="leading-relaxed mb-8" style={{ color: 'var(--t-white-muted)' }}>{T.desc[lang]}</p>
 
-            {/* Features checklist */}
             <ul className="space-y-3 mb-8">
               {FEATURES.map((f, i) => (
                 <li key={i} className="flex items-start gap-3">
                   <CheckCircle size={18} className="text-[#43A047] mt-0.5 flex-shrink-0" />
-                  <span className="text-gray-700 text-sm">{f[lang]}</span>
+                  <span className="text-sm" style={{ color: 'var(--t-white-muted)' }}>{f[lang]}</span>
                 </li>
               ))}
             </ul>
 
-            {/* Mode badges */}
             <div className="flex flex-col sm:flex-row gap-3 mb-8">
               <div className="flex items-center gap-3 bg-[#1565C0]/10 border border-[#1565C0]/20 rounded-xl px-4 py-3">
                 <Cpu size={20} className="text-[#1565C0] flex-shrink-0" />
                 <div>
-                  <div className="font-bold text-[#1565C0] text-sm">{T.modeAutonomousLabel[lang]}</div>
-                  <div className="text-gray-500 text-xs">{T.modeAutonomousDesc[lang]}</div>
+                  <div className="font-bold text-[#1565C0] text-sm">{T.modeALabel[lang]}</div>
+                  <div className="text-xs" style={{ color: 'var(--t-white-muted2)' }}>{T.modeADesc[lang]}</div>
                 </div>
               </div>
               <div className="flex items-center gap-3 bg-[#43A047]/10 border border-[#43A047]/20 rounded-xl px-4 py-3">
                 <Cable size={20} className="text-[#43A047] flex-shrink-0" />
                 <div>
-                  <div className="font-bold text-[#43A047] text-sm">{T.modeManualLabel[lang]}</div>
-                  <div className="text-gray-500 text-xs">{T.modeManualDesc[lang]}</div>
+                  <div className="font-bold text-[#43A047] text-sm">{T.modeMLabel[lang]}</div>
+                  <div className="text-xs" style={{ color: 'var(--t-white-muted2)' }}>{T.modeMDesc[lang]}</div>
                 </div>
               </div>
             </div>
 
-            {/* CTA */}
             <a
               href="https://wa.me/6281227917676"
               target="_blank"
@@ -89,14 +86,11 @@ export default function ProductSection() {
             </a>
           </div>
 
-          {/* Right: Visual */}
+          {/* Right: visual */}
           <div className="flex items-center justify-center" data-anim="scale">
             <div className="relative w-80 h-80">
-              {/* Background glow */}
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#1565C0]/10 to-[#00B4D8]/10" />
-
-              {/* Main device visual */}
-              <div className="absolute inset-8 rounded-3xl bg-gradient-to-br from-[#1B3A6B] to-[#0A1628] border border-[#00B4D8]/30 shadow-2xl flex flex-col items-center justify-center gap-4 animate-glow-pulse">
+              <div className="absolute inset-8 rounded-3xl bg-gradient-to-br from-[#1B3A6B] to-[#0A1628] border border-[#00B4D8]/30 shadow-2xl flex flex-col items-center justify-center gap-4">
                 <div className="w-16 h-16 rounded-full bg-[#00B4D8]/20 border-2 border-[#00B4D8]/50 flex items-center justify-center">
                   <span className="text-[#00B4D8] font-black text-2xl">H</span>
                 </div>
@@ -106,13 +100,12 @@ export default function ProductSection() {
                 </div>
                 <div className="flex gap-3">
                   <div className="flex items-center gap-1.5 text-[#43A047] text-xs">
-                    <span className="w-2 h-2 rounded-full bg-[#43A047] animate-pulse-dot" />
+                    <span className="w-2 h-2 rounded-full bg-[#43A047] animate-[live-pulse_2s_ease-in-out_infinite]" />
                     ACTIVE
                   </div>
                 </div>
               </div>
-
-              {/* Floating sensor cards */}
+              {/* Floating cards — always white for readability */}
               <div className="absolute -top-2 -right-2 bg-white rounded-xl px-3 py-2 shadow-lg border border-gray-100 text-xs animate-float-up">
                 <div className="flex items-center gap-2">
                   <Droplets size={12} className="text-[#00B4D8]" />

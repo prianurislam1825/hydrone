@@ -1,30 +1,13 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import { useLang } from '@/lib/i18n/context'
+import { useLang } from '@/lib/i18n/context';
+import { useEffect, useRef, useState } from 'react';
 
 const STATS = [
-  {
-    value: 500,
-    suffix: 'mm',
-    label: { id: 'Panjang Badan', en: 'Body Length' },
-  },
-  {
-    value: 4,
-    suffix: '',
-    label: { id: 'Thruster', en: 'Thrusters' },
-  },
-  {
-    value: 0.1,
-    suffix: '\u00b5m',
-    label: { id: 'Presisi Filter', en: 'Filter Precision' },
-    decimals: 1,
-  },
-  {
-    value: 20,
-    suffix: 'm',
-    label: { id: 'Jangkauan Tether', en: 'Tether Range' },
-  },
+  { value: 500, suffix: 'mm', label: { id: 'Panjang Badan', en: 'Body Length' } },
+  { value: 4, suffix: '', label: { id: 'Thruster', en: 'Thrusters' } },
+  { value: 0.1, suffix: 'µm', label: { id: 'Presisi Filter', en: 'Filter Precision' }, decimals: 1 },
+  { value: 20, suffix: 'm', label: { id: 'Jangkauan Tether', en: 'Tether Range' } },
 ]
 
 function AnimatedNumber({ target, decimals = 0 }: { target: number; decimals?: number }) {
@@ -35,7 +18,6 @@ function AnimatedNumber({ target, decimals = 0 }: { target: number; decimals?: n
   useEffect(() => {
     const el = ref.current
     if (!el) return
-
     const obs = new IntersectionObserver(
       entries => {
         if (entries[0].isIntersecting && !triggered.current) {
@@ -58,7 +40,7 @@ function AnimatedNumber({ target, decimals = 0 }: { target: number; decimals?: n
   }, [target])
 
   return (
-    <span ref={ref} className="font-[family-name:var(--font-space-grotesk)] font-bold text-5xl sm:text-6xl text-[#F8FAFF]">
+    <span ref={ref} className="font-[family-name:var(--font-space-grotesk)] font-bold text-5xl sm:text-6xl" style={{ color: 'var(--t-text)' }}>
       {val.toFixed(decimals)}
     </span>
   )
@@ -68,7 +50,7 @@ export default function StatsSection() {
   const { lang } = useLang()
 
   return (
-    <section className="py-16 bg-[#111827]">
+    <section className="py-16" style={{ background: 'var(--t-surface)' }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
           {STATS.map((s, i) => (
@@ -77,7 +59,7 @@ export default function StatsSection() {
                 <AnimatedNumber target={s.value} decimals={s.decimals ?? 0} />
                 <span className="text-[#1A56DB] font-bold text-xl">{s.suffix}</span>
               </div>
-              <span className="text-[#8B9EC7] text-xs uppercase tracking-widest mt-2 block">
+              <span className="text-xs uppercase tracking-widest mt-2 block" style={{ color: 'var(--t-muted)' }}>
                 {s.label[lang]}
               </span>
             </div>
