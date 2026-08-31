@@ -275,6 +275,35 @@ h1, h2, h3, h4 {
   animation: live-pulse 2s ease-in-out infinite;
 }
 
+/* ── Bottom nav spacing ──────────────────────────────────────────── */
+.pb-bottom-nav {
+  padding-bottom: 72px;
+}
+
+/* ── Virtual joystick ────────────────────────────────────────────── */
+.joystick-zone {
+  position: relative;
+  border-radius: 50%;
+  background: rgba(26,86,219,0.06);
+  border: 1.5px solid rgba(26,86,219,0.2);
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+}
+.joystick-zone:active { cursor: grabbing; }
+.joystick-knob {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #1A56DB, #0D3A9E);
+  box-shadow: 0 0 16px rgba(26,86,219,0.6), 0 2px 8px rgba(0,0,0,0.4);
+  transform: translate(-50%, -50%);
+  transition: box-shadow 0.15s ease;
+  pointer-events: none;
+}
+.joystick-knob.active {
+  box-shadow: 0 0 24px rgba(26,86,219,0.9), 0 2px 8px rgba(0,0,0,0.4);
+}
+
 /* ── Theme toggle button ─────────────────────────────────────────── */
 .theme-toggle {
   display: inline-flex;
