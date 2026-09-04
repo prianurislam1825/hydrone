@@ -8,13 +8,13 @@ import { useMemo } from 'react'
 function Bubbles() {
   const bubbles = useMemo(
     () =>
-      Array.from({ length: 14 }, (_, i) => ({
+      Array.from({ length: 45 }, (_, i) => ({
         id: i,
         left: `${Math.random() * 100}%`,
-        size: Math.random() * 12 + 4,
-        duration: Math.random() * 12 + 8,
-        delay: Math.random() * 8,
-        opacity: Math.random() * 0.3 + 0.05,
+        size: Math.random() * 18 + 6,
+        duration: Math.random() * 15 + 8,
+        delay: Math.random() * 10,
+        opacity: Math.random() * 0.5 + 0.15,
       })),
     [],
   )
@@ -23,7 +23,7 @@ function Bubbles() {
       {bubbles.map(b => (
         <div
           key={b.id}
-          className="absolute rounded-full border border-[#1A56DB]/20 bg-[#1A56DB]/5"
+          className="absolute rounded-full border border-[#00B4D8]/50 bg-[#00B4D8]/20"
           style={{
             left: b.left,
             bottom: '-40px',
