@@ -39,29 +39,15 @@ export default function LandingNav() {
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
-          <a href="#" className="flex items-center gap-3 group">
-            <div className="relative w-8 h-8 rounded-full overflow-hidden">
+          <a href="#" className="flex items-center group">
+            <div className="relative w-10 h-10 overflow-hidden">
               <Image
-                src="/pfp-hydrone.png"
+                src="/logo-white.png"
                 alt="Hydrone"
                 fill
                 className="object-contain"
-                onError={e => {
-                  const target = e.target as HTMLImageElement
-                  target.style.display = 'none'
-                  const parent = target.parentElement
-                  if (parent) {
-                    parent.innerHTML = '<span class="flex items-center justify-center w-8 h-8 rounded-full bg-[#1A56DB]/20 text-[#1A56DB] font-bold text-sm border border-[#1A56DB]/30">H</span>'
-                  }
-                }}
               />
             </div>
-            <span
-              className="font-bold text-lg tracking-wide font-[family-name:var(--font-space-grotesk)] transition-colors group-hover:text-[#1A56DB]"
-              style={{ color: 'var(--t-text)' }}
-            >
-              Hydrone
-            </span>
           </a>
 
           {/* Desktop nav links */}

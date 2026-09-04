@@ -106,16 +106,21 @@ export default function HeroSection() {
                 </div>
               </div>
 
-              {/* Floating sensor cards */}
-              <div className="absolute -top-3 -right-3 glass rounded-xl px-3 py-2 text-xs animate-float-up z-20">
-                <div style={{ color: 'var(--t-muted)' }}>pH</div>
-                <div className="font-bold font-[family-name:var(--font-jetbrains-mono)]" style={{ color: 'var(--t-text)' }}>7.24</div>
-                <div className="text-[#22C55E] text-[10px]">Normal</div>
+              {/* Floating feature cards */}
+              <div className="absolute -top-3 -right-3 glass rounded-xl px-3.5 py-2.5 text-xs animate-float-up z-20">
+                <div className="font-bold font-[family-name:var(--font-jetbrains-mono)] text-sm" style={{ color: 'var(--t-text)' }}>0.1 µm</div>
+                <div style={{ color: 'var(--t-muted)' }}>Filter Precision</div>
               </div>
-              <div className="absolute -bottom-3 -left-3 glass rounded-xl px-3 py-2 text-xs animate-float-up z-20" style={{ animationDelay: '1.5s' }}>
-                <div style={{ color: 'var(--t-muted)' }}>Turbidity</div>
-                <div className="font-bold font-[family-name:var(--font-jetbrains-mono)]" style={{ color: 'var(--t-text)' }}>34 NTU</div>
-                <div className="text-[#22C55E] text-[10px]">Clear</div>
+              <div className="absolute top-1/2 -right-8 glass rounded-xl px-3.5 py-2.5 text-xs animate-float-up z-20" style={{ animationDelay: '1s' }}>
+                <div className="font-bold text-sm" style={{ color: 'var(--t-text)' }}>DLH</div>
+                <div style={{ color: 'var(--t-muted)' }}>Collab Partner</div>
+              </div>
+              <div className="absolute -bottom-3 -left-3 glass rounded-xl px-3.5 py-2.5 text-xs animate-float-up z-20" style={{ animationDelay: '2s' }}>
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#22C55E]" style={{ animation: 'live-pulse 2s ease-in-out infinite' }} />
+                  <span className="font-bold text-sm" style={{ color: 'var(--t-text)' }}>Real-time</span>
+                </div>
+                <div style={{ color: 'var(--t-muted)' }}>Monitoring</div>
               </div>
             </div>
           </div>
