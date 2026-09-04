@@ -42,13 +42,11 @@ export default function FeaturesSection() {
           {PILLARS.map((p, i) => (
             <div
               key={i}
-              className="group rounded-[20px] p-6 transition-all duration-300 hover:-translate-y-1 cursor-default"
+              className="group rounded-[20px] p-6 cursor-default transition-all duration-500 ease-out hover:-translate-y-2 hover:border-[#1A56DB] hover:shadow-[0_0_35px_rgba(26,86,219,0.25)]"
               style={{
                 background: 'var(--t-surface)',
                 border: '1px solid var(--t-border)',
               }}
-              onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = '#1A56DB'; (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 30px rgba(26,86,219,0.10)' }}
-              onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--t-border)'; (e.currentTarget as HTMLDivElement).style.boxShadow = 'none' }}
               data-anim
               data-delay={`${i * 100}`}
             >
