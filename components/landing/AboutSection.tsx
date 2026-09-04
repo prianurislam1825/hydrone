@@ -7,16 +7,16 @@ import { useEffect, useState } from 'react'
 const T = {
   eyebrow: { id: 'TENTANG HYDRONE', en: 'ABOUT HYDRONE' },
   p1: {
-    id: 'Kami adalah tim lima pelajar SMA dari Mersiflab, membangun ROV pembersih sungai untuk kompetisi IID INNOPA.',
-    en: 'We are a five-person high school team from Mersiflab, building a river-cleaning ROV for the IID INNOPA competition.',
+    id: 'Setiap tahun, jutaan ton plastik mengalir ke laut, dan sebagian besar masuk lewat sungai. Kami menanyakan satu pertanyaan sederhana: kenapa terus membersihkan lautan, kalau titik masuknya bisa dihentikan lebih dulu?',
+    en: 'Every year, millions of tons of plastic flow into the ocean, and most of it enters through rivers. We started with one simple question: why keep cleaning the ocean, when the entry point can be stopped first?',
   },
   p2: {
-    id: 'Hydrone dimulai dari sebuah pertanyaan: mengapa kita terus membersihkan lautan padahal plastik masuk melalui sungai?',
-    en: 'Hydrone started as a question: why do we keep cleaning the ocean when the plastic enters through rivers?',
+    id: 'Hydrone adalah jawaban kami: ROV yang dirancang untuk menangkap sampah di berbagai sungai, sambil memantau kondisi air secara real-time.',
+    en: 'Hydrone is our answer: an ROV designed to capture debris across different rivers, while monitoring water quality in real time.',
   },
   p3: {
-    id: 'Kami membangun jawabannya dari PETG cetak 3D, sensor off-the-shelf, dan banyak iterasi.',
-    en: 'We built the answer from 3D-printed PETG, off-the-shelf sensors, and a lot of iteration.',
+    id: 'Dibangun dari PETG cetak 3D dan sensor off-the-shelf, lalu disempurnakan lewat puluhan iterasi desain. Hydrone dirancang bukan sekadar sebagai prototipe kompetisi, melainkan sebagai solusi yang bisa diadopsi lintas sungai dan lintas komunitas, membuka jalan bagi kolaborasi dengan pemerintah daerah dalam menjaga ekosistem sungai jangka panjang.',
+    en: "Built from 3D-printed PETG and off-the-shelf sensors, then refined through dozens of design iterations. Hydrone isn't just built as a competition prototype, it's designed as a solution that can be adopted across rivers and communities, opening the door to collaboration with local governments in protecting river ecosystems for the long term.",
   },
   caption: {
     id: 'Mengumpulkan mikroplastik di kedalaman. Sungai Dengkeng, Jawa Tengah.',
