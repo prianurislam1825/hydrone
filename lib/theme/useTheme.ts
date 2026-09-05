@@ -1,18 +1,18 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 export type Theme = 'dark' | 'light'
 
-const STORAGE_KEY = 'hydrone-theme'
-const DEFAULT_THEME: Theme = 'dark'
+const STORAGE_KEY   = 'hydrone-theme'
+const DEFAULT_THEME: Theme = 'light'   // ← default now LIGHT per PPT
 
 function applyTheme(theme: Theme) {
   const root = document.documentElement
-  if (theme === 'light') {
-    root.setAttribute('data-theme', 'light')
+  if (theme === 'dark') {
+    root.setAttribute('data-theme', 'dark')
   } else {
-    root.removeAttribute('data-theme')
+    root.removeAttribute('data-theme')   // light = no attribute (CSS :root default)
   }
 }
 
@@ -20,7 +20,6 @@ export function useTheme() {
   const [theme, setThemeState] = useState<Theme>(DEFAULT_THEME)
   const [mounted, setMounted]  = useState(false)
 
-  // Read persisted preference on mount
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY) as Theme | null
     const resolved = stored === 'light' || stored === 'dark' ? stored : DEFAULT_THEME

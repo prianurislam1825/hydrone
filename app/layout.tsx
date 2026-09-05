@@ -12,7 +12,7 @@ const spaceGrotesk = Space_Grotesk({
 const inter = Inter({
   variable: '--font-inter',
   subsets: ['latin'],
-  weight: ['400', '500'],
+  weight: ['400', '500', '600'],
 })
 
 const jetbrainsMono = JetBrains_Mono({
@@ -23,34 +23,45 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Hydrone - River Debris Collection ROV',
+    default: 'Hydrone — River Debris Collection ROV',
     template: '%s | Hydrone',
   },
   description:
     'Hydrone is a student-built underwater ROV that collects river plastic and monitors water quality in real time. Built for IID INNOPA 2026 by Mersiflab.',
   keywords: ['Hydrone', 'ROV', 'underwater', 'river', 'plastic', 'microplastic', 'IID INNOPA', 'Mersiflab'],
   authors: [{ name: 'Mersiflab' }],
-  other: { 'theme-color': '#0D1B3E' },
+  other: { 'theme-color': '#EEF2FF' },
 }
 
-// Inline script — runs before React hydration to prevent flash of wrong theme
+/**
+ * Anti-flash inline script.
+ * Default = LIGHT. Only switch to dark if user previously selected dark.
+ */
 const themeScript = `
 (function() {
   try {
     var t = localStorage.getItem('hydrone-theme');
-    if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    if (t === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+    // light = default, no attribute needed
   } catch(e) {}
 })();
 `
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
+    <html
+      lang="id"
+      className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}
+    >
       <head>
-        {/* Anti-flash script — must be synchronous before body paint */}
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body style={{ backgroundColor: 'var(--t-bg)', color: 'var(--t-text)' }} className="font-sans antialiased">
+      <body
+        className="font-sans antialiased"
+        style={{ backgroundColor: 'var(--t-bg)', color: 'var(--t-text)' }}
+      >
         <LangProvider>{children}</LangProvider>
       </body>
     </html>
