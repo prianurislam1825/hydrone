@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useLang } from '@/lib/i18n/context'
 import { useTheme } from '@/lib/theme/useTheme'
@@ -48,7 +48,7 @@ export default function DashboardNav() {
               />
             </div>
             <span
-              className="font-bold text-lg tracking-wide font-[family-name:var(--font-space-grotesk)] group-hover:text-[#1A56DB] transition-colors"
+              className="font-bold text-lg tracking-wide font-[family-name:var(--font-plus-jakarta)] group-hover:text-[#1A56DB] transition-colors"
               style={{ color: 'var(--t-text)' }}
             >
               Hydrone

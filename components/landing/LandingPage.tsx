@@ -5,6 +5,7 @@ import AboutSection from './AboutSection'
 import CtaSection from './CtaSection'
 import FeaturesSection from './FeaturesSection'
 import HeroSection from './HeroSection'
+import HowItWorks from './HowItWorks'
 import LandingFooter from './LandingFooter'
 import LandingNav from './LandingNav'
 import PartnersSection from './PartnersSection'
@@ -15,15 +16,10 @@ import TeamSection from './TeamSection'
 export default function LandingPage() {
   useEffect(() => {
     const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) entry.target.classList.add('visible')
-        })
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' },
+      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') }),
+      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' },
     )
-    const elements = document.querySelectorAll('[data-anim]')
-    elements.forEach(el => observer.observe(el))
+    document.querySelectorAll('[data-anim]').forEach(el => observer.observe(el))
     return () => observer.disconnect()
   }, [])
 
@@ -32,8 +28,9 @@ export default function LandingPage() {
       <LandingNav />
       <main>
         <HeroSection />
-        <FeaturesSection />
         <StatsSection />
+        <FeaturesSection />
+        <HowItWorks />
         <AboutSection />
         <TeamSection />
         <PartnersSection />

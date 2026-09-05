@@ -1,10 +1,11 @@
-'use client'
+﻿'use client'
 
-import { useState } from 'react'
-import Image from 'next/image'
-import { Mail, Lock, Eye, EyeOff, AlertTriangle, Activity, Wifi, Shield } from 'lucide-react'
-import { signIn } from 'next-auth/react'
 import { useLang } from '@/lib/i18n/context'
+import { Activity, AlertTriangle, Eye, EyeOff, Lock, Mail, Shield, Wifi } from 'lucide-react'
+import { signIn } from 'next-auth/react'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 function HexPattern() {
   return (
@@ -33,13 +34,14 @@ const T = {
     en: 'Access restricted to HYDRONE team and official partners',
   },
   devHint: {
-    id: 'Mode Lokal: Masukkan email & password apa saja untuk demo.',
-    en: 'Local Mode: Enter any email & password for demo.',
+    id: 'Mode Lokal: Masukkan email & password apa saja.',
+    en: 'Local Mode: Enter any email & password.',
   },
 }
 
 export default function LoginForm() {
   const { lang, toggle } = useLang()
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -61,18 +63,24 @@ export default function LoginForm() {
 
       if (result?.error) {
         setError('Email atau password tidak valid.')
+        setIsLoading(false)
+      } else if (result?.ok) {
+        // Session cookie is now set — use router.push then hard reload
+        // to ensure middleware picks up the new cookie
+        router.push('/dashboard')
+        router.refresh()
       } else {
-        window.location.href = '/dashboard'
+        setError('Login gagal. Silakan coba lagi.')
+        setIsLoading(false)
       }
     } catch {
-      setError('Terjadi kesalahan. Silakan coba lagi.')
-    } finally {
+      setError('Terjadi kesalahan jaringan. Silakan coba lagi.')
       setIsLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex font-[family-name:var(--font-inter)]">
+    <div className="min-h-screen flex font-[family-name:var(--font-plus-jakarta)]">
       {/* Left Panel */}
       <div className="hidden lg:flex w-1/2 relative bg-[#0D1B3E] flex-col items-center justify-center p-12 overflow-hidden border-r border-[#1E2D50]">
         <HexPattern />
@@ -91,7 +99,7 @@ export default function LoginForm() {
             />
           </div>
 
-          <h1 className="text-3xl font-bold text-[#F8FAFF] mb-4 font-[family-name:var(--font-space-grotesk)]">
+          <h1 className="text-3xl font-bold text-[#F8FAFF] mb-4 font-[family-name:var(--font-plus-jakarta)]">
             {T.controlCenter[lang]}
           </h1>
           <p className="text-[#8B9EC7] mb-12 max-w-sm leading-relaxed text-sm">
@@ -146,7 +154,7 @@ export default function LoginForm() {
                     className="object-contain"
                   />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900 font-[family-name:var(--font-space-grotesk)]">
+                <h2 className="text-2xl font-bold text-gray-900 font-[family-name:var(--font-plus-jakarta)]">
                   {T.formTitle[lang]}
                 </h2>
               </div>

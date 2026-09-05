@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useLang } from '@/lib/i18n/context'
 import { CheckCircle2, Eye, Target } from 'lucide-react'
@@ -31,7 +31,7 @@ export default function VisionMission() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16" data-anim>
           <span className="eyebrow">{T.sectionLabel[lang]}</span>
-          <h2 className="text-3xl sm:text-4xl font-black mt-2" style={{ color: 'var(--t-white-text)' }}>{T.heading[lang]}</h2>
+          <h2 className="text-3xl sm:text-4xl font-extrabold mt-2" style={{ color: 'var(--t-white-text)' }}>{T.heading[lang]}</h2>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">

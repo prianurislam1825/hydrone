@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useLang } from '@/lib/i18n/context'
 import { Cable, CheckCircle, Cpu, Droplets, Gauge } from 'lucide-react'
@@ -42,7 +42,7 @@ export default function ProductSection() {
           {/* Left */}
           <div data-anim>
             <span className="text-[10px] font-semibold uppercase tracking-widest text-[#00B4D8] mb-2 block">{T.sectionLabel[lang]}</span>
-            <h2 className="text-4xl font-black mt-2 mb-1" style={{ color: 'var(--t-white-text)' }}>{T.name[lang]}</h2>
+            <h2 className="text-4xl font-extrabold mt-2 mb-1" style={{ color: 'var(--t-white-text)' }}>{T.name[lang]}</h2>
             <p className="text-[#00B4D8] font-mono font-bold text-lg mb-1">{T.tagline[lang]}</p>
             <p className="text-sm mb-6" style={{ color: 'var(--t-white-muted2)' }}>{T.sub[lang]}</p>
             <p className="leading-relaxed mb-8" style={{ color: 'var(--t-white-muted)' }}>{T.desc[lang]}</p>

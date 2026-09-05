@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
-import { Mail, Clock, Shield, LogIn, User, Bell, Moon, Sun, Globe, ChevronRight, LogOut } from 'lucide-react'
-import { useTheme } from '@/lib/theme/useTheme'
 import { useLang } from '@/lib/i18n/context'
+import { useTheme } from '@/lib/theme/useTheme'
+import { Bell, ChevronRight, Clock, Globe, LogIn, LogOut, Mail, Moon, Shield, Sun, User } from 'lucide-react'
+import { useState } from 'react'
 
 function ToggleRow({
   icon, label, sublabel, active, onToggle,
@@ -139,7 +139,7 @@ export default function ProfilePage() {
               { label: 'Versi Aplikasi', value: '1.0.0' },
               { label: 'Perangkat',      value: 'Hydrone ROV' },
               { label: 'Kompetisi',      value: 'IID INNOPA 2026' },
-              { label: 'Tim',            value: 'Mersiflab' },
+              { label: 'Tim',            value: 'Hydrone' },
             ].map((item, i) => (
               <div key={i} className="flex items-center justify-between px-4 py-3 border-b last:border-0" style={{ borderColor: 'var(--t-border)' }}>
                 <span className="text-sm" style={{ color: 'var(--t-muted)' }}>{item.label}</span>
@@ -160,7 +160,7 @@ export default function ProfilePage() {
         </a>
 
         <p className="text-center text-[10px] pb-2 font-[family-name:var(--font-jetbrains-mono)]" style={{ color: 'var(--t-muted)', opacity: 0.4 }}>
-          Hydrone · IID INNOPA 2026 · Mersiflab
+          Hydrone · IID INNOPA 2026
         </p>
       </div>
     </div>

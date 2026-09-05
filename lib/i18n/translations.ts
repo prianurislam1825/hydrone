@@ -255,9 +255,9 @@ export const translations = {
         label: { id: 'IID INNOPA', en: 'IID INNOPA' },
       },
       {
-        name: 'Mersiflab',
+        name: 'Hydrone',
         logo: '/partners/mersiflab.png',
-        label: { id: 'Mersiflab', en: 'Mersiflab' },
+        label: { id: 'Hydrone', en: 'Hydrone' },
       },
     ],
   },

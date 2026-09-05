@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useLang } from '@/lib/i18n/context';
 import { ChevronDown, Mail, MessageCircle } from 'lucide-react';
@@ -41,7 +41,7 @@ function SpecGroupCard({ group, defaultOpen }: { group: SpecGroup; defaultOpen: 
         onMouseEnter={e => ((e.currentTarget as HTMLButtonElement).style.background = 'var(--t-surface-2)')}
         onMouseLeave={e => ((e.currentTarget as HTMLButtonElement).style.background = 'var(--t-surface)')}
       >
-        <span className="font-semibold text-sm font-[family-name:var(--font-space-grotesk)]" style={{ color: 'var(--t-text)' }}>
+        <span className="font-semibold text-sm font-[family-name:var(--font-plus-jakarta)]" style={{ color: 'var(--t-text)' }}>
           {group.title[lang]}
         </span>
         <ChevronDown size={16} className={`transition-transform ${open ? 'rotate-180' : ''}`} style={{ color: 'var(--t-muted)' }} />
@@ -80,20 +80,20 @@ export default function SpecsSection() {
         <div className="text-center mb-16" data-anim>
           <span className="eyebrow">{T.eyebrow[lang]}</span>
           <span className="eyebrow-rule mx-auto" />
-          <h2 className="text-3xl sm:text-4xl font-bold mt-4" style={{ color: 'var(--t-text)' }}>{T.heading[lang]}</h2>
+          <h2 className="text-3xl sm:text-4xl font-extrabold mt-4" style={{ color: 'var(--t-text)' }}>{T.heading[lang]}</h2>
         </div>
 
         {/* Summary cards */}
         <div className="grid grid-cols-3 lg:grid-cols-6 gap-4 mb-20" data-anim>
           {SUMMARY_STATS.map((s, i) => (
             <div key={i} className="rounded-xl p-4 text-center border" style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)' }}>
-              <div className="font-bold text-2xl font-[family-name:var(--font-space-grotesk)]" style={{ color: 'var(--t-text)' }}>{s.value}</div>
+              <div className="font-extrabold text-2xl font-[family-name:var(--font-plus-jakarta)]" style={{ color: 'var(--t-text)' }}>{s.value}</div>
               <div className="text-[10px] uppercase tracking-wider mt-1" style={{ color: 'var(--t-muted)' }}>{s.label[lang]}</div>
             </div>
           ))}
         </div>
 
-        <h3 className="text-lg font-bold mb-6 font-[family-name:var(--font-space-grotesk)]" style={{ color: 'var(--t-text)' }} data-anim>
+        <h3 className="text-lg font-bold mb-6 font-[family-name:var(--font-plus-jakarta)]" style={{ color: 'var(--t-text)' }} data-anim>
           {T.fullTitle[lang]}
         </h3>
 
