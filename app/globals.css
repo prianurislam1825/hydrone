@@ -310,8 +310,9 @@ strong, b  { font-weight: 700; }
 
 /* ── Landscape media queries ─────────────────────────────────────── */
 @media (orientation: landscape) {
-  .landscape\:hidden  { display: none !important; }
-  .landscape\:flex    { display: flex !important; }
+  .landscape\:hidden    { display: none !important; }
+  .landscape\:flex      { display: flex !important; }
+  .landscape\:flex-row  { flex-direction: row !important; }
 }
 
 /* ── Virtual joystick ────────────────────────────────────────────── */
