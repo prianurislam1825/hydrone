@@ -19,7 +19,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Top bar — desktop only (sidebar handles mobile) */}
         <TopBar />
         {/* Content: pt for topbar on desktop, pb for bottom nav on mobile */}
-        <main className="flex-1 lg:pt-[60px] pb-[72px] lg:pb-0 overflow-auto">
+        <main className="flex-1 lg:pt-[60px] pb-[72px] lg:pb-0 overflow-auto min-h-0">
           {children}
         </main>
       </div>

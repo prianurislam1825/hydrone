@@ -442,7 +442,7 @@ export default function DashboardPage() {
       </div>
 
       {/* ── 5 sensor top cards ── */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3" key={refreshKey}>
+      <div className="grid grid-cols-2 gap-3" key={refreshKey}>
         {TOP_CARDS.map(cfg => {
           const val  = cfg.key === '_depth' ? depth : values[cfg.key as keyof typeof values]
           const hist = cfg.key === '_depth' ? [] : history[cfg.key as keyof typeof history]
