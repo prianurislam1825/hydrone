@@ -48,7 +48,7 @@ export default function FeaturesSection() {
   const { lang } = useLang()
 
   return (
-    <section className="py-24 relative overflow-hidden" style={{ background: 'var(--t-bg)' }}>
+    <section id="fitur" className="py-24 relative overflow-hidden" style={{ background: 'var(--t-bg)' }}>
       {/* Background accent */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden
         style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 100%, rgba(26,86,219,0.06) 0%, transparent 60%)' }} />
