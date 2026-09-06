@@ -2,9 +2,14 @@
 
 import { useLang } from '@/lib/i18n/context'
 import { useTheme } from '@/lib/theme/useTheme'
-import { LogIn, Menu, Moon, Sun, X } from 'lucide-react'
+import { Download, LogIn, Menu, Moon, Sun, X } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
+
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
+}
 
 const NAV_LINKS = [
   { label: { id: 'Beranda',    en: 'Home'        }, href: '#'            },
@@ -20,12 +25,33 @@ export default function LandingNav() {
   const [isOpen,   setIsOpen]   = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [active,   setActive]   = useState('#')
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
+  const [isInstalled, setIsInstalled]     = useState(false)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  // Capture install prompt
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault()
+      setInstallPrompt(e as BeforeInstallPromptEvent)
+    }
+    window.addEventListener('beforeinstallprompt', handler)
+    // Check if already installed
+    if (window.matchMedia('(display-mode: standalone)').matches) setIsInstalled(true)
+    return () => window.removeEventListener('beforeinstallprompt', handler)
+  }, [])
+
+  const handleInstall = async () => {
+    if (!installPrompt) return
+    await installPrompt.prompt()
+    const { outcome } = await installPrompt.userChoice
+    if (outcome === 'accepted') setInstallPrompt(null)
+  }
 
   return (
     <nav
@@ -132,6 +158,19 @@ export default function LandingNav() {
               <LogIn size={13} />
               {lang === 'id' ? 'Masuk' : 'Sign In'}
             </a>
+
+            {/* Install App — shows when browser allows install */}
+            {installPrompt && !isInstalled && (
+              <button
+                onClick={handleInstall}
+                className="h-9 px-3 flex items-center gap-1.5 rounded-lg text-xs font-semibold border transition-all hover:opacity-80"
+                style={{ borderColor: 'rgba(26,86,219,0.3)', color: '#1A56DB', background: 'rgba(26,86,219,0.06)' }}
+                title={lang === 'id' ? 'Install sebagai App' : 'Install App'}
+              >
+                <Download size={13} />
+                {lang === 'id' ? 'Install' : 'Install'}
+              </button>
+            )}
           </div>
 
           {/* ── Mobile right ─────────────────────────── */}
