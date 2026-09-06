@@ -1,5 +1,6 @@
 import type { NextAuthConfig } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
+import Google from 'next-auth/providers/google'
 
 const appMode = process.env.APP_MODE ?? 'cloud'
 
@@ -11,6 +12,10 @@ const ADMIN_ACCOUNTS = [
 
 export const authConfig: NextAuthConfig = {
   providers: [
+    Google({
+      clientId:     process.env.GOOGLE_CLIENT_ID  ?? '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
+    }),
     Credentials({
       name: 'credentials',
       credentials: {

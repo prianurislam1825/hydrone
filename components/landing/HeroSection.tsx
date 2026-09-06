@@ -118,7 +118,7 @@ export default function HeroSection() {
         <div className="grid lg:grid-cols-[55fr_45fr] gap-12 items-center">
 
           {/* Left */}
-          <div data-anim className="min-w-0">
+          <div data-anim className="min-w-0" style={{ overflow: 'visible', paddingRight: '8px' }}>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold mb-5"
               style={{ background: 'linear-gradient(135deg, rgba(26,86,219,0.15), rgba(0,180,216,0.1))',
                 border: '1px solid rgba(26,86,219,0.25)', color: '#1A56DB' }}>
@@ -135,12 +135,16 @@ export default function HeroSection() {
               style={{ fontSize: 'clamp(1.75rem, 5.5vw, 3.4rem)', overflowWrap: 'break-word', wordBreak: 'break-word' }}>
               <span className="block" style={{ color: 'var(--t-text)' }}>{T.h1a[lang]}</span>
               <span className="block" style={{
+                display: 'inline-block',
                 background: 'linear-gradient(135deg, #1A56DB 0%, #00B4D8 60%, #1A56DB 100%)',
                 WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+                paddingRight: '4px', paddingBottom: '4px',
               }}>{T.h1b[lang]}</span>
               <span className="block" style={{
+                display: 'inline-block',
                 background: 'linear-gradient(135deg, #F05A22 0%, #F59E0B 100%)',
                 WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+                paddingRight: '4px', paddingBottom: '4px',
               }}>{T.h1c[lang]}</span>
             </h1>
 
