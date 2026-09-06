@@ -152,58 +152,66 @@ export default function ControlPage() {
   /* ── HUD top bar (shared) ── */
   const HudBar = () => (
     <div style={{ flexShrink: 0, background: 'var(--t-surface)', borderBottom: '1px solid var(--t-border)' }}>
-      {/* Row 1: mode + stop + live + theme */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 10px', gap: 6 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 8px', borderRadius: 8, fontSize: 10, fontWeight: 900,
-            background: mode === 'MANUAL' ? `${A}18` : 'rgba(139,92,246,0.12)',
-            border: `1px solid ${mode === 'MANUAL' ? `${A}55` : 'rgba(139,92,246,0.4)'}`,
-            color: mode === 'MANUAL' ? A : '#8B5CF6' }}>
-            <Radio size={8} />{mode}
-          </div>
-          <button onClick={() => { setMode(m => m === 'MANUAL' ? 'AUTO' : 'MANUAL'); showToast('Mode changed') }}
-            style={{ padding: '4px 7px', borderRadius: 7, fontSize: 9, fontWeight: 700, cursor: 'pointer',
-              background: 'var(--t-surface-2)', border: '1px solid var(--t-border)', color: 'var(--t-muted)' }}>
-            {mode === 'MANUAL' ? 'AUTO' : 'MANUAL'}
-          </button>
-          <button onClick={handleStop}
-            style={{ display: 'flex', alignItems: 'center', gap: 3, padding: '4px 8px', borderRadius: 7, fontSize: 10, fontWeight: 900, cursor: 'pointer',
-              background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.4)', color: '#EF4444' }}>
-            <Power size={9} />STOP
-          </button>
+      {/* Single centered row — semua elemen ditengah */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '6px 8px', gap: 6, flexWrap: 'wrap' }}>
+
+        {/* Mode badge */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 8px', borderRadius: 8, fontSize: 10, fontWeight: 900,
+          background: mode === 'MANUAL' ? `${A}18` : 'rgba(139,92,246,0.12)',
+          border: `1px solid ${mode === 'MANUAL' ? `${A}55` : 'rgba(139,92,246,0.4)'}`,
+          color: mode === 'MANUAL' ? A : '#8B5CF6' }}>
+          <Radio size={8} />{mode}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '3px 7px', borderRadius: 99, fontSize: 8, fontWeight: 900,
-            background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', color: '#22C55E' }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22C55E', animation: 'live-pulse 2s ease-in-out infinite', display: 'inline-block' }} />LIVE
-          </div>
-          {!connected && <WifiOff size={11} color="#F59E0B" />}
-          {mounted && (
-            <button onClick={toggleTheme} className="theme-toggle" style={{ width: 26, height: 26 }}>
-              {theme === 'dark' ? <Sun size={12} /> : <Moon size={12} />}
-            </button>
-          )}
-          <button onClick={() => setFullscreen(v => !v)} className="theme-toggle" style={{ width: 26, height: 26 }}>
-            {fullscreen ? <Minimize2 size={12} /> : <Maximize2 size={12} />}
-          </button>
-          {/* Landscape: toggle sidebar */}
-          {isLandscape && (
-            <button onClick={() => setSidebarOpen(v => !v)} className="theme-toggle" style={{ width: 26, height: 26 }}
-              title={sidebarOpen ? 'Hide sensors' : 'Show sensors'}>
-              {sidebarOpen ? <ChevronLeft size={12} /> : <ChevronRight size={12} />}
-            </button>
-          )}
-        </div>
-      </div>
-      {/* Row 2: SPD + nav state */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0 10px 6px' }}>
+
+        <button onClick={() => { setMode(m => m === 'MANUAL' ? 'AUTO' : 'MANUAL'); showToast('Mode changed') }}
+          style={{ padding: '4px 7px', borderRadius: 7, fontSize: 9, fontWeight: 700, cursor: 'pointer',
+            background: 'var(--t-surface-2)', border: '1px solid var(--t-border)', color: 'var(--t-muted)' }}>
+          {mode === 'MANUAL' ? 'AUTO' : 'MANUAL'}
+        </button>
+
+        <button onClick={handleStop}
+          style={{ display: 'flex', alignItems: 'center', gap: 3, padding: '4px 8px', borderRadius: 7, fontSize: 10, fontWeight: 900, cursor: 'pointer',
+            background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.4)', color: '#EF4444' }}>
+          <Power size={9} />STOP
+        </button>
+
+        {/* Divider */}
+        <div style={{ width: 1, height: 18, background: 'var(--t-border)', flexShrink: 0 }} />
+
+        {/* SPD bar */}
         <span style={{ fontSize: 8, fontWeight: 700, color: 'var(--t-muted)', flexShrink: 0 }}>SPD</span>
-        <div style={{ flex: 1, height: 5, borderRadius: 99, overflow: 'hidden', background: 'var(--t-bg)', border: '1px solid var(--t-border)' }}>
+        <div style={{ width: 80, height: 5, borderRadius: 99, overflow: 'hidden', background: 'var(--t-bg)', border: '1px solid var(--t-border)', flexShrink: 0 }}>
           <div style={{ height: '100%', width: `${speed}%`, background: `linear-gradient(to right,${A},${spdColor})`, borderRadius: 99, transition: 'width 0.4s' }} />
         </div>
-        <span style={{ fontSize: 10, fontWeight: 900, color: spdColor, width: 28, textAlign: 'right', fontFamily: 'var(--font-jetbrains-mono)', flexShrink: 0 }}>{speed}%</span>
-        <span style={{ width: 6, height: 6, borderRadius: '50%', background: navState === 'MOVING' ? '#22C55E' : 'var(--t-border)', flexShrink: 0 }} />
-        <span style={{ fontSize: 8, fontWeight: 700, color: navState === 'MOVING' ? '#22C55E' : 'var(--t-muted)', flexShrink: 0 }}>{navState}</span>
+        <span style={{ fontSize: 10, fontWeight: 900, color: spdColor, fontFamily: 'var(--font-jetbrains-mono)', flexShrink: 0, minWidth: 26 }}>{speed}%</span>
+        <span style={{ width: 5, height: 5, borderRadius: '50%', background: navState === 'MOVING' ? '#22C55E' : 'var(--t-border)', flexShrink: 0 }} />
+
+        {/* Divider */}
+        <div style={{ width: 1, height: 18, background: 'var(--t-border)', flexShrink: 0 }} />
+
+        {/* LIVE */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '3px 7px', borderRadius: 99, fontSize: 8, fontWeight: 900,
+          background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', color: '#22C55E', flexShrink: 0 }}>
+          <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#22C55E', animation: 'live-pulse 2s ease-in-out infinite', display: 'inline-block' }} />LIVE
+        </div>
+
+        {!connected && <WifiOff size={11} color="#F59E0B" />}
+
+        {mounted && (
+          <button onClick={toggleTheme} className="theme-toggle" style={{ width: 26, height: 26 }}>
+            {theme === 'dark' ? <Sun size={12} /> : <Moon size={12} />}
+          </button>
+        )}
+
+        <button onClick={() => setFullscreen(v => !v)} className="theme-toggle" style={{ width: 26, height: 26 }}>
+          {fullscreen ? <Minimize2 size={12} /> : <Maximize2 size={12} />}
+        </button>
+
+        {isLandscape && (
+          <button onClick={() => setSidebarOpen(v => !v)} className="theme-toggle" style={{ width: 26, height: 26 }}>
+            {sidebarOpen ? <ChevronLeft size={12} /> : <ChevronRight size={12} />}
+          </button>
+        )}
       </div>
     </div>
   )
