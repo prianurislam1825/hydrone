@@ -2,9 +2,12 @@
 
 import { useSensorData } from '@/lib/dashboard/useSensorData'
 import {
-  Cpu, Wifi, Battery, Thermometer, Droplets,
-  Wind, Layers, Activity, Camera, Radio,
-  CheckCircle2, AlertTriangle, XCircle,
+    Activity,
+    AlertTriangle,
+    Battery, Camera, CheckCircle2,
+    Cpu, Droplets, Layers, Radio, Thermometer,
+    Wifi, Wind,
+    XCircle,
 } from 'lucide-react'
 
 type DeviceStatus = 'online' | 'warning' | 'offline'
@@ -24,7 +27,8 @@ const STATUS_LABEL: Record<DeviceStatus, string> = {
   warning: 'Waspada',
   offline: 'Offline',
 }
-const StatusIcon = ({ s }: { s: DeviceStatus }) => {
+
+function StatusIcon({ s }: { s: DeviceStatus }) {
   if (s === 'online')  return <CheckCircle2 size={14} style={{ color: STATUS_COLOR.online }} />
   if (s === 'warning') return <AlertTriangle size={14} style={{ color: STATUS_COLOR.warning }} />
   return <XCircle size={14} style={{ color: STATUS_COLOR.offline }} />
@@ -44,6 +48,16 @@ interface Device {
 export default function DevicesPage() {
   const { values, depth } = useSensorData()
 
+  const fmtPh   = values.ph          !== null ? values.ph.toFixed(2)           : '--'
+  const fmtTds  = values.tds         !== null ? String(Math.round(values.tds)) : '--'
+  const fmtTurb = values.turbidity   !== null ? values.turbidity.toFixed(1)    : '--'
+  const fmtTemp = values.temperature !== null ? values.temperature.toFixed(1)  : '--'
+  const fmtDep  = depth              !== null ? depth.toFixed(1)               : '--'
+
+  const phStatus: DeviceStatus   = values.ph !== null ? (values.ph >= 6.5 && values.ph <= 8.5 ? 'online' : 'warning') : 'offline'
+  const tdsStatus: DeviceStatus  = values.tds !== null ? (values.tds < 500 ? 'online' : 'warning') : 'offline'
+  const turbStatus: DeviceStatus = values.turbidity !== null ? (values.turbidity < 50 ? 'online' : 'warning') : 'offline'
+
   const DEVICES: Device[] = [
     {
       id: 'esp32-main', name: 'ESP32 Main Controller', type: 'Mikrokontroler',
@@ -60,36 +74,36 @@ export default function DevicesPage() {
     {
       id: 'sensor-ph', name: 'pH Sensor', type: 'Sensor Analog',
       icon: <Droplets size={20} style={{ color: '#1A56DB' }} />,
-      status: values.ph >= 6.5 && values.ph <= 8.5 ? 'online' : 'warning',
-      detail: `Pembacaan saat ini: ${values.ph.toFixed(2)} pH`,
+      status: phStatus,
+      detail: `Pembacaan saat ini: ${fmtPh} pH`,
       lastSeen: 'Baru saja', firmware: '—',
     },
     {
       id: 'sensor-tds', name: 'TDS Sensor', type: 'Sensor Analog',
       icon: <Layers size={20} style={{ color: '#F59E0B' }} />,
-      status: values.tds < 500 ? 'online' : 'warning',
-      detail: `Pembacaan saat ini: ${Math.round(values.tds)} ppm`,
+      status: tdsStatus,
+      detail: `Pembacaan saat ini: ${fmtTds} ppm`,
       lastSeen: 'Baru saja', firmware: '—',
     },
     {
       id: 'sensor-turbidity', name: 'Turbidity Sensor', type: 'Sensor Analog',
       icon: <Wind size={20} style={{ color: '#F05A22' }} />,
-      status: values.turbidity < 50 ? 'online' : 'warning',
-      detail: `Pembacaan saat ini: ${values.turbidity.toFixed(1)} NTU`,
+      status: turbStatus,
+      detail: `Pembacaan saat ini: ${fmtTurb} NTU`,
       lastSeen: 'Baru saja', firmware: '—',
     },
     {
       id: 'sensor-temp', name: 'DS18B20 Temperature', type: 'Sensor OneWire',
       icon: <Thermometer size={20} style={{ color: '#22C55E' }} />,
       status: 'online',
-      detail: `Pembacaan saat ini: ${values.temperature.toFixed(1)} °C`,
+      detail: `Pembacaan saat ini: ${fmtTemp} °C`,
       lastSeen: 'Baru saja', firmware: '—',
     },
     {
       id: 'sensor-depth', name: 'Depth / Pressure', type: 'Sensor IMU',
       icon: <Activity size={20} style={{ color: '#8B5CF6' }} />,
       status: 'online',
-      detail: `Kedalaman saat ini: ${depth.toFixed(1)} m`,
+      detail: `Kedalaman saat ini: ${fmtDep} m`,
       lastSeen: 'Baru saja', firmware: '—',
     },
     {
@@ -132,9 +146,9 @@ export default function DevicesPage() {
       {/* Summary cards */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { label: 'Total Perangkat', value: DEVICES.length, color: '#1A56DB', bg: 'rgba(26,86,219,0.08)' },
-          { label: 'Online',          value: counts.online,  color: '#22C55E', bg: 'rgba(34,197,94,0.08)' },
-          { label: 'Waspada / Offline', value: counts.warning + counts.offline, color: '#F59E0B', bg: 'rgba(245,158,11,0.08)' },
+          { label: 'Total Perangkat', value: DEVICES.length, color: '#1A56DB' },
+          { label: 'Online',          value: counts.online,  color: '#22C55E' },
+          { label: 'Waspada / Offline', value: counts.warning + counts.offline, color: '#F59E0B' },
         ].map((c, i) => (
           <div key={i} className="rounded-2xl p-4 border text-center" style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)' }}>
             <div className="text-2xl font-extrabold mb-0.5" style={{ color: c.color }}>{c.value}</div>
@@ -153,8 +167,43 @@ export default function DevicesPage() {
         </div>
       </div>
 
-      {/* Device list */}
-      <div className="rounded-2xl border overflow-hidden" style={{ borderColor: 'var(--t-border)' }}>
+      {/* ── MOBILE: card list (hidden on sm+) ── */}
+      <div className="flex flex-col gap-3 sm:hidden">
+        {DEVICES.map(dev => (
+          <div key={dev.id} className="rounded-2xl border p-4 flex items-center gap-3"
+            style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)' }}>
+            {/* Icon */}
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border"
+              style={{ background: STATUS_BG[dev.status], borderColor: STATUS_COLOR[dev.status] + '40' }}>
+              {dev.icon}
+            </div>
+
+            {/* Info */}
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-bold truncate" style={{ color: 'var(--t-text)' }}>{dev.name}</div>
+              <div className="text-[10px] truncate" style={{ color: 'var(--t-muted)' }}>{dev.detail}</div>
+              <div className="text-[9px] mt-0.5" style={{ color: 'var(--t-muted)', opacity: 0.6 }}>{dev.type}</div>
+            </div>
+
+            {/* Status badge */}
+            <div className="flex flex-col items-end gap-1 shrink-0">
+              <div className="flex items-center gap-1">
+                <StatusIcon s={dev.status} />
+                <span className="text-xs font-semibold" style={{ color: STATUS_COLOR[dev.status] }}>
+                  {STATUS_LABEL[dev.status]}
+                </span>
+              </div>
+              <span className="text-[9px] font-mono" style={{ color: 'var(--t-muted)' }}>{dev.lastSeen}</span>
+              {dev.firmware !== '—' && (
+                <span className="text-[8px] font-mono" style={{ color: 'var(--t-muted)', opacity: 0.6 }}>FW {dev.firmware}</span>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── DESKTOP: table (hidden on mobile) ── */}
+      <div className="hidden sm:block rounded-2xl border overflow-hidden" style={{ borderColor: 'var(--t-border)' }}>
         {/* Table header */}
         <div className="grid grid-cols-[1fr_140px_120px_100px] px-5 py-3 border-b text-[10px] font-bold uppercase tracking-wider"
           style={{ background: 'var(--t-surface-2)', borderColor: 'var(--t-border)', color: 'var(--t-muted)' }}>

@@ -1,7 +1,7 @@
 'use client'
 
 import DepthChart from '@/components/dashboard/DepthChart'
-import { BATTERY_A, BATTERY_B, SENSOR_CONFIGS, useSensorData } from '@/lib/dashboard/useSensorData'
+import { SENSOR_CONFIGS, useSensorData } from '@/lib/dashboard/useSensorData'
 import { useLang } from '@/lib/i18n/context'
 import {
   Activity,
@@ -13,7 +13,9 @@ import {
   Filter,
   Layers,
   RefreshCw,
-  Thermometer, Wind,
+  Thermometer,
+  WifiOff,
+  Wind,
 } from 'lucide-react'
 import { useCallback, useState } from 'react'
 
@@ -67,9 +69,10 @@ const TOP_CARDS = [
 ]
 
 /* ─── Status helpers ─── */
-type Status = 'normal' | 'warning' | 'danger'
+type Status = 'normal' | 'warning' | 'danger' | 'offline'
 
-function getStatus(val: number, min: number, max: number): Status {
+function getStatus(val: number | null, min: number, max: number): Status {
+  if (val === null) return 'offline'
   if (val < min * 0.9 || val > max * 1.1) return 'danger'
   if (val < min       || val > max)       return 'warning'
   return 'normal'
@@ -79,16 +82,19 @@ const STATUS_COLOR: Record<Status, string> = {
   normal:  '#22C55E',
   warning: '#F59E0B',
   danger:  '#EF4444',
+  offline: '#6B7280',
 }
 const STATUS_BG: Record<Status, string> = {
   normal:  'rgba(34,197,94,0.08)',
   warning: 'rgba(245,158,11,0.08)',
   danger:  'rgba(239,68,68,0.08)',
+  offline: 'rgba(107,114,128,0.08)',
 }
 const STATUS_LABEL: Record<Status, { id: string; badge: string }> = {
   normal:  { id: 'Normal',   badge: 'Aman'      },
   warning: { id: 'Waspada',  badge: 'Meningkat' },
   danger:  { id: 'Bahaya',   badge: 'Tinggi'    },
+  offline: { id: 'Offline',  badge: 'Offline'   },
 }
 
 /* ─── Sparkline ─── */
@@ -116,16 +122,20 @@ function Sparkline({ data, color, min, max }: { data: number[]; color: string; m
 
 /* ─── Top sensor card ─── */
 function SensorTopCard({ cfg, value, history, unit }: {
-  cfg: typeof TOP_CARDS[0]; value: number; history: number[]; unit: string
+  cfg: typeof TOP_CARDS[0]; value: number | null; history: number[]; unit: string
 }) {
   const status  = getStatus(value, cfg.normalMin, cfg.normalMax)
   const sColor  = STATUS_COLOR[status]
   const sBg     = STATUS_BG[status]
   const sLabel  = STATUS_LABEL[status]
-  const display = cfg.key === 'tds' ? Math.round(value).toString()
-    : cfg.key === '_depth' ? value.toFixed(1)
-    : cfg.key === 'ph' ? value.toFixed(2)
-    : value.toFixed(1)
+
+  let display = '--'
+  if (value !== null) {
+    if (cfg.key === 'tds')    display = Math.round(value).toString()
+    else if (cfg.key === '_depth') display = value.toFixed(1)
+    else if (cfg.key === 'ph')     display = value.toFixed(2)
+    else                           display = value.toFixed(1)
+  }
 
   return (
     <div className="rounded-2xl p-4 border flex flex-col gap-2 min-w-0" style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)' }}>
@@ -142,10 +152,12 @@ function SensorTopCard({ cfg, value, history, unit }: {
 
       {/* Value */}
       <div className="flex items-end gap-1">
-        <span className="font-extrabold tabular-nums leading-none" style={{ fontSize: 'clamp(1.6rem,3vw,2.2rem)', color: cfg.color }}>
+        <span className="font-extrabold tabular-nums leading-none" style={{ fontSize: 'clamp(1.6rem,3vw,2.2rem)', color: value !== null ? cfg.color : 'var(--t-muted)' }}>
           {display}
         </span>
-        <span className="text-xs mb-1" style={{ color: 'var(--t-muted)' }}>{unit}</span>
+        {value !== null && (
+          <span className="text-xs mb-1" style={{ color: 'var(--t-muted)' }}>{unit}</span>
+        )}
       </div>
 
       {/* Sparkline */}
@@ -156,7 +168,7 @@ function SensorTopCard({ cfg, value, history, unit }: {
       {/* Status + range */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1">
-          <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: sColor, boxShadow: `0 0 4px ${sColor}` }} />
+          <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: sColor, boxShadow: value !== null ? `0 0 4px ${sColor}` : 'none' }} />
           <span className="text-[10px] font-semibold" style={{ color: sColor }}>{sLabel.id}</span>
         </div>
         <span className="text-[10px]" style={{ color: 'var(--t-muted)' }}>Aman: {cfg.ranges.ok}</span>
@@ -166,15 +178,20 @@ function SensorTopCard({ cfg, value, history, unit }: {
 }
 
 /* ─── Water quality card ─── */
-function WaterQualityCard({ status, values }: { status: Status; values: Record<string,string> }) {
+function WaterQualityCard({ status, values, connected }: { status: Status; values: Record<string,string>; connected: boolean }) {
   const sColor = STATUS_COLOR[status]
   const sBg    = STATUS_BG[status]
-  const Icon   = status === 'normal' ? CheckCircle2 : AlertTriangle
+  const Icon   = status === 'offline' ? WifiOff : status === 'normal' ? CheckCircle2 : AlertTriangle
 
   return (
     <div className="rounded-2xl border p-5 flex flex-col gap-3" style={{ background: 'var(--t-surface)', borderColor: sColor + '40' }}>
       <div className="flex items-center justify-between">
         <span className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--t-muted)' }}>Kualitas Air</span>
+        {!connected && (
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: STATUS_BG.offline, color: STATUS_COLOR.offline }}>
+            Sensor Offline
+          </span>
+        )}
       </div>
       <div className="flex items-center gap-3">
         <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ background: sBg }}>
@@ -182,7 +199,10 @@ function WaterQualityCard({ status, values }: { status: Status; values: Record<s
         </div>
         <div>
           <div className="font-extrabold text-lg leading-tight" style={{ color: 'var(--t-text)' }}>
-            {status === 'normal' ? 'Kondisi Aman' : status === 'warning' ? 'Kondisi Waspada' : 'Kondisi Bahaya'}
+            {status === 'offline'  ? 'Tidak Ada Data'
+              : status === 'normal'  ? 'Kondisi Aman'
+              : status === 'warning' ? 'Kondisi Waspada'
+              :                        'Kondisi Bahaya'}
           </div>
           <div className="text-xs px-2.5 py-0.5 rounded-full inline-block mt-0.5 font-bold" style={{ background: sBg, color: sColor }}>
             ● {STATUS_LABEL[status].id.toUpperCase()}
@@ -233,10 +253,10 @@ function SystemPanelCard({ netOpen, filterOn, onNetToggle, onFilterToggle }: {
 }
 
 /* ─── Battery card ─── */
-function BatteryCard() {
+function BatteryCard({ batteryA, batteryB }: { batteryA: number | null; batteryB: number | null }) {
   const packs = [
-    { label: 'Pack A · Propulsi',  pct: BATTERY_A, volt: '14.8V' },
-    { label: 'Pack B · Elektronik', pct: BATTERY_B, volt: '11.1V' },
+    { label: 'Pack A · Propulsi',   pct: batteryA, volt: '14.8V' },
+    { label: 'Pack B · Elektronik', pct: batteryB, volt: '11.1V' },
   ]
   return (
     <div className="rounded-2xl border p-5 flex flex-col gap-3" style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)' }}>
@@ -245,15 +265,20 @@ function BatteryCard() {
         <BatteryMedium size={14} style={{ color: 'var(--t-muted)' }} />
       </div>
       {packs.map(p => {
-        const color = p.pct > 50 ? '#22C55E' : p.pct > 20 ? '#F59E0B' : '#EF4444'
+        const pct = p.pct ?? 0
+        const color = pct > 50 ? '#22C55E' : pct > 20 ? '#F59E0B' : '#EF4444'
         return (
           <div key={p.label} className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold" style={{ color: 'var(--t-muted)' }}>{p.label}</span>
-              <span className="text-sm font-extrabold" style={{ color }}>{p.pct}% <span className="text-[10px] font-normal" style={{ color: 'var(--t-muted)' }}>{p.volt}</span></span>
+              <span className="text-sm font-extrabold" style={{ color: p.pct !== null ? color : 'var(--t-muted)' }}>
+                {p.pct !== null ? `${p.pct}%` : '--'}
+                {' '}
+                <span className="text-[10px] font-normal" style={{ color: 'var(--t-muted)' }}>{p.volt}</span>
+              </span>
             </div>
             <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--t-bg)', border: '1px solid var(--t-border)' }}>
-              <div className="h-full rounded-full transition-all duration-700" style={{ width: `${p.pct}%`, background: `linear-gradient(to right, ${color}88, ${color})` }} />
+              <div className="h-full rounded-full transition-all duration-700" style={{ width: `${pct}%`, background: `linear-gradient(to right, ${color}88, ${color})` }} />
             </div>
           </div>
         )
@@ -264,7 +289,7 @@ function BatteryCard() {
 
 /* ─── Sensor chart card ─── */
 function SensorChartCard({ histories }: {
-  values?: Record<string, number>; histories: Record<string, number[]>; depth?: number
+  histories: Record<string, number[]>
 }) {
   const [active, setActive] = useState<string[]>(['ph', 'tds', 'turbidity', 'temperature'])
   const colors: Record<string,string> = { ph:'#1A56DB', tds:'#F59E0B', turbidity:'#F05A22', temperature:'#22C55E' }
@@ -308,10 +333,10 @@ function SensorChartCard({ histories }: {
             if (!active.includes(cfg.key)) return null
             const hist = histories[cfg.key as keyof typeof histories] ?? []
             if (hist.length < 2) return null
-            const range = cfg.max - cfg.min || 1
+            const range = cfg.normalMax - cfg.normalMin || 1
             const pts = hist.map((v, i) => {
               const x = (i / (hist.length - 1)) * 400
-              const y = 120 - ((v - cfg.min) / range) * 120
+              const y = 120 - ((v - cfg.normalMin) / range) * 120
               return `${x.toFixed(1)},${Math.max(2, Math.min(118, y)).toFixed(1)}`
             }).join(' ')
             return (
@@ -342,7 +367,8 @@ function SensorChartCard({ histories }: {
 
 /* ══ Main page ══════════════════════════════════════════════════════ */
 export default function DashboardPage() {
-  const { values, history, depth, tick } = useSensorData()
+  const sensorState = useSensorData()
+  const { values, history, depth, tick, connected, batteryA, batteryB } = sensorState
   const { lang } = useLang()
   const [netOpen,  setNetOpen]  = useState(false)
   const [filterOn, setFilterOn] = useState(true)
@@ -369,15 +395,22 @@ export default function DashboardPage() {
     danger:  { id: 'Kondisi Bahaya',  en: 'Danger' },
   }
 
-  /* Overall water quality = worst of all sensors */
-  const statuses = [
-    getStatus(values.ph,          6.5, 8.5),
-    getStatus(values.tds,         0,   500),
-    getStatus(values.turbidity,   0,   50),
-    getStatus(values.temperature, 20,  32),
-  ]
-  const overallStatus: Status = statuses.includes('danger') ? 'danger'
-    : statuses.includes('warning') ? 'warning' : 'normal'
+  /* Overall water quality = worst of all sensors; offline if not connected */
+  const statuses: Status[] = connected
+    ? [
+        getStatus(values.ph,          6.5, 8.5),
+        getStatus(values.tds,         0,   500),
+        getStatus(values.turbidity,   0,   50),
+        getStatus(values.temperature, 20,  32),
+      ]
+    : ['offline']
+
+  const overallStatus: Status = !connected ? 'offline'
+    : statuses.includes('danger')  ? 'danger'
+    : statuses.includes('warning') ? 'warning'
+    : 'normal'
+
+  const fmt = (v: number | null, decimals = 1) => v !== null ? v.toFixed(decimals) : '--'
 
   return (
     <div className="p-4 lg:p-6 flex flex-col gap-5 max-w-screen-2xl">
@@ -388,8 +421,13 @@ export default function DashboardPage() {
           <h1 className="text-xl font-extrabold leading-tight" style={{ color: 'var(--t-text)' }}>
             {T.title[lang]}
           </h1>
-          <p className="text-xs mt-0.5" style={{ color: 'var(--t-muted)' }}>
+          <p className="text-xs mt-0.5 flex items-center gap-2" style={{ color: 'var(--t-muted)' }}>
             {T.sub[lang]} · {now.toLocaleDateString(lang === 'id' ? 'id-ID' : 'en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+            {!connected && (
+              <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: STATUS_BG.offline, color: STATUS_COLOR.offline }}>
+                <WifiOff size={10} /> Offline
+              </span>
+            )}
           </p>
         </div>
         <button
@@ -420,15 +458,16 @@ export default function DashboardPage() {
         <div className="flex flex-col gap-4">
           <WaterQualityCard
             status={overallStatus}
+            connected={connected}
             values={{
-              'pH':         values.ph.toFixed(2),
-              'TDS':        `${Math.round(values.tds)} ppm`,
-              'Turbidity':  `${values.turbidity.toFixed(1)} NTU`,
-              [T.temp[lang]]:    `${values.temperature.toFixed(1)}°C`,
-              [T.depth[lang]]:   `${depth.toFixed(1)} m`,
+              'pH':             fmt(values.ph, 2),
+              'TDS':            values.tds !== null ? `${Math.round(values.tds)} ppm` : '--',
+              'Turbidity':      values.turbidity !== null ? `${values.turbidity.toFixed(1)} NTU` : '--',
+              [T.temp[lang]]:   values.temperature !== null ? `${values.temperature.toFixed(1)}°C` : '--',
+              [T.depth[lang]]:  depth !== null ? `${depth.toFixed(1)} m` : '--',
             }}
           />
-          <DepthChart depth={depth} tick={tick} />
+          <DepthChart depth={depth ?? 0} tick={tick} />
         </div>
 
         {/* Right: system panel + battery */}
@@ -437,7 +476,7 @@ export default function DashboardPage() {
             netOpen={netOpen}   filterOn={filterOn}
             onNetToggle={toggleNet} onFilterToggle={toggleFilter}
           />
-          <BatteryCard />
+          <BatteryCard batteryA={batteryA} batteryB={batteryB} />
 
           {/* Net/filter status chips */}
           <div className="grid grid-cols-2 gap-3">
@@ -468,7 +507,7 @@ export default function DashboardPage() {
 
       {/* Footer */}
       <p className="text-center text-[10px] pb-2" style={{ color: 'var(--t-muted)', opacity: 0.45, fontFamily: 'var(--font-mono)' }}>
-        Hydrone · IID INNOPA 2026 · Mock Telemetry
+        Hydrone · IID INNOPA 2026 · Live Telemetry
       </p>
     </div>
   )

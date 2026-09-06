@@ -48,6 +48,7 @@ const STATUS_COLORS = {
   normal:  { dot: '#22C55E', text: 'text-[#22C55E]', label: 'Normal' },
   warning: { dot: '#F59E0B', text: 'text-[#F59E0B]', label: 'Warning' },
   danger:  { dot: '#EF4444', text: 'text-[#EF4444]', label: 'Out of Range' },
+  offline: { dot: '#6B7280', text: 'text-[#6B7280]', label: 'Offline' },
 }
 
 export default function SensorTile({ config, value, history, tick }: SensorTileProps) {
@@ -117,7 +118,7 @@ export default function SensorTile({ config, value, history, tick }: SensorTileP
 
       {/* Sparkline */}
       <div className="relative">
-        <Sparkline data={history} min={config.min} max={config.max} />
+        <Sparkline data={history} min={config.normalMin} max={config.normalMax} />
       </div>
 
       {/* Status */}

@@ -1,12 +1,24 @@
 'use client'
 
-import { useState, useMemo } from 'react'
 import { useSensorData } from '@/lib/dashboard/useSensorData'
 import {
-  AlertTriangle, CheckCircle2, XCircle, Bell,
-  BellOff, Droplets, Thermometer, Wind, Layers,
-  Activity, Wifi, Filter, Anchor, Clock, Trash2,
+    Activity,
+    AlertTriangle,
+    Anchor,
+    Bell,
+    BellOff,
+    CheckCircle2,
+    Clock,
+    Droplets,
+    Filter,
+    Layers,
+    Thermometer,
+    Trash2,
+    Wifi,
+    Wind,
+    XCircle,
 } from 'lucide-react'
+import { useMemo, useState } from 'react'
 
 /* ── Alert types ─────────────────────────────────────────── */
 type Severity = 'danger' | 'warning' | 'info' | 'success'
@@ -89,11 +101,11 @@ export default function AlertsPage() {
   const liveAlerts = useMemo(() => {
     const live: AlertItem[] = []
     const now = new Date()
-    if (values.ph < 6.5 || values.ph > 8.5)
+    if (values.ph !== null && (values.ph < 6.5 || values.ph > 8.5))
       live.push({ id: 9001, timestamp: now, severity: 'danger',  category: 'Sensor', title: 'pH Out of Range (Live)', message: `pH saat ini ${values.ph.toFixed(2)} — di luar rentang aman.`, icon: <Droplets size={14} />, read: false })
-    if (values.turbidity > 50)
+    if (values.turbidity !== null && values.turbidity > 50)
       live.push({ id: 9002, timestamp: now, severity: 'warning', category: 'Sensor', title: 'Turbidity Tinggi (Live)', message: `Turbidity ${values.turbidity.toFixed(1)} NTU — di atas batas aman.`, icon: <Wind size={14} />, read: false })
-    if (values.tds > 400)
+    if (values.tds !== null && values.tds > 400)
       live.push({ id: 9003, timestamp: now, severity: 'warning', category: 'Sensor', title: 'TDS Tinggi (Live)', message: `TDS ${Math.round(values.tds)} ppm — mendekati batas bahaya.`, icon: <Layers size={14} />, read: false })
     return live
   }, [values.ph, values.turbidity, values.tds])

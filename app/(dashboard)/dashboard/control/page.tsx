@@ -4,13 +4,13 @@ import VirtualJoystick, { type JoystickVector } from '@/components/dashboard/Vir
 import { useSensorData } from '@/lib/dashboard/useSensorData'
 import { useTheme } from '@/lib/theme/useTheme'
 import {
-  Activity, Anchor, BatteryMedium, Camera,
-  Droplets, Filter, Gauge, Layers,
-  Maximize2, Minimize2, Moon,
-  Power, Radio,
-  Sun,
-  Thermometer,
-  TriangleAlert, Wifi, WifiOff, Wind,
+    Activity, Anchor, BatteryMedium, Camera,
+    Droplets, Filter, Gauge, Layers,
+    Maximize2, Minimize2, Moon,
+    Power, Radio,
+    Sun,
+    Thermometer,
+    TriangleAlert, Wifi, WifiOff, Wind,
 } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -56,7 +56,26 @@ function EStopOverlay({ onConfirm, onCancel }: { onConfirm: () => void; onCancel
   )
 }
 
-/* ── Sensor row — uses global CSS vars ── */
+/* ── Sensor pill — compact for horizontal scroll strip ── */
+function SensorPill({ icon, label, value, unit, color }: {
+  icon: React.ReactNode; label: string; value: string; unit: string; color: string
+}) {
+  return (
+    <div className="flex items-center gap-2 px-3 py-2 rounded-xl shrink-0"
+      style={{ background: 'var(--t-surface-2)', border: '1px solid var(--t-border)' }}>
+      <span style={{ color, opacity: 0.85 }}>{icon}</span>
+      <div>
+        <div className="text-[8px] uppercase tracking-wider" style={{ color: 'var(--t-muted)' }}>{label}</div>
+        <div className="font-bold text-xs font-[family-name:var(--font-jetbrains-mono)] leading-tight" style={{ color: 'var(--t-text)' }}>
+          {value}<span className="text-[9px] font-normal ml-0.5" style={{ color: 'var(--t-muted)' }}>{unit}</span>
+        </div>
+      </div>
+      <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: color, boxShadow: `0 0 4px ${color}` }} />
+    </div>
+  )
+}
+
+/* ── Sensor row — desktop sidebar ── */
 function SensorRow({ icon, label, value, unit, color }: {
   icon: React.ReactNode; label: string; value: string; unit: string; color: string
 }) {
@@ -75,9 +94,15 @@ function SensorRow({ icon, label, value, unit, color }: {
   )
 }
 
+/* ── Format sensor value with null safety ── */
+function fmtSensor(v: number | null, decimals: number, fallback = '--') {
+  if (v === null) return fallback
+  return v.toFixed(decimals)
+}
+
 /* ══ Main ══ */
 export default function ControlPage() {
-  const { values, depth }             = useSensorData()
+  const { values, depth, batteryA }             = useSensorData()
   const { theme, toggle: toggleTheme, mounted } = useTheme()
   const [mode, setMode]               = useState<ControlMode>('MANUAL')
   const [speed, setSpeed]             = useState(50)
@@ -124,6 +149,19 @@ export default function ControlPage() {
 
   const spdColor = speed > 70 ? '#EF4444' : speed > 40 ? '#F59E0B' : accent
 
+  const depthVal  = depth  !== null ? depth  : 0
+  const battPct   = batteryA !== null ? batteryA : 0
+
+  const sensorData = [
+    { icon: <Thermometer size={12} />, label: 'Temp',      value: fmtSensor(values.temperature, 1), unit: '°C',  color: '#F05A22' },
+    { icon: <Droplets    size={12} />, label: 'pH',        value: fmtSensor(values.ph, 2),          unit: 'pH',  color: '#1A56DB' },
+    { icon: <Layers      size={12} />, label: 'TDS',       value: values.tds !== null ? String(Math.round(values.tds)) : '--', unit: 'ppm', color: accent },
+    { icon: <Wind        size={12} />, label: 'Turbidity', value: fmtSensor(values.turbidity, 1),   unit: 'NTU', color: '#F59E0B' },
+    { icon: <Gauge       size={12} />, label: 'Pressure',  value: (1 + depthVal * 0.098).toFixed(2), unit: 'bar', color: '#8B5CF6' },
+    { icon: <Layers      size={12} />, label: 'Depth',     value: fmtSensor(depth, 1),              unit: 'm',   color: '#22C55E' },
+    { icon: <BatteryMedium size={12} />, label: 'Battery', value: batteryA !== null ? String(battPct) : '--', unit: '%', color: '#F59E0B' },
+  ]
+
   return (
     <>
       {showConfirm && (
@@ -147,6 +185,7 @@ export default function ControlPage() {
           background: 'var(--t-bg)',
           minHeight: fullscreen ? '100dvh' : 'calc(100dvh - 128px)',
           fontFamily: 'var(--font-sans)',
+          touchAction: 'none',
         }}
       >
         {/* Scan lines */}
@@ -178,8 +217,8 @@ export default function ControlPage() {
           {/* Center: SPD */}
           <div className="flex flex-col items-center gap-1">
             <div className="flex items-center gap-2">
-              <span className="text-[9px] font-bold tracking-widest" style={{ color: 'var(--t-muted)' }}>SPD</span>
-              <div className="w-24 sm:w-36 h-2 rounded-full overflow-hidden border" style={{ background: 'var(--t-bg)', borderColor: 'var(--t-border)' }}>
+              <span className="hidden xs:block text-[9px] font-bold tracking-widest" style={{ color: 'var(--t-muted)' }}>SPD</span>
+              <div className="w-20 sm:w-36 h-2 rounded-full overflow-hidden border" style={{ background: 'var(--t-bg)', borderColor: 'var(--t-border)' }}>
                 <div className="h-full rounded-full transition-all duration-500"
                   style={{ width: `${speed}%`, background: `linear-gradient(to right,${accent},${spdColor})`, boxShadow: `0 0 8px ${spdColor}66` }} />
               </div>
@@ -205,7 +244,6 @@ export default function ControlPage() {
               <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-[live-pulse_2s_ease-in-out_infinite]" />LIVE
             </div>
 
-            {/* Theme toggle — uses global useTheme, same as rest of app */}
             {mounted && (
               <button onClick={toggleTheme}
                 className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold border transition-all hover:opacity-80 theme-toggle"
@@ -222,11 +260,20 @@ export default function ControlPage() {
           </div>
         </div>
 
+        {/* ── MOBILE SENSOR STRIP (portrait only, above camera) ── */}
+        <div className="lg:hidden border-b overflow-x-auto" style={{ borderColor: 'var(--t-border)', background: 'var(--t-surface)' }}>
+          <div className="flex gap-2 px-3 py-2 w-max">
+            {sensorData.map((s, i) => (
+              <SensorPill key={i} {...s} />
+            ))}
+          </div>
+        </div>
+
         {/* ── MAIN AREA ── */}
         <div className="relative flex-1 flex flex-col lg:flex-row overflow-hidden">
 
-          {/* Left: sensor panel */}
-          <div className="lg:w-52 xl:w-60 shrink-0 flex flex-col border-b lg:border-b-0 lg:border-r"
+          {/* Desktop sensor panel (lg+) */}
+          <div className="hidden lg:flex lg:w-52 xl:w-60 shrink-0 flex-col border-r"
             style={{ borderColor: 'var(--t-border)', background: 'var(--t-surface)' }}>
             <div className="flex items-center gap-2 px-3 py-2.5 border-b" style={{ borderColor: 'var(--t-border)' }}>
               <Activity size={12} style={{ color: accent }} />
@@ -234,20 +281,14 @@ export default function ControlPage() {
               <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-[live-pulse_2s_ease-in-out_infinite]" />
             </div>
 
-            <div className="flex flex-row lg:flex-col gap-2 p-3 overflow-x-auto lg:overflow-x-visible lg:overflow-y-auto">
-              <div className="flex flex-row lg:flex-col gap-2 min-w-max lg:min-w-0 w-full">
-                <SensorRow icon={<Thermometer size={12} />} label="Temp"      value={values.temperature.toFixed(1)} unit="°C"  color="#F05A22" />
-                <SensorRow icon={<Droplets    size={12} />} label="pH"        value={values.ph.toFixed(2)}          unit="pH"  color="#1A56DB" />
-                <SensorRow icon={<Layers      size={12} />} label="TDS"       value={String(Math.round(values.tds))} unit="ppm" color={accent} />
-                <SensorRow icon={<Wind        size={12} />} label="Turbidity" value={values.turbidity.toFixed(1)}   unit="NTU" color="#F59E0B" />
-                <SensorRow icon={<Gauge       size={12} />} label="Pressure"  value={(1 + depth * 0.098).toFixed(2)} unit="bar" color="#8B5CF6" />
-                <SensorRow icon={<Layers      size={12} />} label="Depth"     value={depth.toFixed(1)}              unit="m"   color="#22C55E" />
-                <SensorRow icon={<BatteryMedium size={12} />} label="Battery" value="78"                            unit="%"   color="#F59E0B" />
-              </div>
+            <div className="flex flex-col gap-2 p-3 overflow-y-auto">
+              {sensorData.map((s, i) => (
+                <SensorRow key={i} {...s} />
+              ))}
             </div>
 
-            {/* System status — desktop */}
-            <div className="hidden lg:flex flex-col mt-auto border-t" style={{ borderColor: 'var(--t-border)' }}>
+            {/* System status */}
+            <div className="flex flex-col mt-auto border-t" style={{ borderColor: 'var(--t-border)' }}>
               <div className="px-3 pt-2.5 pb-1">
                 <span className="text-[9px] font-bold tracking-widest uppercase" style={{ color: `${accent}99` }}>System Status</span>
               </div>
@@ -271,8 +312,8 @@ export default function ControlPage() {
             </div>
           </div>
 
-          {/* Center: camera */}
-          <div className="relative flex-1 flex items-center justify-center overflow-hidden" style={{ background: 'var(--t-surface-3)' }}>
+          {/* Camera feed */}
+          <div className="relative flex-1 flex items-center justify-center overflow-hidden" style={{ background: 'var(--t-surface-3)', minHeight: 160 }}>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               <Camera size={32} style={{ color: accent, opacity: 0.25 }} className="mb-3" />
               <div className="text-[11px] font-semibold tracking-widest mb-1" style={{ color: `${accent}77` }}>ESP32-CAM · LIVE FEED</div>
@@ -291,7 +332,7 @@ export default function ControlPage() {
               style={{ backgroundImage: `repeating-linear-gradient(0deg,transparent,transparent 3px,${accent} 3px,${accent} 4px)` }} />
 
             {/* HUD brackets */}
-            {[['top-3 left-3','border-t-2 border-l-2'],['top-3 right-3','border-t-2 border-r-2'],['bottom-20 left-3','border-b-2 border-l-2'],['bottom-20 right-3','border-b-2 border-r-2']].map(([pos, s], i) => (
+            {[['top-3 left-3','border-t-2 border-l-2'],['top-3 right-3','border-t-2 border-r-2'],['bottom-12 left-3','border-b-2 border-l-2'],['bottom-12 right-3','border-b-2 border-r-2']].map(([pos, s], i) => (
               <div key={i} className={`absolute ${pos} w-6 h-6 ${s}`} style={{ borderColor: `${accent}55` }} />
             ))}
 
@@ -318,7 +359,7 @@ export default function ControlPage() {
             {/* Bottom bar */}
             <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between px-4 py-2 pointer-events-none"
               style={{ background: 'linear-gradient(to top, var(--t-surface-3), transparent)' }}>
-              {['HYDRONE · ROV-01', `MODE: ${mode}`, `DEPTH: ${depth.toFixed(1)}m`].map(t => (
+              {['HYDRONE · ROV-01', `MODE: ${mode}`, `DEPTH: ${depthVal.toFixed(1)}m`].map(t => (
                 <span key={t} className="text-[9px] font-[family-name:var(--font-jetbrains-mono)]" style={{ color: `${accent}66` }}>{t}</span>
               ))}
             </div>
@@ -327,54 +368,54 @@ export default function ControlPage() {
 
         {/* ── BOTTOM CONTROLS ── */}
         <div className="relative z-30 border-t" style={{ borderColor: 'var(--t-border)', background: 'var(--t-surface)', backdropFilter: 'blur(12px)' }}>
-          <div className="flex items-end justify-between px-4 sm:px-8 pb-4 pt-3 gap-4">
+          <div className="flex items-end justify-between px-3 sm:px-8 pb-4 pt-3 gap-2 sm:gap-4">
 
             {/* Left: nav + net/filter */}
             <div className="flex flex-col items-center gap-1.5 shrink-0">
-              <VirtualJoystick label="NAVIGASI" size={100} onChange={handleNav} accentColor={accent} />
-              <div className="flex gap-2 mt-1">
+              <VirtualJoystick label="NAVIGASI" size={80} onChange={handleNav} accentColor={accent} />
+              <div className="flex gap-1.5 mt-0.5">
                 {[
-                  { label: 'JARING', icon: <Anchor size={14} />, active: netOpen,  onToggle: () => { setNetOpen(v => !v);  showToast(`Net ${netOpen ? 'CLOSED' : 'OPEN'} — Servo latch active.`) }, activeColor: '#22C55E' },
-                  { label: 'FILTER', icon: <Filter size={14} />, active: filterOn, onToggle: () => { setFilterOn(v => !v); showToast(`Filter ${filterOn ? 'OFF' : 'ACTIVE'} — Bilge pump.`) },          activeColor: accent },
+                  { label: 'JARING', icon: <Anchor size={12} />, active: netOpen,  onToggle: () => { setNetOpen(v => !v);  showToast(`Net ${netOpen ? 'CLOSED' : 'OPEN'} — Servo latch active.`) }, activeColor: '#22C55E' },
+                  { label: 'FILTER', icon: <Filter size={12} />, active: filterOn, onToggle: () => { setFilterOn(v => !v); showToast(`Filter ${filterOn ? 'OFF' : 'ACTIVE'} — Bilge pump.`) },          activeColor: accent },
                 ].map(b => (
                   <button key={b.label} onClick={b.onToggle}
-                    className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-xl border transition-all active:scale-95"
+                    className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl border transition-all active:scale-95"
                     style={{ background: b.active ? `${b.activeColor}18` : 'var(--t-surface-2)', borderColor: b.active ? `${b.activeColor}55` : 'var(--t-border)', color: b.active ? b.activeColor : 'var(--t-muted)' }}>
                     {b.icon}
-                    <span className="text-[8px] font-black tracking-widest">{b.active ? (b.label === 'JARING' ? 'OPEN' : 'ON') : (b.label === 'JARING' ? 'CLOSED' : 'OFF')}</span>
-                    <span className="text-[7px]" style={{ color: 'var(--t-muted)' }}>{b.label}</span>
+                    <span className="text-[7px] font-black tracking-widest">{b.active ? (b.label === 'JARING' ? 'OPEN' : 'ON') : (b.label === 'JARING' ? 'CLOSED' : 'OFF')}</span>
+                    <span className="text-[6px]" style={{ color: 'var(--t-muted)' }}>{b.label}</span>
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Center: E-STOP */}
-            <div className="flex flex-col items-center gap-3 flex-1 max-w-[200px]">
+            {/* Center: depth + E-STOP */}
+            <div className="flex flex-col items-center gap-2 flex-1 max-w-[180px] sm:max-w-[200px]">
               <div className="w-full flex items-center gap-2">
                 <span className="text-[9px] tracking-widest font-bold" style={{ color: 'var(--t-muted)' }}>DEPTH</span>
                 <div className="flex-1 h-1.5 rounded-full overflow-hidden border" style={{ background: 'var(--t-bg)', borderColor: 'var(--t-border)' }}>
                   <div className="h-full rounded-full transition-all duration-700"
-                    style={{ width: `${Math.min((depth / 10) * 100, 100)}%`, background: 'linear-gradient(to right,#22C55E,#1A56DB)' }} />
+                    style={{ width: `${Math.min((depthVal / 10) * 100, 100)}%`, background: 'linear-gradient(to right,#22C55E,#1A56DB)' }} />
                 </div>
-                <span className="text-[9px] font-bold font-[family-name:var(--font-jetbrains-mono)] text-[#22C55E]">{depth.toFixed(1)}m</span>
+                <span className="text-[9px] font-bold font-[family-name:var(--font-jetbrains-mono)] text-[#22C55E]">{depthVal.toFixed(1)}m</span>
               </div>
 
               <button onClick={() => setShowConfirm(true)}
-                className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full flex flex-col items-center justify-center shadow-2xl transition-all active:scale-90"
+                className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full flex flex-col items-center justify-center shadow-2xl transition-all active:scale-90"
                 style={{ background: eStopActive ? 'radial-gradient(circle,#B91C1C,#7F1D1D)' : 'radial-gradient(circle,#EF4444,#B91C1C)', boxShadow: eStopActive ? '0 0 40px rgba(185,28,28,0.9)' : '0 0 24px rgba(239,68,68,0.6)', border: '3px solid rgba(255,255,255,0.2)' }}>
                 <div className="absolute inset-0 rounded-full" style={{ boxShadow: '0 0 20px rgba(239,68,68,0.4)', animation: 'orange-glow 1.5s ease-in-out infinite' }} />
-                <TriangleAlert size={22} className="text-white mb-0.5" />
-                <span className="text-[10px] font-black text-white tracking-widest leading-none">E-STOP</span>
+                <TriangleAlert size={18} className="text-white mb-0.5" />
+                <span className="text-[9px] font-black text-white tracking-widest leading-none">E-STOP</span>
               </button>
 
-              <span className="text-[8px] text-center font-[family-name:var(--font-jetbrains-mono)]" style={{ color: 'var(--t-muted)', opacity: 0.5 }}>
+              <span className="text-[7px] text-center font-[family-name:var(--font-jetbrains-mono)]" style={{ color: 'var(--t-muted)', opacity: 0.5 }}>
                 DEMO · NOT TRANSMITTED
               </span>
             </div>
 
             {/* Right: throttle */}
             <div className="shrink-0">
-              <VirtualJoystick label="THROTTLE" size={100} onChange={handleThrottle} accentColor="#F05A22" />
+              <VirtualJoystick label="THROTTLE" size={80} onChange={handleThrottle} accentColor="#F05A22" />
             </div>
           </div>
         </div>
