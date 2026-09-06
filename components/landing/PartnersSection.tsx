@@ -6,8 +6,6 @@ import Image from 'next/image'
 const PARTNERS = [
   { name: 'SMA Negeri 1 Surakarta', src: '/partners/sman1.jpg',        scale: 1.35 },
   { name: 'SMA Muhammadiyah PK',    src: '/partners/smamuh.jpg',       scale: 1    },
-  { name: 'IID INNOPA',             src: '/partners/innopa.png',        scale: 1, invert: true },
-  { name: 'hydrone',                src: '/partners/hydrone.png',       scale: 1, invert: true },
   { name: 'Solvia Nova',            src: '/partners/logo-solvia.png',   scale: 1    },
 ]
 

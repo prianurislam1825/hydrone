@@ -1,5 +1,6 @@
 'use client'
 
+import { useLang } from '@/lib/i18n/context'
 import {
     Bell,
     ChevronLeft, ChevronRight,
@@ -15,16 +16,17 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
 const NAV_ITEMS = [
-  { label: 'Dashboard',  href: '/dashboard',          icon: LayoutDashboard },
-  { label: 'Riwayat',    href: '/dashboard/history',  icon: History },
-  { label: 'Perangkat',  href: '/dashboard/devices',  icon: Cpu },
-  { label: 'Kontrol',    href: '/dashboard/control',  icon: Gamepad2 },
-  { label: 'Alert',      href: '/dashboard/alerts',   icon: Bell },
-  { label: 'Pengaturan', href: '/dashboard/profile',  icon: Settings },
+  { label: { id: 'Dashboard',  en: 'Dashboard'  }, href: '/dashboard',          icon: LayoutDashboard },
+  { label: { id: 'Riwayat',    en: 'History'    }, href: '/dashboard/history',  icon: History },
+  { label: { id: 'Perangkat',  en: 'Devices'    }, href: '/dashboard/devices',  icon: Cpu },
+  { label: { id: 'Kontrol',    en: 'Control'    }, href: '/dashboard/control',  icon: Gamepad2 },
+  { label: { id: 'Alert',      en: 'Alerts'     }, href: '/dashboard/alerts',   icon: Bell },
+  { label: { id: 'Pengaturan', en: 'Settings'   }, href: '/dashboard/profile',  icon: Settings },
 ]
 
 export default function Sidebar() {
-  const pathname   = usePathname()
+  const pathname    = usePathname()
+  const { lang }    = useLang()
   const [collapsed, setCollapsed] = useState(false)
 
   return (
@@ -85,7 +87,7 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              title={collapsed ? item.label : undefined}
+              title={collapsed ? item.label[lang] : undefined}
               className="flex items-center gap-3 px-2.5 py-2.5 rounded-xl transition-all duration-150 group relative"
               style={{
                 background:  isActive ? 'rgba(26,86,219,0.1)'  : 'transparent',
@@ -104,7 +106,7 @@ export default function Sidebar() {
               )}
               <Icon size={17} strokeWidth={isActive ? 2.5 : 1.8} className="shrink-0" />
               {!collapsed && (
-                <span className="text-sm font-semibold">{item.label}</span>
+                <span className="text-sm font-semibold">{item.label[lang]}</span>
               )}
             </Link>
           )

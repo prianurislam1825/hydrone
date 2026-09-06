@@ -362,22 +362,35 @@ export default function ControlPage() {
           {/* Camera — fullscreen center */}
           <CameraFeed />
 
-          {/* Right: dual joystick + E-STOP panel */}
-          <div style={{ width: jsSize + 28, flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', padding: '10px 8px', background: 'var(--t-surface)', borderLeft: '1px solid var(--t-border)', gap: 6 }}>
+        </div>
+
+        {/* Bottom controls — landscape: centered like portrait */}
+        <div style={{ flexShrink: 0, background: 'var(--t-surface)', borderTop: '1px solid var(--t-border)', padding: '8px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+          {/* Left: nav joystick + filter */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, flexShrink: 0 }}>
             <VirtualJoystick label="NAVIGASI" size={jsSize} onChange={handleNav} accentColor={A} />
+            <button onClick={() => { setFilterOn(v => !v); showToast(`Filter ${filterOn ? 'OFF' : 'ON'}`) }}
+              style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 8px', borderRadius: 8, fontSize: 9, fontWeight: 900, cursor: 'pointer',
+                background: filterOn ? `${A}18` : 'var(--t-surface-2)', border: `1px solid ${filterOn ? `${A}55` : 'var(--t-border)'}`, color: filterOn ? A : 'var(--t-muted)' }}>
+              <Filter size={10} />FILTER {filterOn ? 'ON' : 'OFF'}
+            </button>
+          </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-              {/* Depth mini */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 4, width: jsSize + 12 }}>
-                <span style={{ fontSize: 7, fontWeight: 700, color: 'var(--t-muted)', flexShrink: 0 }}>D</span>
-                <div style={{ flex: 1, height: 4, borderRadius: 99, overflow: 'hidden', background: 'var(--t-bg)', border: '1px solid var(--t-border)' }}>
-                  <div style={{ height: '100%', width: `${Math.min((depthVal / 10) * 100, 100)}%`, background: 'linear-gradient(to right,#22C55E,#1A56DB)' }} />
-                </div>
-                <span style={{ fontSize: 7, color: '#22C55E', fontFamily: 'var(--font-jetbrains-mono)', flexShrink: 0 }}>{depthVal.toFixed(1)}m</span>
+          {/* Center: depth + E-STOP */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, flex: 1, maxWidth: 160 }}>
+            <div style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 5 }}>
+              <span style={{ fontSize: 8, fontWeight: 700, color: 'var(--t-muted)', flexShrink: 0 }}>DEPTH</span>
+              <div style={{ flex: 1, height: 5, borderRadius: 99, overflow: 'hidden', background: 'var(--t-bg)', border: '1px solid var(--t-border)' }}>
+                <div style={{ height: '100%', width: `${Math.min((depthVal / 10) * 100, 100)}%`, background: 'linear-gradient(to right,#22C55E,#1A56DB)', borderRadius: 99 }} />
               </div>
-              <EStopBtn size={Math.max(56, jsSize * 0.75)} />
+              <span style={{ fontSize: 8, fontWeight: 700, color: '#22C55E', flexShrink: 0, fontFamily: 'var(--font-jetbrains-mono)' }}>{depthVal.toFixed(1)}m</span>
             </div>
+            <EStopBtn size={Math.max(60, jsSize * 0.85)} />
+            <span style={{ fontSize: 7, color: 'var(--t-muted)', opacity: 0.5 }}>DEMO · NOT TRANSMITTED</span>
+          </div>
 
+          {/* Right: throttle joystick */}
+          <div style={{ flexShrink: 0 }}>
             <VirtualJoystick label="THROTTLE" size={jsSize} onChange={handleThrottle} accentColor="#F05A22" />
           </div>
         </div>
