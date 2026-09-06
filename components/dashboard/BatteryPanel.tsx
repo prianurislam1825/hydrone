@@ -1,7 +1,9 @@
 'use client'
 
-import { BATTERY_A, BATTERY_B } from '@/lib/dashboard/useSensorData';
 import { BatteryFull, BatteryLow, BatteryMedium, Bolt } from 'lucide-react';
+
+const BATTERY_A = 78
+const BATTERY_B = 91
 
 interface Pack { label: string; sub: string; percent: number; voltage: string }
 

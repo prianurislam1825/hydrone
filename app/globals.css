@@ -308,6 +308,12 @@ strong, b  { font-weight: 700; }
 /* ── Bottom nav spacing ──────────────────────────────────────────── */
 .pb-bottom-nav { padding-bottom: 72px; }
 
+/* ── Landscape media queries ─────────────────────────────────────── */
+@media (orientation: landscape) {
+  .landscape\:hidden  { display: none !important; }
+  .landscape\:flex    { display: flex !important; }
+}
+
 /* ── Virtual joystick ────────────────────────────────────────────── */
 .joystick-zone {
   position: relative;
