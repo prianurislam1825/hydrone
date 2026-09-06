@@ -62,7 +62,7 @@ function SensorCard({ icon, label, value, unit, status, color, delay = '0s', pos
 
 function RovVisual() {
   return (
-    <div className="relative w-full max-w-sm mx-auto aspect-square">
+    <div className="relative w-full max-w-sm mx-auto aspect-square" style={{ overflow: 'visible' }}>
       <div className="absolute inset-0 rounded-full opacity-20 animate-[orange-glow_3s_ease-in-out_infinite]"
         style={{ background: 'radial-gradient(circle, #1A56DB44 0%, transparent 70%)' }} />
       <div className="absolute inset-8 rounded-[2rem] flex flex-col items-center justify-center overflow-hidden shadow-2xl"
@@ -78,10 +78,10 @@ function RovVisual() {
           ACTIVE
         </div>
       </div>
-      <SensorCard icon={<Droplets size={11} />}    label="pH"     value="7.24" unit="pH"  status="Normal" color="#1A56DB" delay="0s"   pos={{ top: '-12px', right: '-12px' }} />
-      <SensorCard icon={<Thermometer size={11} />} label="Temp"   value="26.4" unit="°C"  status="Normal" color="#22C55E" delay="0.8s" pos={{ top: '40%', right: '-20px' }} />
-      <SensorCard icon={<Activity size={11} />}    label="Turb"   value="34"   unit="NTU" status="Clear"  color="#1A56DB" delay="1.6s" pos={{ bottom: '-12px', left: '-8px' }} />
-      <SensorCard icon={<Wifi size={11} />}        label="Tether" value="20"   unit="m"   status="Online" color="#00B4D8" delay="2.4s" pos={{ top: '20%', left: '-20px' }} />
+      <SensorCard icon={<Droplets size={11} />}    label="pH"     value="7.24" unit="pH"  status="Normal" color="#1A56DB" delay="0s"   pos={{ top: '0px', right: '0px' }} />
+      <SensorCard icon={<Thermometer size={11} />} label="Temp"   value="26.4" unit="°C"  status="Normal" color="#22C55E" delay="0.8s" pos={{ top: '38%', right: '4px' }} />
+      <SensorCard icon={<Activity size={11} />}    label="Turb"   value="34"   unit="NTU" status="Clear"  color="#1A56DB" delay="1.6s" pos={{ bottom: '0px', left: '4px' }} />
+      <SensorCard icon={<Wifi size={11} />}        label="Tether" value="20"   unit="m"   status="Online" color="#00B4D8" delay="2.4s" pos={{ top: '18%', left: '4px' }} />
     </div>
   )
 }
@@ -167,7 +167,7 @@ export default function HeroSection() {
           </div>
 
           {/* Right */}
-          <div className="hidden lg:flex items-center justify-center" data-anim="scale" data-delay="200">
+          <div className="hidden lg:flex items-center justify-center overflow-hidden" data-anim="scale" data-delay="200">
             <RovVisual />
           </div>
         </div>
