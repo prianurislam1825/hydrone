@@ -321,11 +321,15 @@ strong, b  { font-weight: 700; }
   border-radius: 50%;
   background: rgba(26,86,219,0.06);
   border: 1.5px solid rgba(26,86,219,0.25);
-  touch-action: none;
+  touch-action: none !important;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
   user-select: none;
   cursor: grab;
+  -webkit-tap-highlight-color: transparent;
 }
 .joystick-zone:active { cursor: grabbing; }
+.joystick-zone, .joystick-zone * { touch-action: none !important; }
 .joystick-knob {
   position: absolute;
   border-radius: 50%;

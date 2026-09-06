@@ -1,7 +1,7 @@
 import type { NextAuthConfig } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 
-const appMode = process.env.APP_MODE ?? 'local'
+const appMode = process.env.APP_MODE ?? 'cloud'
 
 // ── Registered admin accounts ────────────────────────────────────────
 const ADMIN_ACCOUNTS = [
