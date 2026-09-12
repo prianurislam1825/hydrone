@@ -4,7 +4,6 @@ import LandingFooter from '@/components/landing/LandingFooter'
 import LandingNav from '@/components/landing/LandingNav'
 import PageHeader from '@/components/landing/PageHeader'
 import ProductSection from '@/components/landing/ProductSection'
-import SpecsSection from '@/components/landing/SpecsSection'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -27,7 +26,6 @@ export default function FeaturesPage() {
       <main>
         <FeaturesSection />
         <ProductSection />
-        <SpecsSection />
         <CtaSection />
       </main>
       <LandingFooter />
