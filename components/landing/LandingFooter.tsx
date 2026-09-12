@@ -1,14 +1,11 @@
 'use client'
 
 import { useLang } from '@/lib/i18n/context'
-import { Github, Mail, MessageCircle } from 'lucide-react'
-
-
+import { Mail, MessageCircle } from 'lucide-react'
 
 const CONTACT = [
-  { icon: <Mail size={14} />,          href: 'mailto:hydrone.id@gmail.com',         label: 'hydrone.id@gmail.com' },
-  { icon: <MessageCircle size={14} />, href: 'https://wa.me/6281548158100',          label: '+62 815-4815-8100' },
-  { icon: <Github size={14} />,        href: 'https://github.com/prianurislam1825/hydrone', label: 'github.com/hydrone' },
+  { icon: <Mail size={14} />,          href: 'mailto:hydrone.id@gmail.com', label: 'hydrone.id@gmail.com' },
+  { icon: <MessageCircle size={14} />, href: 'https://wa.me/6281548158100',  label: '+62 815-4815-8100' },
 ]
 
 export default function LandingFooter() {
