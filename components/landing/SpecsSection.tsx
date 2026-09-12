@@ -78,12 +78,12 @@ export default function SpecsSection() {
           <h2 className="text-3xl sm:text-4xl font-extrabold mt-4" style={{ color: 'var(--t-text)' }}>{T.heading[lang]}</h2>
         </div>
 
-        {/* Summary cards with vibrant icons & gradients */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mb-16" data-anim>
+        {/* Summary cards with vibrant icons & gradients — 2 rows (3 top, 3 bottom) */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 max-w-4xl mx-auto mb-16" data-anim>
           {SUMMARY_STATS.map((s, i) => (
             <div
               key={i}
-              className="rounded-2xl p-4 text-center border relative overflow-hidden transition-all duration-300 hover:-translate-y-1.5 group"
+              className="rounded-2xl p-6 text-center border relative overflow-hidden transition-all duration-300 hover:-translate-y-1.5 group"
               style={{
                 background: 'var(--t-surface)',
                 borderColor: s.color + '35',
@@ -91,11 +91,11 @@ export default function SpecsSection() {
               }}
             >
               {/* Top gradient bar */}
-              <div className="absolute top-0 left-0 right-0 h-1" style={{ background: s.gradient }} />
+              <div className="absolute top-0 left-0 right-0 h-1.5" style={{ background: s.gradient }} />
 
               {/* Icon badge */}
               <div
-                className="w-9 h-9 rounded-xl mx-auto mb-3 flex items-center justify-center transition-transform group-hover:scale-110 shrink-0"
+                className="w-11 h-11 rounded-2xl mx-auto mb-3.5 flex items-center justify-center transition-transform group-hover:scale-110 shrink-0"
                 style={{ background: s.color + '15', border: `1px solid ${s.color}30`, color: s.color }}
               >
                 {s.icon}
@@ -103,7 +103,7 @@ export default function SpecsSection() {
 
               {/* Value */}
               <div
-                className="font-black text-xl sm:text-2xl tracking-tight mb-1 font-[family-name:var(--font-plus-jakarta)]"
+                className="font-black text-2xl sm:text-3xl tracking-tight mb-1.5 font-[family-name:var(--font-plus-jakarta)]"
                 style={{
                   background: s.gradient,
                   WebkitBackgroundClip: 'text',
@@ -115,7 +115,7 @@ export default function SpecsSection() {
               </div>
 
               {/* Label */}
-              <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: 'var(--t-muted)' }}>
+              <div className="text-xs font-extrabold uppercase tracking-wider" style={{ color: 'var(--t-muted)' }}>
                 {s.label[lang]}
               </div>
             </div>
