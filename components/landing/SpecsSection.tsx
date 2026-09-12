@@ -84,10 +84,10 @@ export default function SpecsSection() {
         </div>
 
         {/* Summary cards */}
-        <div className="grid grid-cols-3 lg:grid-cols-6 gap-4 mb-20" data-anim>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mb-20" data-anim>
           {SUMMARY_STATS.map((s, i) => (
-            <div key={i} className="rounded-xl p-4 text-center border" style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)' }}>
-              <div className="font-extrabold text-2xl font-[family-name:var(--font-plus-jakarta)]" style={{ color: 'var(--t-text)' }}>{s.value}</div>
+            <div key={i} className="rounded-xl p-3.5 sm:p-4 text-center border" style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)' }}>
+              <div className="font-extrabold text-xl sm:text-2xl font-[family-name:var(--font-plus-jakarta)]" style={{ color: 'var(--t-text)' }}>{s.value}</div>
               <div className="text-[10px] uppercase tracking-wider mt-1" style={{ color: 'var(--t-muted)' }}>{s.label[lang]}</div>
             </div>
           ))}
