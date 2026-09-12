@@ -164,11 +164,16 @@ export default function TeamSection() {
           </p>
         </div>
 
-        {/* Equal 5-column grid — all cards same size */}
+        {/* Equal 5-column grid — last card centered on mobile */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-14">
-          {TEAM.map((member, i) => (
+          {TEAM.slice(0, 4).map((member, i) => (
             <MemberCard key={member.name} member={member} lang={lang} index={i} />
           ))}
+          <div className="col-span-2 sm:col-span-1 flex justify-center">
+            <div className="w-full max-w-[200px] sm:max-w-none">
+              <MemberCard member={TEAM[4]} lang={lang} index={4} />
+            </div>
+          </div>
         </div>
 
         {/* Org badge */}
