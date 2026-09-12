@@ -8,18 +8,20 @@ import {
     LayoutDashboard,
     LayoutGrid,
     Settings,
+    User,
     X
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
-/* ── Bottom tabs (4 main) ─────────────────────────────────── */
+/* ── 5 Main Bottom Tabs ─────────────────────────────────── */
 const TABS = [
-  { label: { id: 'Dashboard', en: 'Dashboard' }, href: '/dashboard',         icon: LayoutDashboard },
-  { label: { id: 'Kontrol', en: 'Control' },   href: '/dashboard/control', icon: Gamepad2, center: true },
-  { label: { id: 'Riwayat', en: 'History' },   href: '/dashboard/history', icon: History },
-  { label: { id: 'Menu', en: 'Menu' },      href: null,                 icon: LayoutGrid, gridTrigger: true },
+  { label: { id: 'Home', en: 'Home' },             href: '/dashboard',          icon: LayoutDashboard },
+  { label: { id: 'Riwayat', en: 'History' },       href: '/dashboard/history',  icon: History },
+  { label: { id: 'Kontroler', en: 'Controller' }, href: '/dashboard/control',  icon: Gamepad2, center: true },
+  { label: { id: 'Perangkat', en: 'Devices' },     href: '/dashboard/devices',  icon: Cpu },
+  { label: { id: 'Profil', en: 'Profile' },         href: '/dashboard/profile',  icon: User },
 ]
 
 /* ── All menus for the grid sheet ─────────────────────────── */

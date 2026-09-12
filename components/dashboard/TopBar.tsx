@@ -123,17 +123,22 @@ export default function TopBar() {
 
   return (
     <header
-      className="hidden lg:flex fixed top-0 right-0 z-40 h-[60px] items-center justify-between px-6 border-b"
+      className="fixed top-0 left-0 lg:left-[var(--sidebar-width,220px)] right-0 z-40 h-[56px] lg:h-[60px] flex items-center justify-between px-3 sm:px-6 border-b backdrop-blur-xl"
       style={{
-        left:           'var(--sidebar-width, 220px)',
         background:     'var(--t-surface)',
         borderColor:    'var(--t-border)',
-        backdropFilter: 'blur(12px)',
       }}
     >
-      {/* Left: mode badge */}
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold border"
+      {/* Left: Brand logo (mobile) + mode badge */}
+      <div className="flex items-center gap-2.5">
+        <Link href="/dashboard" className="flex lg:hidden items-center gap-2 shrink-0 mr-1">
+          <div className="w-7 h-7 rounded-lg overflow-hidden border relative" style={{ borderColor: 'rgba(26,86,219,0.25)' }}>
+            <img src="/pfp-hydrone.png" alt="Hydrone" className="w-full h-full object-contain" />
+          </div>
+          <span className="font-extrabold text-sm tracking-tight" style={{ color: 'var(--t-text)' }}>Hydrone</span>
+        </Link>
+
+        <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold border"
           style={{ background: 'rgba(34,197,94,0.08)', borderColor: 'rgba(34,197,94,0.2)', color: '#22C55E' }}>
           <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-[live-pulse_2s_ease-in-out_infinite]" />
           {lang === 'id' ? 'MODE LOKAL' : 'LOCAL MODE'}
@@ -160,10 +165,11 @@ export default function TopBar() {
           </button>
         )}
 
-        {/* Bell */}
-        <button className="theme-toggle relative" aria-label="Notifications">
+        {/* Bell / Notifications */}
+        <Link href="/dashboard/alerts" className="theme-toggle relative" aria-label={lang === 'id' ? 'Notifikasi' : 'Notifications'}>
           <Bell size={15} />
-        </button>
+          <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#EF4444] animate-pulse" />
+        </Link>
 
         {/* LIVE */}
         <span className="live-badge text-xs">
