@@ -2,6 +2,7 @@ import AboutSection from '@/components/landing/AboutSection'
 import CtaSection from '@/components/landing/CtaSection'
 import LandingFooter from '@/components/landing/LandingFooter'
 import LandingNav from '@/components/landing/LandingNav'
+import VisionMission from '@/components/landing/VisionMission'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -15,6 +16,7 @@ export default function AboutPage() {
       <LandingNav />
       <main>
         <AboutSection />
+        <VisionMission />
         <CtaSection />
       </main>
       <LandingFooter />

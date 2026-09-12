@@ -160,7 +160,7 @@ export default function HeroSection() {
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = '' }}>
                 {T.cta1[lang]} <ArrowRight size={16} />
               </a>
-              <a href="#tentang"
+              <a href="/about"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 font-semibold rounded-xl transition-all min-h-[50px] text-sm hover:bg-[#1A56DB]/5"
                 style={{ border: '1px solid var(--t-border)', color: 'var(--t-muted)' }}
                 onMouseEnter={e => (e.currentTarget.style.color = 'var(--t-text)')}

@@ -4,6 +4,8 @@ import { useLang } from '@/lib/i18n/context'
 import { useTheme } from '@/lib/theme/useTheme'
 import { Download, LogIn, Menu, Moon, Sun, X } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 interface BeforeInstallPromptEvent extends Event {
@@ -15,6 +17,7 @@ const NAV_LINKS = [
   { label: { id: 'Beranda',    en: 'Home'        }, href: '/'             },
   { label: { id: 'Fitur',      en: 'Features'    }, href: '/features'     },
   { label: { id: 'Cara Kerja', en: 'How It Works' }, href: '/how-it-works' },
+  { label: { id: 'Spesifikasi',en: 'Specs'        }, href: '/specs'        },
   { label: { id: 'Tim Kami',   en: 'Our Team'    }, href: '/team'         },
   { label: { id: 'Tentang',    en: 'About'       }, href: '/about'        },
 ]
@@ -22,9 +25,9 @@ const NAV_LINKS = [
 export default function LandingNav() {
   const { lang, toggle: toggleLang } = useLang()
   const { theme, toggle: toggleTheme, mounted } = useTheme()
+  const pathname = usePathname()
   const [isOpen,   setIsOpen]   = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [active,   setActive]   = useState('#')
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [isInstalled, setIsInstalled]     = useState(false)
 
@@ -76,7 +79,7 @@ export default function LandingNav() {
         <div className="flex items-center justify-between h-[60px]">
 
           {/* ── Logo ──────────────────────────────────── */}
-          <a href="#" className="flex items-center gap-2.5 group shrink-0" onClick={() => setActive('#')}>
+          <Link href="/" className="flex items-center gap-2.5 group shrink-0">
             <div className="relative w-8 h-8 rounded-lg overflow-hidden border"
               style={{ borderColor: 'rgba(26,86,219,0.2)' }}>
               <Image
@@ -95,17 +98,16 @@ export default function LandingNav() {
             <span className="font-extrabold text-base tracking-tight" style={{ color: 'var(--t-text)' }}>
               Hydrone
             </span>
-          </a>
+          </Link>
 
           {/* ── Desktop nav links ─────────────────────── */}
           <div className="hidden md:flex items-center">
             {NAV_LINKS.map(link => {
-              const isAct = active === link.href
+              const isAct = pathname === link.href
               return (
-                <a
+                <Link
                   key={link.href}
                   href={link.href}
-                  onClick={() => setActive(link.href)}
                   className="relative px-3 py-1.5 text-sm font-semibold rounded-md transition-colors duration-150 min-h-[40px] flex items-center"
                   style={{ color: isAct ? '#1A56DB' : 'var(--t-muted)' }}
                   onMouseEnter={e => (e.currentTarget.style.color = 'var(--t-text)')}
@@ -116,7 +118,7 @@ export default function LandingNav() {
                   {isAct && (
                     <span className="absolute bottom-0.5 left-3 right-3 h-0.5 rounded-full bg-[#1A56DB]" />
                   )}
-                </a>
+                </Link>
               )
             })}
           </div>
@@ -219,15 +221,15 @@ export default function LandingNav() {
         <div className="border-t px-4 py-3 flex flex-col gap-0.5"
           style={{ background: 'var(--t-nav-bg)', borderColor: 'var(--t-nav-border)' }}>
           {NAV_LINKS.map(link => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
-              onClick={() => { setActive(link.href); setIsOpen(false) }}
+              onClick={() => setIsOpen(false)}
               className="px-3 py-2.5 rounded-lg text-sm font-semibold transition-all min-h-[44px] flex items-center"
-              style={{ color: active === link.href ? '#1A56DB' : 'var(--t-muted)' }}
+              style={{ color: pathname === link.href ? '#1A56DB' : 'var(--t-muted)' }}
             >
               {link.label[lang]}
-            </a>
+            </Link>
           ))}
           {!isInstalled && (
             <div className="pt-2 pb-1 border-t" style={{ borderColor: 'var(--t-border)' }}>

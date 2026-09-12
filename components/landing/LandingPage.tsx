@@ -9,9 +9,11 @@ import HowItWorks from './HowItWorks'
 import LandingFooter from './LandingFooter'
 import LandingNav from './LandingNav'
 import PartnersSection from './PartnersSection'
+import ProductSection from './ProductSection'
 import SpecsSection from './SpecsSection'
 import StatsSection from './StatsSection'
 import TeamSection from './TeamSection'
+import VisionMission from './VisionMission'
 
 export default function LandingPage() {
   useEffect(() => {
@@ -30,8 +32,10 @@ export default function LandingPage() {
         <HeroSection />
         <StatsSection />
         <FeaturesSection />
+        <ProductSection />
         <HowItWorks />
         <AboutSection />
+        <VisionMission />
         <TeamSection />
         <PartnersSection />
         <SpecsSection />
