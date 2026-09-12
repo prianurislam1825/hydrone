@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useCallback, useContext, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import type { Lang } from '@/types'
 import { translations } from './translations'
 
@@ -18,12 +18,27 @@ const LangContext = createContext<LangContextValue | null>(null)
 export function LangProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLangState] = useState<Lang>('en')
 
+  // Load initial lang from localStorage after mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('hydrone-lang') as Lang | null
+      if (saved === 'id' || saved === 'en') {
+        setLangState(saved)
+      }
+    } catch {}
+  }, [])
+
   const toggle = useCallback(() => {
-    setLangState(prev => (prev === 'id' ? 'en' : 'id'))
+    setLangState(prev => {
+      const next = prev === 'id' ? 'en' : 'id'
+      try { localStorage.setItem('hydrone-lang', next) } catch {}
+      return next
+    })
   }, [])
 
   const setLang = useCallback((newLang: Lang) => {
     setLangState(newLang)
+    try { localStorage.setItem('hydrone-lang', newLang) } catch {}
   }, [])
 
   return (
