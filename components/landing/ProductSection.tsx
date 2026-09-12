@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useLang } from '@/lib/i18n/context'
 import { Cable, CheckCircle, Cpu, Droplets, Gauge } from 'lucide-react'
@@ -101,7 +101,7 @@ export default function ProductSection() {
                 <div className="flex gap-3">
                   <div className="flex items-center gap-1.5 text-[#43A047] text-xs">
                     <span className="w-2 h-2 rounded-full bg-[#43A047] animate-[live-pulse_2s_ease-in-out_infinite]" />
-                    ACTIVE
+                    {{ id: 'AKTIF', en: 'ACTIVE' }[lang]}
                   </div>
                 </div>
               </div>

@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useLang } from '@/lib/i18n/context'
 import { Activity, AlertTriangle, Eye, EyeOff, Lock, Mail, Shield, Wifi } from 'lucide-react'
@@ -62,7 +62,7 @@ export default function LoginForm() {
       })
 
       if (result?.error) {
-        setError('Email atau password tidak valid.')
+        setError(lang === 'id' ? 'Email atau password tidak valid.' : 'Invalid email or password.')
         setIsLoading(false)
       } else if (result?.ok) {
         // Session cookie is now set — use router.push then hard reload
@@ -70,11 +70,11 @@ export default function LoginForm() {
         router.push('/dashboard')
         router.refresh()
       } else {
-        setError('Login gagal. Silakan coba lagi.')
+        setError(lang === 'id' ? 'Login gagal. Silakan coba lagi.' : 'Login failed. Please try again.')
         setIsLoading(false)
       }
     } catch {
-      setError('Terjadi kesalahan jaringan. Silakan coba lagi.')
+      setError(lang === 'id' ? 'Terjadi kesalahan jaringan. Silakan coba lagi.' : 'A network error occurred. Please try again.')
       setIsLoading(false)
     }
   }

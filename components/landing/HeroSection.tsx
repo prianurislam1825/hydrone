@@ -61,6 +61,8 @@ function SensorCard({ icon, label, value, unit, status, color, delay = '0s', pos
 }
 
 function RovVisual() {
+  const { lang } = useLang()
+  
   return (
     <div className="relative w-full max-w-sm mx-auto aspect-square" style={{ overflow: 'visible' }}>
       <div className="absolute inset-0 rounded-full opacity-20 animate-[orange-glow_3s_ease-in-out_infinite]"
@@ -75,13 +77,13 @@ function RovVisual() {
         <div className="absolute bottom-3 flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold"
           style={{ background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.3)', color: '#22C55E' }}>
           <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-[live-pulse_2s_ease-in-out_infinite]" />
-          ACTIVE
+          {{ id: 'AKTIF', en: 'ACTIVE' }[lang]}
         </div>
       </div>
       <SensorCard icon={<Droplets size={11} />}    label="pH"     value="7.24" unit="pH"  status="Normal" color="#1A56DB" delay="0s"   pos={{ top: '0px', right: '0px' }} />
-      <SensorCard icon={<Thermometer size={11} />} label="Temp"   value="26.4" unit="°C"  status="Normal" color="#22C55E" delay="0.8s" pos={{ top: '38%', right: '4px' }} />
-      <SensorCard icon={<Activity size={11} />}    label="Turb"   value="34"   unit="NTU" status="Clear"  color="#1A56DB" delay="1.6s" pos={{ bottom: '0px', left: '4px' }} />
-      <SensorCard icon={<Wifi size={11} />}        label="Tether" value="20"   unit="m"   status="Online" color="#00B4D8" delay="2.4s" pos={{ top: '18%', left: '4px' }} />
+      <SensorCard icon={<Thermometer size={11} />} label={{ id: 'Suhu', en: 'Temp' }[lang]}   value="26.4" unit="°C"  status="Normal" color="#22C55E" delay="0.8s" pos={{ top: '38%', right: '4px' }} />
+      <SensorCard icon={<Activity size={11} />}    label={{ id: 'Kekeruhan', en: 'Turb' }[lang]}   value="34"   unit="NTU" status={{ id: 'Jernih', en: 'Clear' }[lang]}  color="#1A56DB" delay="1.6s" pos={{ bottom: '0px', left: '4px' }} />
+      <SensorCard icon={<Wifi size={11} />}        label="Tether" value="20"   unit="m"   status={{ id: 'Terhubung', en: 'Online' }[lang]} color="#00B4D8" delay="2.4s" pos={{ top: '18%', left: '4px' }} />
     </div>
   )
 }
@@ -91,10 +93,10 @@ export default function HeroSection() {
 
   const T = {
     eyebrow: { id: 'RIVER ROV · IID INNOPA 2026', en: 'RIVER ROV · IID INNOPA 2026' },
-    tag:     { id: 'AI Powered', en: 'AI Powered' },
-    h1a:     { id: 'Cleaning Rivers,', en: 'Cleaning Rivers,' },
-    h1b:     { id: 'Reading Water.', en: 'Reading Water.' },
-    h1c:     { id: 'Built by Students.', en: 'Built by Students.' },
+    tag:     { id: 'Bertenaga AI', en: 'AI Powered' },
+    h1a:     { id: 'Membersihkan Sungai,', en: 'Cleaning Rivers,' },
+    h1b:     { id: 'Membaca Air.', en: 'Reading Water.' },
+    h1c:     { id: 'Karya Siswa.', en: 'Built by Students.' },
     sub: {
       id: 'ROV bawah air untuk koleksi makroplastik dan penyaringan mikroplastik hingga 0.1 mikron, memantau kualitas air secara real-time — dibangun oleh lima pelajar SMA.',
       en: 'Underwater ROV for macroplastic collection and microplastic filtration down to 0.1 microns, streaming real-time water quality data — built by five high school students.',

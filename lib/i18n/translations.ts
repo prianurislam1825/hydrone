@@ -13,7 +13,7 @@ export const translations = {
     contact: { id: 'Hubungi Kami', en: 'Contact Us' },
   },
   hero: {
-    tagline: { id: 'Autonomous Underwater Plastic Collector', en: 'Autonomous Underwater Plastic Collector' },
+    tagline: { id: 'Kolektor Sampah Plastik Bawah Air Otonom', en: 'Autonomous Underwater Plastic Collector' },
     sub: {
       id: 'ROV bawah air yang menangkap sampah plastik makro dan menyaring mikroplastik hingga 5 mikron dari perairan Indonesia.',
       en: 'An underwater ROV that captures macroplastic waste and filters microplastics down to 5 microns from Indonesian waters.',
@@ -22,7 +22,7 @@ export const translations = {
     cta2: { id: 'Cara Kerjanya', en: 'How It Works' },
     slogan: { id: 'Dive. Collect. Protect.', en: 'Dive. Collect. Protect.' },
     sensors: {
-      turbidity: { id: 'Turbidity', en: 'Turbidity' },
+      turbidity: { id: 'Kekeruhan', en: 'Turbidity' },
       turbidityStatus: { id: 'Jernih', en: 'Clear' },
       tds: { id: 'TDS', en: 'TDS' },
       tdsStatus: { id: 'Aman', en: 'Safe' },
@@ -318,11 +318,17 @@ export const translations = {
     },
     btnWhatsApp: { id: 'Chat WhatsApp', en: 'Chat WhatsApp' },
     btnEmail: { id: 'Kirim Email', en: 'Send Email' },
-    tags: ['ROV Bawah Air', 'Filter 5µm', 'ESP32 IoT', 'Dual Mode', 'IID INNOPA'],
+    tags: [
+      { id: 'ROV Bawah Air', en: 'Underwater ROV' },
+      { id: 'Filter 5µm', en: '5µm Filter' },
+      { id: 'ESP32 IoT', en: 'ESP32 IoT' },
+      { id: 'Dual Mode', en: 'Dual Mode' },
+      { id: 'IID INNOPA', en: 'IID INNOPA' }
+    ],
   },
   footer: {
     brand: {
-      sub: { id: 'Autonomous Underwater Plastic Collector', en: 'Autonomous Underwater Plastic Collector' },
+      sub: { id: 'Kolektor Sampah Plastik Bawah Air Otonom', en: 'Autonomous Underwater Plastic Collector' },
       desc: {
         id: 'ROV bawah air untuk membersihkan sampah plastik dan mikroplastik di perairan Indonesia.',
         en: 'Underwater ROV to clean plastic waste and microplastics from Indonesian waters.',

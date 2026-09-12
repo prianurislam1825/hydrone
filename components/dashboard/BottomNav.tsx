@@ -1,5 +1,6 @@
 'use client'
 
+import { useLang } from '@/lib/i18n/context'
 import {
     Bell,
     Cpu,
@@ -15,25 +16,26 @@ import { useState } from 'react'
 
 /* ── Bottom tabs (4 main) ─────────────────────────────────── */
 const TABS = [
-  { label: 'Dashboard', href: '/dashboard',         icon: LayoutDashboard },
-  { label: 'Kontrol',   href: '/dashboard/control', icon: Gamepad2, center: true },
-  { label: 'Riwayat',   href: '/dashboard/history', icon: History },
-  { label: 'Menu',      href: null,                 icon: LayoutGrid, gridTrigger: true },
+  { label: { id: 'Dashboard', en: 'Dashboard' }, href: '/dashboard',         icon: LayoutDashboard },
+  { label: { id: 'Kontrol', en: 'Control' },   href: '/dashboard/control', icon: Gamepad2, center: true },
+  { label: { id: 'Riwayat', en: 'History' },   href: '/dashboard/history', icon: History },
+  { label: { id: 'Menu', en: 'Menu' },      href: null,                 icon: LayoutGrid, gridTrigger: true },
 ]
 
 /* ── All menus for the grid sheet ─────────────────────────── */
 const ALL_MENUS = [
-  { label: 'Dashboard',  href: '/dashboard',          icon: LayoutDashboard, color: '#1A56DB' },
-  { label: 'Riwayat',    href: '/dashboard/history',  icon: History,         color: '#F59E0B' },
-  { label: 'Perangkat',  href: '/dashboard/devices',  icon: Cpu,             color: '#8B5CF6' },
-  { label: 'Kontrol',    href: '/dashboard/control',  icon: Gamepad2,        color: '#F05A22' },
-  { label: 'Alert',      href: '/dashboard/alerts',   icon: Bell,            color: '#EF4444' },
-  { label: 'Pengaturan', href: '/dashboard/profile',  icon: Settings,        color: '#22C55E' },
+  { label: { id: 'Dashboard', en: 'Dashboard' },  href: '/dashboard',          icon: LayoutDashboard, color: '#1A56DB' },
+  { label: { id: 'Riwayat', en: 'History' },    href: '/dashboard/history',  icon: History,         color: '#F59E0B' },
+  { label: { id: 'Perangkat', en: 'Devices' },  href: '/dashboard/devices',  icon: Cpu,             color: '#8B5CF6' },
+  { label: { id: 'Kontrol', en: 'Control' },    href: '/dashboard/control',  icon: Gamepad2,        color: '#F05A22' },
+  { label: { id: 'Alert', en: 'Alerts' },      href: '/dashboard/alerts',   icon: Bell,            color: '#EF4444' },
+  { label: { id: 'Pengaturan', en: 'Settings' }, href: '/dashboard/profile',  icon: Settings,        color: '#22C55E' },
 ]
 
 /* ── Menu grid bottom sheet ───────────────────────────────── */
 function MenuSheet({ onClose }: { onClose: () => void }) {
   const pathname = usePathname()
+  const { lang } = useLang()
 
   return (
     <>
@@ -60,7 +62,7 @@ function MenuSheet({ onClose }: { onClose: () => void }) {
 
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-3 border-b" style={{ borderColor: 'var(--t-border)' }}>
-          <span className="text-sm font-extrabold" style={{ color: 'var(--t-text)' }}>Semua Menu</span>
+          <span className="text-sm font-extrabold" style={{ color: 'var(--t-text)' }}>{lang === 'id' ? 'Semua Menu' : 'All Menus'}</span>
           <button
             onClick={onClose}
             className="w-8 h-8 rounded-xl flex items-center justify-center border transition-all"
@@ -99,7 +101,7 @@ function MenuSheet({ onClose }: { onClose: () => void }) {
                   className="text-xs font-semibold text-center leading-tight"
                   style={{ color: isActive ? item.color : 'var(--t-text)' }}
                 >
-                  {item.label}
+                  {item.label[lang]}
                 </span>
               </Link>
             )
@@ -113,6 +115,7 @@ function MenuSheet({ onClose }: { onClose: () => void }) {
 /* ── BottomNav ────────────────────────────────────────────── */
 export default function BottomNav() {
   const pathname          = usePathname()
+  const { lang }          = useLang()
   const [sheetOpen, setSheetOpen] = useState(false)
 
   return (
@@ -145,7 +148,7 @@ export default function BottomNav() {
                     : <LayoutGrid size={20} strokeWidth={1.8} />
                   }
                   <span className="text-[10px] font-semibold tracking-wide">
-                    {sheetOpen ? 'Tutup' : 'Menu'}
+                    {sheetOpen ? (lang === 'id' ? 'Tutup' : 'Close') : (lang === 'id' ? 'Menu' : 'Menu')}
                   </span>
                 </button>
               )
@@ -175,7 +178,7 @@ export default function BottomNav() {
                     <Icon size={22} color="#ffffff" strokeWidth={isActive ? 2.5 : 2} />
                   </div>
                   <span className="text-[10px] font-bold tracking-wide" style={{ color: isActive ? '#1A56DB' : 'var(--t-muted)' }}>
-                    {tab.label}
+                    {tab.label[lang]}
                   </span>
                 </Link>
               )
@@ -199,7 +202,7 @@ export default function BottomNav() {
                   <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 rounded-full bg-[#1A56DB]" />
                 )}
                 <Icon size={20} strokeWidth={isActive ? 2.5 : 1.8} />
-                <span className="text-[10px] font-semibold tracking-wide">{tab.label}</span>
+                <span className="text-[10px] font-semibold tracking-wide">{tab.label[lang]}</span>
               </Link>
             )
           })}

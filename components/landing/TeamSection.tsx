@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useLang } from '@/lib/i18n/context'
 import type { Lang } from '@/types'
@@ -178,7 +178,7 @@ export default function TeamSection() {
             {[
               { label: lang === 'id' ? 'Dibangun di bawah' : 'Built under', value: 'Hydrone', gradient: 'linear-gradient(135deg, #1A56DB, #00B4D8)' },
               { label: lang === 'id' ? 'Untuk kompetisi' : 'For competition', value: 'IID INNOPA 2026', gradient: 'linear-gradient(135deg, #F05A22, #F59E0B)' },
-              { label: 'Based in', value: 'Surakarta, Jawa Tengah', color: 'var(--t-text)' },
+              { label: { id: 'Berbasis di', en: 'Based in' }[lang], value: { id: 'Surakarta, Jawa Tengah', en: 'Surakarta, Central Java' }[lang], color: 'var(--t-text)' },
             ].map((item, i) => (
               <div key={i} className="text-center">
                 <div className="text-[10px] uppercase tracking-widest mb-1" style={{ color: 'var(--t-muted)' }}>{item.label}</div>

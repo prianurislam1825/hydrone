@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useLang } from '@/lib/i18n/context'
 
@@ -25,7 +25,7 @@ const PILLARS = [
         <polygon points="22 3 2 12 12 15 15 25"/><line x1="22" y1="3" x2="13" y2="12"/>
       </svg>
     ),
-    title:   { id: 'FILTER',   en: 'FILTER' },
+    title:   { id: 'SARING',   en: 'FILTER' },
     desc:    { id: 'Filtrasi dua tahap: Stage 1 (20–50 µm sedimen) + Stage 2 (0.1 µm mikroplastik).', en: 'Two-stage filtration: Stage 1 (20–50 µm sediment) + Stage 2 (0.1 µm microplastic).' },
     tag:     { id: '0.1 µm Presisi', en: '0.1 µm Precision' },
   },
@@ -38,7 +38,7 @@ const PILLARS = [
         <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>
       </svg>
     ),
-    title:   { id: 'MONITOR',  en: 'MONITOR' },
+    title:   { id: 'PANTAU',  en: 'MONITOR' },
     desc:    { id: 'pH, TDS, turbidity, dan suhu distream real-time via tether ke dashboard web.', en: 'pH, TDS, turbidity and temperature streamed real-time via tether to the web dashboard.' },
     tag:     { id: 'Real-time · Live', en: 'Real-time · Live' },
   },
@@ -56,7 +56,7 @@ export default function FeaturesSection() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-14" data-anim>
           <div className="text-[11px] font-bold tracking-[0.18em] uppercase mb-3" style={{ color: 'var(--t-muted)' }}>
-            Tiga Kemampuan Utama
+            {{ id: 'Tiga Kemampuan Utama', en: 'Three Core Capabilities' }[lang]}
           </div>
           <h2
             className="text-3xl sm:text-4xl font-extrabold"
@@ -67,7 +67,7 @@ export default function FeaturesSection() {
               backgroundClip: 'text',
             }}
           >
-            Satu ROV, Tiga Misi
+            {{ id: 'Satu ROV, Tiga Misi', en: 'One ROV, Three Missions' }[lang]}
           </h2>
         </div>
 

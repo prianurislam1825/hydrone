@@ -1,22 +1,22 @@
-﻿'use client'
+'use client'
 
 import { useLang } from '@/lib/i18n/context';
 import { ChevronDown, Mail, MessageCircle } from 'lucide-react';
 import { useState } from 'react';
 
-interface SpecRow { name: string; value: string }
+interface SpecRow { name: string | { id: string; en: string }; value: string | { id: string; en: string } }
 interface SpecGroup { title: { id: string; en: string }; rows: SpecRow[] }
 
 const SPEC_GROUPS: SpecGroup[] = [
-  { title: { id: 'Badan & Struktur', en: 'Body & Structure' }, rows: [{ name: 'Dimensi (P x L x T)', value: '500 x 200 x 120 mm' }, { name: 'Lebar total + pod thruster', value: '~350 mm' }, { name: 'Berat target', value: '~7.5 kg' }, { name: 'Material badan', value: 'PETG (3D printed)' }, { name: 'Kedalaman operasi', value: '0 - 10 m' }] },
-  { title: { id: 'Sistem Propulsi', en: 'Propulsion System' }, rows: [{ name: 'Total thruster', value: '4 unit' }, { name: 'Horizontal', value: '2x (1 CW + 1 CCW)' }, { name: 'Vertikal', value: '2x (sudut-V 75°)' }, { name: 'Efektivitas thrust vertikal', value: '96.6% (sin 75°)' }, { name: 'Kontrol kemudi', value: 'Diferensial thrust' }, { name: 'Tegangan propulsi', value: '14.8V (Li-Ion 4S)' }] },
-  { title: { id: 'Sistem Balast', en: 'Ballast System' }, rows: [{ name: 'Konfigurasi', value: 'Dual-chamber' }, { name: 'Volume total', value: '1.000 ml (1 liter)' }, { name: 'Komponen utama', value: 'Pompa air DC 12V + kompresor mini + katup solenoid' }] },
-  { title: { id: 'Mekanisme Jaring', en: 'Net Mechanism' }, rows: [{ name: 'Tipe mekanisme', value: 'Passive flap door + servo latch' }, { name: 'Frame', value: 'Fiberglass rod / HDPE strip' }, { name: 'Material jaring', value: 'Nylon/polyester mesh' }, { name: 'Penguncian', value: 'Servo-actuated sliding latch' }] },
-  { title: { id: 'Sistem Filtrasi', en: 'Filtration System' }, rows: [{ name: 'Tahapan filter', value: '2-stage series' }, { name: 'Stage 1', value: '20 - 50 mikron' }, { name: 'Stage 2', value: '0.1 mikron (mikroplastik)' }, { name: 'Housing', value: '10-inch filter housing x 2' }] },
+  { title: { id: 'Badan & Struktur', en: 'Body & Structure' }, rows: [{ name: { id: 'Dimensi (P x L x T)', en: 'Dimensions (L x W x H)' }, value: '500 x 200 x 120 mm' }, { name: { id: 'Lebar total + pod thruster', en: 'Total width + thruster pods' }, value: '~350 mm' }, { name: { id: 'Berat target', en: 'Target weight' }, value: '~7.5 kg' }, { name: { id: 'Material badan', en: 'Body material' }, value: 'PETG (3D printed)' }, { name: { id: 'Kedalaman operasi', en: 'Operating depth' }, value: '0 - 10 m' }] },
+  { title: { id: 'Sistem Propulsi', en: 'Propulsion System' }, rows: [{ name: 'Total thruster', value: { id: '4 unit', en: '4 units' } }, { name: 'Horizontal', value: '2x (1 CW + 1 CCW)' }, { name: { id: 'Vertikal', en: 'Vertical' }, value: '2x (sudut-V 75°)' }, { name: { id: 'Efektivitas thrust vertikal', en: 'Vertical thrust effectiveness' }, value: '96.6% (sin 75°)' }, { name: { id: 'Kontrol kemudi', en: 'Steering control' }, value: { id: 'Diferensial thrust', en: 'Differential thrust' } }, { name: { id: 'Tegangan propulsi', en: 'Propulsion voltage' }, value: '14.8V (Li-Ion 4S)' }] },
+  { title: { id: 'Sistem Balast', en: 'Ballast System' }, rows: [{ name: { id: 'Konfigurasi', en: 'Configuration' }, value: 'Dual-chamber' }, { name: { id: 'Volume total', en: 'Total volume' }, value: { id: '1.000 ml (1 liter)', en: '1,000 ml (1 liter)' } }, { name: { id: 'Komponen utama', en: 'Main components' }, value: { id: 'Pompa air DC 12V + kompresor mini + katup solenoid', en: '12V DC water pump + mini compressor + solenoid valve' } }] },
+  { title: { id: 'Mekanisme Jaring', en: 'Net Mechanism' }, rows: [{ name: { id: 'Tipe mekanisme', en: 'Mechanism type' }, value: 'Passive flap door + servo latch' }, { name: 'Frame', value: 'Fiberglass rod / HDPE strip' }, { name: { id: 'Material jaring', en: 'Net material' }, value: 'Nylon/polyester mesh' }, { name: { id: 'Penguncian', en: 'Locking' }, value: 'Servo-actuated sliding latch' }] },
+  { title: { id: 'Sistem Filtrasi', en: 'Filtration System' }, rows: [{ name: { id: 'Tahapan filter', en: 'Filter stages' }, value: '2-stage series' }, { name: 'Stage 1', value: { id: '20 - 50 mikron', en: '20 - 50 microns' } }, { name: 'Stage 2', value: { id: '0.1 mikron (mikroplastik)', en: '0.1 microns (microplastic)' } }, { name: 'Housing', value: '10-inch filter housing x 2' }] },
   { title: { id: 'Sensor Suite', en: 'Sensor Suite' }, rows: [{ name: 'pH sensor', value: 'Analog → Arduino A1' }, { name: 'TDS sensor', value: 'Analog → Arduino A2' }, { name: 'Turbidity sensor', value: 'Analog → ESP32 GPIO34' }, { name: 'Temperature DS18B20', value: 'OneWire → ESP32 GPIO32' }, { name: 'MPU6050 IMU', value: 'I2C → ESP32 GPIO21/22' }] },
-  { title: { id: 'Kamera & Pencahayaan', en: 'Camera & Lighting' }, rows: [{ name: 'Kamera', value: 'ESP32-CAM (onboard WiFi)' }, { name: 'LED spotlight', value: 'Waterproof putih x 2 (depan)' }, { name: 'LED DRL', value: 'Waterproof oranye (samping)' }] },
-  { title: { id: 'Sistem Daya', en: 'Power System' }, rows: [{ name: 'Pack A (Propulsi)', value: 'Li-Ion 4S5P, 14.8V, ~12.500 mAh' }, { name: 'Pack B (Elektronik)', value: 'Li-Ion 3S2P, 11.1V, ~5.000 mAh' }, { name: 'Hot-swappable', value: 'Ya (top-access panel)' }] },
-  { title: { id: 'Komunikasi & Kontrol', en: 'Communication & Control' }, rows: [{ name: 'Tipe link', value: 'Physical tether' }, { name: 'Panjang tether', value: '20 m' }, { name: 'Interface operator', value: 'Tablet / laptop di permukaan' }, { name: 'Backend dashboard', value: 'Firebase (deployment penuh)' }] },
+  { title: { id: 'Kamera & Pencahayaan', en: 'Camera & Lighting' }, rows: [{ name: { id: 'Kamera', en: 'Camera' }, value: 'ESP32-CAM (onboard WiFi)' }, { name: 'LED spotlight', value: { id: 'Waterproof putih x 2 (depan)', en: 'Waterproof white x 2 (front)' } }, { name: 'LED DRL', value: { id: 'Waterproof oranye (samping)', en: 'Waterproof orange (side)' } }] },
+  { title: { id: 'Sistem Daya', en: 'Power System' }, rows: [{ name: { id: 'Pack A (Propulsi)', en: 'Pack A (Propulsion)' }, value: 'Li-Ion 4S5P, 14.8V, ~12.500 mAh' }, { name: { id: 'Pack B (Elektronik)', en: 'Pack B (Electronics)' }, value: 'Li-Ion 3S2P, 11.1V, ~5.000 mAh' }, { name: 'Hot-swappable', value: { id: 'Ya (top-access panel)', en: 'Yes (top-access panel)' } }] },
+  { title: { id: 'Komunikasi & Kontrol', en: 'Communication & Control' }, rows: [{ name: { id: 'Tipe link', en: 'Link type' }, value: 'Physical tether' }, { name: { id: 'Panjang tether', en: 'Tether length' }, value: '20 m' }, { name: { id: 'Interface operator', en: 'Operator interface' }, value: { id: 'Tablet / laptop di permukaan', en: 'Tablet / laptop at surface' } }, { name: 'Backend dashboard', value: { id: 'Firebase (deployment penuh)', en: 'Firebase (full deployment)' } }] },
 ]
 
 const SUMMARY_STATS = [
@@ -50,8 +50,8 @@ function SpecGroupCard({ group, defaultOpen }: { group: SpecGroup; defaultOpen: 
         <div style={{ background: 'var(--t-bg)' }}>
           {group.rows.map((row, i) => (
             <div key={i} className="flex items-center justify-between px-5 py-3 border-t" style={{ borderColor: 'var(--t-border)' }}>
-              <span className="text-sm" style={{ color: 'var(--t-muted)' }}>{row.name}</span>
-              <span className="text-sm font-medium font-[family-name:var(--font-jetbrains-mono)]" style={{ color: 'var(--t-text)' }}>{row.value}</span>
+              <span className="text-sm" style={{ color: 'var(--t-muted)' }}>{typeof row.name === 'string' ? row.name : row.name[lang]}</span>
+              <span className="text-sm font-medium font-[family-name:var(--font-jetbrains-mono)]" style={{ color: 'var(--t-text)' }}>{typeof row.value === 'string' ? row.value : row.value[lang]}</span>
             </div>
           ))}
         </div>

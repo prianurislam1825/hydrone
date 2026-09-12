@@ -20,17 +20,18 @@ import { useEffect, useRef, useState } from 'react'
 
 /* ── All menu items ─────────────────────────────────────────────── */
 const ALL_MENUS = [
-  { label: 'Dashboard',  href: '/dashboard',          icon: LayoutDashboard, color: '#1A56DB' },
-  { label: 'Riwayat',    href: '/dashboard/history',  icon: History,         color: '#F59E0B' },
-  { label: 'Perangkat',  href: '/dashboard/devices',  icon: Cpu,             color: '#8B5CF6' },
-  { label: 'Kontrol',    href: '/dashboard/control',  icon: Gamepad2,        color: '#F05A22' },
-  { label: 'Alert',      href: '/dashboard/alerts',   icon: BellIcon,        color: '#EF4444' },
-  { label: 'Pengaturan', href: '/dashboard/profile',  icon: Settings,        color: '#22C55E' },
+  { label: { id: 'Dashboard', en: 'Dashboard' },  href: '/dashboard',          icon: LayoutDashboard, color: '#1A56DB' },
+  { label: { id: 'Riwayat', en: 'History' },    href: '/dashboard/history',  icon: History,         color: '#F59E0B' },
+  { label: { id: 'Perangkat', en: 'Devices' },  href: '/dashboard/devices',  icon: Cpu,             color: '#8B5CF6' },
+  { label: { id: 'Kontrol', en: 'Control' },    href: '/dashboard/control',  icon: Gamepad2,        color: '#F05A22' },
+  { label: { id: 'Alert', en: 'Alerts' },      href: '/dashboard/alerts',   icon: BellIcon,        color: '#EF4444' },
+  { label: { id: 'Pengaturan', en: 'Settings' }, href: '/dashboard/profile',  icon: Settings,        color: '#22C55E' },
 ]
 
 /* ── Grid menu dropdown ─────────────────────────────────────────── */
 function MenuGrid({ onClose }: { onClose: () => void }) {
   const pathname = usePathname()
+  const { lang } = useLang()
 
   return (
     <div
@@ -45,7 +46,7 @@ function MenuGrid({ onClose }: { onClose: () => void }) {
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: 'var(--t-border)' }}>
         <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--t-muted)' }}>
-          Semua Menu
+          {lang === 'id' ? 'Semua Menu' : 'All Menus'}
         </span>
         <button onClick={onClose} className="w-6 h-6 rounded-lg flex items-center justify-center hover:bg-[#EF4444]/10 transition-all" style={{ color: 'var(--t-muted)' }}>
           <X size={14} />
@@ -82,7 +83,7 @@ function MenuGrid({ onClose }: { onClose: () => void }) {
                 className="text-[10px] font-semibold text-center leading-tight"
                 style={{ color: isActive ? item.color : 'var(--t-muted)' }}
               >
-                {item.label}
+                {item.label[lang]}
               </span>
               {isActive && (
                 <span className="w-1 h-1 rounded-full" style={{ background: item.color }} />
@@ -135,7 +136,7 @@ export default function TopBar() {
         <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold border"
           style={{ background: 'rgba(34,197,94,0.08)', borderColor: 'rgba(34,197,94,0.2)', color: '#22C55E' }}>
           <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-[live-pulse_2s_ease-in-out_infinite]" />
-          LOCAL MODE
+          {lang === 'id' ? 'MODE LOKAL' : 'LOCAL MODE'}
         </div>
       </div>
 
@@ -185,7 +186,7 @@ export default function TopBar() {
         <div ref={menuRef} className="relative">
           <button
             onClick={() => setMenuOpen(v => !v)}
-            aria-label="Semua menu"
+            aria-label={lang === 'id' ? 'Semua menu' : 'All menus'}
             aria-expanded={menuOpen}
             className="flex items-center justify-center w-9 h-9 rounded-xl border transition-all"
             style={{

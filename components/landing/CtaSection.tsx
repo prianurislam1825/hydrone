@@ -4,7 +4,7 @@ import { useLang } from '@/lib/i18n/context'
 import { ArrowRight, Satellite } from 'lucide-react'
 
 const T = {
-  badge:   { id: 'LIVE DATA STREAM', en: 'LIVE DATA STREAM' },
+  badge:   { id: 'STREAM DATA LANGSUNG', en: 'LIVE DATA STREAM' },
   heading: { id: 'Lihat sensor Hydrone streaming secara real-time.', en: "See Hydrone's sensors streaming in real time." },
   sub:     { id: 'pH, TDS, turbidity, suhu, dan kedalaman — langsung dari sungai ke browser kamu.', en: 'pH, TDS, turbidity, temperature, and depth — straight from the river to your browser.' },
   cta:     { id: 'Buka Dashboard', en: 'Open Dashboard' },

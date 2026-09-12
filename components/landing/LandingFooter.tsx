@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useLang } from '@/lib/i18n/context'
 import { Github, Mail, MessageCircle } from 'lucide-react'
@@ -21,7 +21,7 @@ export default function LandingFooter() {
   const year = new Date().getFullYear()
 
   const T = {
-    tagline: { id: 'Cleaning Rivers. Reading Water. Built by Students.', en: 'Cleaning Rivers. Reading Water. Built by Students.' },
+    tagline: { id: 'Membersihkan Sungai. Membaca Air. Karya Siswa.', en: 'Cleaning Rivers. Reading Water. Built by Students.' },
     desc:    { id: 'Proyek ROV bawah air untuk pembersihan makroplastik dan pemantauan kualitas air sungai — oleh Hydrone untuk IID INNOPA 2026.', en: 'Underwater ROV project for macroplastic collection and river water quality monitoring — by Hydrone for IID INNOPA 2026.' },
     nav:     { id: 'Navigasi', en: 'Navigation' },
     contact: { id: 'Kontak', en: 'Contact' },

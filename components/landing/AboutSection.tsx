@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useLang } from '@/lib/i18n/context'
 import {
@@ -26,7 +26,7 @@ const HIGHLIGHTS = [
     icon:     <Navigation2 size={16} />,
     color:    '#1A56DB',
     gradient: 'linear-gradient(135deg,#1A56DB,#0D3A9E)',
-    label:    'ROV',
+    label:    { id: 'ROV', en: 'ROV' },
     desc: {
       id: 'Remotely Operated Vehicle untuk operasi di sungai.',
       en: 'Remotely Operated Vehicle for river operations.',
@@ -36,7 +36,7 @@ const HIGHLIGHTS = [
     icon:     <Activity size={16} />,
     color:    '#00B4D8',
     gradient: 'linear-gradient(135deg,#00B4D8,#0891b2)',
-    label:    'REAL-TIME MONITORING',
+    label:    { id: 'MONITORING REAL-TIME', en: 'REAL-TIME MONITORING' },
     desc: {
       id: 'Memantau kondisi air secara real-time.',
       en: 'Monitor water conditions in real time.',
@@ -46,7 +46,7 @@ const HIGHLIGHTS = [
     icon:     <Trash2 size={16} />,
     color:    '#F05A22',
     gradient: 'linear-gradient(135deg,#F05A22,#c2410c)',
-    label:    'PLASTIC CAPTURE',
+    label:    { id: 'PENANGKAP PLASTIK', en: 'PLASTIC CAPTURE' },
     desc: {
       id: 'Membantu menangkap sampah plastik di sungai.',
       en: 'Helps capture plastic waste in rivers.',
@@ -56,7 +56,7 @@ const HIGHLIGHTS = [
     icon:     <Droplets size={16} />,
     color:    '#22C55E',
     gradient: 'linear-gradient(135deg,#22C55E,#16a34a)',
-    label:    'WATER QUALITY',
+    label:    { id: 'KUALITAS AIR', en: 'WATER QUALITY' },
     desc: {
       id: 'Memantau pH, TDS, turbidity, dan suhu.',
       en: 'Monitors pH, TDS, turbidity, and temperature.',
@@ -83,7 +83,7 @@ const T = {
   caption:  { id: 'Sungai Dengkeng, Jawa Tengah.', en: 'Sungai Dengkeng, Central Java.' },
 
   /* Control Center block */
-  ccEyebrow: { id: 'CONTROL CENTER', en: 'CONTROL CENTER' },
+  ccEyebrow: { id: 'PUSAT KENDALI', en: 'CONTROL CENTER' },
   ccHeading: { id: 'Dikendalikan dari Permukaan', en: 'Controlled from the Surface' },
   ccDesc: {
     id: 'Operator memantau kamera, kondisi sensor, status sistem, dan mengendalikan pergerakan Hydrone secara langsung melalui Control Center — menggunakan tether dan live camera feed dari ESP32-CAM.',
@@ -174,7 +174,7 @@ export default function AboutSection() {
 
                   {/* Label */}
                   <div className="text-[10px] font-extrabold uppercase tracking-widest mb-1" style={{ color: h.color }}>
-                    {h.label}
+                    {h.label[lang]}
                   </div>
 
                   {/* Desc */}
@@ -242,7 +242,7 @@ export default function AboutSection() {
                   <div className="absolute bottom-0 left-0 right-0 z-30 flex items-center justify-between px-4 py-2"
                     style={{ background: 'linear-gradient(to top, rgba(3,8,16,0.85), transparent)', backdropFilter: 'blur(4px)' }}>
                     <span className="text-[9px] font-mono" style={{ color: 'rgba(0,180,216,0.7)' }}>HYDRONE · ROV-01</span>
-                    <span className="text-[9px] font-mono" style={{ color: 'rgba(0,180,216,0.7)' }}>Sungai Dengkeng · Jawa Tengah</span>
+                    <span className="text-[9px] font-mono" style={{ color: 'rgba(0,180,216,0.7)' }}>{{ id: 'Sungai Dengkeng · Jawa Tengah', en: 'Dengkeng River · Central Java' }[lang]}</span>
                   </div>
                 </div>
 

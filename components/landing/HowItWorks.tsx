@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useLang } from '@/lib/i18n/context'
 import { BarChart3, CheckCircle2, Filter, Navigation2, Power, Waves } from 'lucide-react'
@@ -96,15 +96,15 @@ export default function HowItWorks() {
         {/* ── Header ── */}
         <div className="text-center mb-16" data-anim>
           <div className="text-[11px] font-bold tracking-[0.18em] uppercase mb-3" style={{ color: 'var(--t-muted)' }}>
-            Cara Kerja
+            {{ id: 'Cara Kerja', en: 'How It Works' }[lang]}
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold mb-3" style={{ color: 'var(--t-text)' }}>
-            Bagaimana{' '}
+            {lang === 'id' ? 'Bagaimana ' : 'How '}
             <span style={{
               background: 'linear-gradient(135deg, #1A56DB, #00B4D8)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-            }}>Hydrone</span>{' '}
-            Beroperasi?
+            }}>Hydrone</span>
+            {lang === 'id' ? ' Beroperasi?' : ' Operates?'}
           </h2>
           <p className="text-sm max-w-lg mx-auto" style={{ color: 'var(--t-muted)' }}>
             {lang === 'id'

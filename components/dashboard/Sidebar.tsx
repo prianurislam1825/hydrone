@@ -69,7 +69,7 @@ export default function Sidebar() {
           <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[10px] font-bold border"
             style={{ background: 'rgba(34,197,94,0.08)', borderColor: 'rgba(34,197,94,0.2)', color: '#22C55E' }}>
             <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-[live-pulse_2s_ease-in-out_infinite]" />
-            LOCAL MODE
+            {lang === 'id' ? 'MODE LOKAL' : 'LOCAL MODE'}
           </div>
         </div>
       )}
@@ -129,13 +129,13 @@ export default function Sidebar() {
         )}
         <Link href="/login"
           className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl transition-all hover:bg-red-50 group"
-          title={collapsed ? 'Keluar' : undefined}
+          title={collapsed ? (lang === 'id' ? 'Keluar' : 'Log Out') : undefined}
           style={{ color: 'var(--t-muted)' }}
           onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.color = '#EF4444' }}
           onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.color = 'var(--t-muted)' }}
         >
           <LogOut size={16} className="shrink-0" />
-          {!collapsed && <span className="text-sm font-semibold">Keluar</span>}
+          {!collapsed && <span className="text-sm font-semibold">{lang === 'id' ? 'Keluar' : 'Log Out'}</span>}
         </Link>
       </div>
 
@@ -144,7 +144,7 @@ export default function Sidebar() {
         onClick={() => setCollapsed(v => !v)}
         className="absolute -right-3 top-16 w-6 h-6 rounded-full border flex items-center justify-center transition-all hover:border-[#1A56DB] z-10"
         style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)', color: 'var(--t-muted)' }}
-        aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        aria-label={collapsed ? (lang === 'id' ? 'Luaskan sidebar' : 'Expand sidebar') : (lang === 'id' ? 'Tutup sidebar' : 'Collapse sidebar')}
       >
         {collapsed ? <ChevronRight size={12} /> : <ChevronLeft size={12} />}
       </button>
