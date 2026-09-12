@@ -13,7 +13,7 @@ export default function PartnersSection() {
   const { lang } = useLang()
 
   const T = {
-    eyebrow: { id: 'DIDUKUNG OLEH', en: 'SUPPORTED BY' },
+    eyebrow: { id: 'BERKOLABORASI DENGAN', en: 'IN COLLABORATION WITH' },
     heading: { id: 'Bersama membangun solusi perairan bersih untuk Indonesia.', en: 'Together building clean water solutions for Indonesia.' },
   }
 

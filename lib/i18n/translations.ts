@@ -238,7 +238,7 @@ export const translations = {
   },
   partners: {
     sectionLabel: { id: 'Mitra Kami', en: 'Our Partners' },
-    heading: { id: 'Didukung Oleh', en: 'Supported By' },
+    heading: { id: 'Berkolaborasi Dengan', en: 'In Collaboration With' },
     tagline: {
       id: 'Bersama membangun solusi perairan bersih untuk Indonesia',
       en: 'Together building clean water solutions for Indonesia',
