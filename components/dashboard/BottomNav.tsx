@@ -2,215 +2,91 @@
 
 import { useLang } from '@/lib/i18n/context'
 import {
-    Bell,
     Cpu,
     Gamepad2, History,
     LayoutDashboard,
-    LayoutGrid,
-    Settings,
-    User,
-    X
+    User
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
 
-/* ── 6 Bottom Tabs (Home, Riwayat, Kontroler, Perangkat, Profil, Menu) ── */
+/* ── 5 Bottom Tabs (Home, Riwayat, Kontroler, Perangkat, Profil) ── */
 const TABS = [
   { label: { id: 'Home', en: 'Home' },             href: '/dashboard',          icon: LayoutDashboard },
   { label: { id: 'Riwayat', en: 'History' },       href: '/dashboard/history',  icon: History },
   { label: { id: 'Kontroler', en: 'Controller' }, href: '/dashboard/control',  icon: Gamepad2, center: true },
   { label: { id: 'Perangkat', en: 'Devices' },     href: '/dashboard/devices',  icon: Cpu },
   { label: { id: 'Profil', en: 'Profile' },         href: '/dashboard/profile',  icon: User },
-  { label: { id: 'Menu', en: 'Menu' },             href: null,                  icon: LayoutGrid, gridTrigger: true },
 ]
 
-/* ── All menus for the grid sheet ─────────────────────────── */
-const ALL_MENUS = [
-  { label: { id: 'Dashboard', en: 'Dashboard' },  href: '/dashboard',          icon: LayoutDashboard, color: '#1A56DB' },
-  { label: { id: 'Riwayat', en: 'History' },    href: '/dashboard/history',  icon: History,         color: '#F59E0B' },
-  { label: { id: 'Perangkat', en: 'Devices' },  href: '/dashboard/devices',  icon: Cpu,             color: '#8B5CF6' },
-  { label: { id: 'Kontrol', en: 'Control' },    href: '/dashboard/control',  icon: Gamepad2,        color: '#F05A22' },
-  { label: { id: 'Alert', en: 'Alerts' },      href: '/dashboard/alerts',   icon: Bell,            color: '#EF4444' },
-  { label: { id: 'Pengaturan', en: 'Settings' }, href: '/dashboard/profile',  icon: Settings,        color: '#22C55E' },
-]
-
-/* ── Menu grid bottom sheet ───────────────────────────────── */
-function MenuSheet({ onClose }: { onClose: () => void }) {
+/* ── BottomNav ────────────────────────────────────────────── */
+export default function BottomNav() {
   const pathname = usePathname()
   const { lang } = useLang()
 
   return (
-    <>
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
-        onClick={onClose}
-        aria-hidden
-      />
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-50 border-t backdrop-blur-xl lg:hidden"
+      style={{ background: 'var(--t-nav-bg)', borderColor: 'var(--t-border)' }}
+      aria-label="Bottom navigation"
+    >
+      <div className="flex items-stretch">
+        {TABS.map(tab => {
+          const Icon = tab.icon
 
-      {/* Sheet */}
-      <div
-        className="fixed bottom-0 left-0 right-0 z-50 rounded-t-3xl overflow-hidden"
-        style={{
-          background:  'var(--t-surface)',
-          boxShadow:   '0 -8px 40px rgba(0,0,0,0.2)',
-          paddingBottom: 'calc(env(safe-area-inset-bottom) + 80px)',
-        }}
-      >
-        {/* Handle */}
-        <div className="flex justify-center pt-3 pb-1">
-          <div className="w-10 h-1 rounded-full" style={{ background: 'var(--t-border)' }} />
-        </div>
-
-        {/* Header */}
-        <div className="flex items-center justify-between px-5 py-3 border-b" style={{ borderColor: 'var(--t-border)' }}>
-          <span className="text-sm font-extrabold" style={{ color: 'var(--t-text)' }}>{lang === 'id' ? 'Semua Menu' : 'All Menus'}</span>
-          <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-xl flex items-center justify-center border transition-all"
-            style={{ borderColor: 'var(--t-border)', color: 'var(--t-muted)', background: 'var(--t-bg)' }}
-          >
-            <X size={15} />
-          </button>
-        </div>
-
-        {/* Grid 3×2 */}
-        <div className="grid grid-cols-3 gap-3 p-4">
-          {ALL_MENUS.map(item => {
-            const Icon     = item.icon
-            const isActive = item.href === '/dashboard'
-              ? pathname === '/dashboard'
-              : pathname.startsWith(item.href)
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={onClose}
-                className="flex flex-col items-center gap-2.5 py-4 px-2 rounded-2xl transition-all active:scale-95"
-                style={{
-                  background:  isActive ? item.color + '15' : 'var(--t-bg)',
-                  border:      `1px solid ${isActive ? item.color + '40' : 'var(--t-border)'}`,
-                }}
-              >
-                <div
-                  className="w-11 h-11 rounded-xl flex items-center justify-center"
-                  style={{ background: item.color + '18' }}
-                >
-                  <Icon size={20} style={{ color: item.color }} strokeWidth={isActive ? 2.5 : 1.8} />
-                </div>
-                <span
-                  className="text-xs font-semibold text-center leading-tight"
-                  style={{ color: isActive ? item.color : 'var(--t-text)' }}
-                >
-                  {item.label[lang]}
-                </span>
-              </Link>
-            )
-          })}
-        </div>
-      </div>
-    </>
-  )
-}
-
-/* ── BottomNav ────────────────────────────────────────────── */
-export default function BottomNav() {
-  const pathname          = usePathname()
-  const { lang }          = useLang()
-  const [sheetOpen, setSheetOpen] = useState(false)
-
-  return (
-    <>
-      {/* Menu sheet */}
-      {sheetOpen && <MenuSheet onClose={() => setSheetOpen(false)} />}
-
-      <nav
-        className="fixed bottom-0 left-0 right-0 z-50 border-t backdrop-blur-xl lg:hidden"
-        style={{ background: 'var(--t-nav-bg)', borderColor: 'var(--t-border)' }}
-        aria-label="Bottom navigation"
-      >
-        <div className="flex items-stretch">
-          {TABS.map(tab => {
-            const Icon = tab.icon
-
-            /* ── Grid trigger button ── */
-            if ('gridTrigger' in tab && tab.gridTrigger) {
-              return (
-                <button
-                  key="menu-grid"
-                  onClick={() => setSheetOpen(v => !v)}
-                  className="flex-1 flex flex-col items-center justify-center gap-0.5 py-2 px-0.5 min-h-[54px] transition-all"
-                  style={{ color: sheetOpen ? '#1A56DB' : 'var(--t-muted)' }}
-                  aria-label="Semua menu"
-                  aria-expanded={sheetOpen}
-                >
-                  {sheetOpen
-                    ? <X size={18} strokeWidth={2.5} style={{ color: '#1A56DB' }} />
-                    : <LayoutGrid size={18} strokeWidth={1.8} />
-                  }
-                  <span className="text-[9px] font-semibold tracking-tight">
-                    {sheetOpen ? (lang === 'id' ? 'Tutup' : 'Close') : (lang === 'id' ? 'Menu' : 'Menu')}
-                  </span>
-                </button>
-              )
-            }
-
-            /* ── Center elevated button (Kontroler) ── */
-            if ('center' in tab && tab.center && tab.href) {
-              const isActive = pathname.startsWith(tab.href)
-              return (
-                <Link
-                  key={tab.href}
-                  href={tab.href}
-                  className="flex-1 flex flex-col items-center justify-center relative -mt-3 pb-0.5 px-0.5"
-                  aria-current={isActive ? 'page' : undefined}
-                >
-                  <div
-                    className="w-12 h-12 rounded-full flex items-center justify-center shadow-xl mb-0.5 transition-all duration-200"
-                    style={{
-                      background: isActive
-                        ? 'linear-gradient(135deg, #1A56DB, #00B4D8)'
-                        : 'linear-gradient(135deg, #1C2A4A, #1A3060)',
-                      boxShadow: isActive
-                        ? '0 4px 20px rgba(26,86,219,0.5), 0 0 0 3px var(--t-bg)'
-                        : '0 4px 16px rgba(0,0,0,0.3), 0 0 0 3px var(--t-bg)',
-                    }}
-                  >
-                    <Icon size={20} color="#ffffff" strokeWidth={isActive ? 2.5 : 2} />
-                  </div>
-                  <span className="text-[9px] font-bold tracking-tight" style={{ color: isActive ? '#1A56DB' : 'var(--t-muted)' }}>
-                    {tab.label[lang]}
-                  </span>
-                </Link>
-              )
-            }
-
-            /* ── Regular tab ── */
-            if (!tab.href) return null
-            const isActive = tab.href === '/dashboard'
-              ? pathname === '/dashboard'
-              : pathname.startsWith(tab.href)
-
+          /* ── Center elevated button (Kontroler) ── */
+          if (tab.center) {
+            const isActive = pathname.startsWith(tab.href)
             return (
               <Link
                 key={tab.href}
                 href={tab.href}
-                className="flex-1 flex flex-col items-center justify-center gap-0.5 py-2 px-0.5 min-h-[54px] relative transition-all"
+                className="flex-1 flex flex-col items-center justify-center relative -mt-3 pb-0.5 px-0.5"
                 aria-current={isActive ? 'page' : undefined}
-                style={{ color: isActive ? '#1A56DB' : 'var(--t-muted)' }}
               >
-                {isActive && (
-                  <span className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full bg-[#1A56DB]" />
-                )}
-                <Icon size={18} strokeWidth={isActive ? 2.5 : 1.8} />
-                <span className="text-[9px] font-semibold tracking-tight">{tab.label[lang]}</span>
+                <div
+                  className="w-12 h-12 rounded-full flex items-center justify-center shadow-xl mb-0.5 transition-all duration-200"
+                  style={{
+                    background: isActive
+                      ? 'linear-gradient(135deg, #1A56DB, #00B4D8)'
+                      : 'linear-gradient(135deg, #1C2A4A, #1A3060)',
+                    boxShadow: isActive
+                      ? '0 4px 20px rgba(26,86,219,0.5), 0 0 0 3px var(--t-bg)'
+                      : '0 4px 16px rgba(0,0,0,0.3), 0 0 0 3px var(--t-bg)',
+                  }}
+                >
+                  <Icon size={20} color="#ffffff" strokeWidth={isActive ? 2.5 : 2} />
+                </div>
+                <span className="text-[9px] font-bold tracking-tight" style={{ color: isActive ? '#1A56DB' : 'var(--t-muted)' }}>
+                  {tab.label[lang]}
+                </span>
               </Link>
             )
-          })}
-        </div>
-      </nav>
-    </>
+          }
+
+          /* ── Regular tab ── */
+          const isActive = tab.href === '/dashboard'
+            ? pathname === '/dashboard'
+            : pathname.startsWith(tab.href)
+
+          return (
+            <Link
+              key={tab.href}
+              href={tab.href}
+              className="flex-1 flex flex-col items-center justify-center gap-0.5 py-2 px-0.5 min-h-[54px] relative transition-all"
+              aria-current={isActive ? 'page' : undefined}
+              style={{ color: isActive ? '#1A56DB' : 'var(--t-muted)' }}
+            >
+              {isActive && (
+                <span className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full bg-[#1A56DB]" />
+              )}
+              <Icon size={18} strokeWidth={isActive ? 2.5 : 1.8} />
+              <span className="text-[9px] font-semibold tracking-tight">{tab.label[lang]}</span>
+            </Link>
+          )
+        })}
+      </div>
+    </nav>
   )
 }
+
