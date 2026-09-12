@@ -48,7 +48,7 @@ const TEAM: TeamMember[] = [
     email: 'raisasa.qs@gmail.com', phone: '085727178769', initials: 'RQ',
   },
   {
-    name: 'Marsya Razanah Khansa',
+    name: 'Marsya Razanah',
     role: { id: 'CMO', en: 'CMO' },
     desc: { id: 'Pemasaran & Visi', en: 'Marketing & Vision' },
     color: '#F59E0B', gradient: 'linear-gradient(135deg, #F59E0B, #F05A22)',

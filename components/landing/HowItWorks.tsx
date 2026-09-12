@@ -98,7 +98,7 @@ export default function HowItWorks() {
           <div className="text-[11px] font-bold tracking-[0.18em] uppercase mb-3" style={{ color: 'var(--t-muted)' }}>
             {{ id: 'Cara Kerja', en: 'How It Works' }[lang]}
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold mb-3" style={{ color: 'var(--t-text)' }}>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4 tracking-tight" style={{ color: 'var(--t-text)' }}>
             {lang === 'id' ? 'Bagaimana ' : 'How '}
             <span style={{
               background: 'linear-gradient(135deg, #1A56DB, #00B4D8)',

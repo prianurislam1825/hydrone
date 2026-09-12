@@ -131,7 +131,7 @@ export default function AboutSection() {
 
             {/* Heading */}
             <h2
-              className="text-3xl sm:text-4xl font-extrabold mb-6 leading-tight"
+              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight tracking-tight"
               style={{ color: 'var(--t-text)', whiteSpace: 'pre-line' }}
             >
               {T.heading[lang]}

@@ -21,9 +21,8 @@ export default function LandingFooter() {
   const year = new Date().getFullYear()
 
   const T = {
-    tagline: { id: 'Membersihkan Sungai. Membaca Air. Karya Siswa.', en: 'Cleaning Rivers. Reading Water. Built by Students.' },
+    tagline: { id: 'Membersihkan Sungai. Membaca Air.', en: 'Cleaning Rivers. Reading Water.' },
     desc:    { id: 'Proyek ROV bawah air untuk pembersihan makroplastik dan pemantauan kualitas air sungai — oleh Hydrone untuk IID INNOPA 2026.', en: 'Underwater ROV project for macroplastic collection and river water quality monitoring — by Hydrone for IID INNOPA 2026.' },
-    nav:     { id: 'Navigasi', en: 'Navigation' },
     contact: { id: 'Kontak', en: 'Contact' },
     rights:  { id: `© ${year} Tim Hydrone · Hydrone. Semua hak cipta dilindungi.`, en: `© ${year} Hydrone Team · Hydrone. All rights reserved.` },
     school:  { id: 'SMAN 1 Surakarta & SMA Muhammadiyah PK', en: 'SMAN 1 Surakarta & SMA Muhammadiyah PK' },
@@ -39,7 +38,7 @@ export default function LandingFooter() {
         <div className="h-0.5" style={{ background: 'linear-gradient(to right, #1A56DB, #00B4D8, #F05A22, #1A56DB)' }} />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-          <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr] gap-12 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-12 mb-12">
 
             {/* Brand col */}
             <div>
@@ -69,24 +68,6 @@ export default function LandingFooter() {
               <p className="text-sm leading-relaxed max-w-xs" style={{ color: 'var(--t-muted)' }}>
                 {T.desc[lang]}
               </p>
-            </div>
-
-            {/* Nav col */}
-            <div>
-              <div className="text-[10px] font-bold uppercase tracking-widest mb-4" style={{ color: 'var(--t-muted)' }}>{T.nav[lang]}</div>
-              <ul className="flex flex-col gap-2.5">
-                {NAV_LINKS.map(l => (
-                  <li key={l.href}>
-                    <a
-                      href={l.href}
-                      className="text-sm transition-colors hover:text-[#1A56DB]"
-                      style={{ color: 'var(--t-muted)' }}
-                    >
-                      {l.label[lang]}
-                    </a>
-                  </li>
-                ))}
-              </ul>
             </div>
 
             {/* Contact col */}

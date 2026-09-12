@@ -5,9 +5,9 @@ import { ArrowRight, Satellite } from 'lucide-react'
 
 const T = {
   badge:   { id: 'STREAM DATA LANGSUNG', en: 'LIVE DATA STREAM' },
-  heading: { id: 'Lihat sensor Hydrone streaming secara real-time.', en: "See Hydrone's sensors streaming in real time." },
-  sub:     { id: 'pH, TDS, turbidity, suhu, dan kedalaman — langsung dari sungai ke browser kamu.', en: 'pH, TDS, turbidity, temperature, and depth — straight from the river to your browser.' },
-  cta:     { id: 'Buka Dashboard', en: 'Open Dashboard' },
+  heading: { id: 'Punya pertanyaan atau ingin berkolaborasi?', en: 'Have questions or want to collaborate?' },
+  sub:     { id: 'Tim Hydrone siap berdiskusi mengenai teknologi ROV dan pemantauan air.', en: 'The Hydrone team is ready to discuss ROV tech and water monitoring.' },
+  cta:     { id: 'Hubungi Kami', en: 'Contact Us' },
 }
 
 export default function CtaSection() {
@@ -57,7 +57,7 @@ export default function CtaSection() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
-                href="/login"
+                href="mailto:hydrone.id@gmail.com"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-white font-bold rounded-xl transition-all min-h-[52px] text-base hover:shadow-lg hover:-translate-y-0.5"
                 style={{ color: '#1A56DB' }}
               >
