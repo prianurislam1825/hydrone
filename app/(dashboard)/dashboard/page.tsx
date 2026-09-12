@@ -23,7 +23,7 @@ import { useCallback, useState } from 'react'
 const TOP_CARDS = [
   {
     key:      'ph',
-    label:    'pH',
+    label:    { id: 'pH', en: 'pH' },
     unit:     'pH',
     icon:     <Droplets    size={20} />,
     color:    '#1A56DB',
@@ -32,7 +32,7 @@ const TOP_CARDS = [
   },
   {
     key:      'tds',
-    label:    'TDS',
+    label:    { id: 'TDS', en: 'TDS' },
     unit:     'ppm',
     icon:     <Layers      size={20} />,
     color:    '#F59E0B',
@@ -41,7 +41,7 @@ const TOP_CARDS = [
   },
   {
     key:      'turbidity',
-    label:    'Kekeruhan',
+    label:    { id: 'Kekeruhan', en: 'Turbidity' },
     unit:     'NTU',
     icon:     <Wind        size={20} />,
     color:    '#F05A22',
@@ -50,7 +50,7 @@ const TOP_CARDS = [
   },
   {
     key:      'temperature',
-    label:    'Suhu',
+    label:    { id: 'Suhu', en: 'Temperature' },
     unit:     '°C',
     icon:     <Thermometer size={20} />,
     color:    '#22C55E',
@@ -59,7 +59,7 @@ const TOP_CARDS = [
   },
   {
     key:      '_depth',
-    label:    'Kedalaman',
+    label:    { id: 'Kedalaman', en: 'Depth' },
     unit:     'm',
     icon:     <Activity    size={20} />,
     color:    '#8B5CF6',
@@ -90,11 +90,11 @@ const STATUS_BG: Record<Status, string> = {
   danger:  'rgba(239,68,68,0.08)',
   offline: 'rgba(107,114,128,0.08)',
 }
-const STATUS_LABEL: Record<Status, { id: string; badge: string }> = {
-  normal:  { id: 'Normal',   badge: 'Aman'      },
-  warning: { id: 'Waspada',  badge: 'Meningkat' },
-  danger:  { id: 'Bahaya',   badge: 'Tinggi'    },
-  offline: { id: 'Offline',  badge: 'Offline'   },
+const STATUS_LABEL: Record<Status, { id: { id: string; en: string }; badge: { id: string; en: string } }> = {
+  normal:  { id: { id: 'Normal', en: 'Normal' },   badge: { id: 'Aman', en: 'Safe' } },
+  warning: { id: { id: 'Waspada', en: 'Caution' },  badge: { id: 'Meningkat', en: 'Elevated' } },
+  danger:  { id: { id: 'Bahaya', en: 'Danger' },   badge: { id: 'Tinggi', en: 'High' } },
+  offline: { id: { id: 'Offline', en: 'Offline' },  badge: { id: 'Offline', en: 'Offline' } },
 }
 
 /* ─── Sparkline ─── */
@@ -124,14 +124,15 @@ function Sparkline({ data, color, min, max }: { data: number[]; color: string; m
 function SensorTopCard({ cfg, value, history, unit }: {
   cfg: typeof TOP_CARDS[0]; value: number | null; history: number[]; unit: string
 }) {
-  const status  = getStatus(value, cfg.normalMin, cfg.normalMax)
-  const sColor  = STATUS_COLOR[status]
-  const sBg     = STATUS_BG[status]
-  const sLabel  = STATUS_LABEL[status]
+  const { lang } = useLang()
+  const status   = getStatus(value, cfg.normalMin, cfg.normalMax)
+  const sColor   = STATUS_COLOR[status]
+  const sBg      = STATUS_BG[status]
+  const sLabel   = STATUS_LABEL[status]
 
   let display = '--'
   if (value !== null) {
-    if (cfg.key === 'tds')    display = Math.round(value).toString()
+    if (cfg.key === 'tds')         display = Math.round(value).toString()
     else if (cfg.key === '_depth') display = value.toFixed(1)
     else if (cfg.key === 'ph')     display = value.toFixed(2)
     else                           display = value.toFixed(1)
@@ -143,10 +144,10 @@ function SensorTopCard({ cfg, value, history, unit }: {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5">
           <span style={{ color: cfg.color }}>{cfg.icon}</span>
-          <span className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--t-muted)' }}>{cfg.label}</span>
+          <span className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--t-muted)' }}>{cfg.label[lang]}</span>
         </div>
         <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: sBg, color: sColor }}>
-          {sLabel.badge}
+          {sLabel.badge[lang]}
         </span>
       </div>
 
@@ -169,9 +170,9 @@ function SensorTopCard({ cfg, value, history, unit }: {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1">
           <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: sColor, boxShadow: value !== null ? `0 0 4px ${sColor}` : 'none' }} />
-          <span className="text-[10px] font-semibold" style={{ color: sColor }}>{sLabel.id}</span>
+          <span className="text-[10px] font-semibold" style={{ color: sColor }}>{sLabel.id[lang]}</span>
         </div>
-        <span className="text-[10px]" style={{ color: 'var(--t-muted)' }}>Aman: {cfg.ranges.ok}</span>
+        <span className="text-[10px]" style={{ color: 'var(--t-muted)' }}>{lang === 'id' ? 'Aman: ' : 'Safe: '}{cfg.ranges.ok}</span>
       </div>
     </div>
   )
@@ -179,17 +180,20 @@ function SensorTopCard({ cfg, value, history, unit }: {
 
 /* ─── Water quality card ─── */
 function WaterQualityCard({ status, values, connected }: { status: Status; values: Record<string,string>; connected: boolean }) {
-  const sColor = STATUS_COLOR[status]
-  const sBg    = STATUS_BG[status]
-  const Icon   = status === 'offline' ? WifiOff : status === 'normal' ? CheckCircle2 : AlertTriangle
+  const { lang } = useLang()
+  const sColor   = STATUS_COLOR[status]
+  const sBg      = STATUS_BG[status]
+  const Icon     = status === 'offline' ? WifiOff : status === 'normal' ? CheckCircle2 : AlertTriangle
 
   return (
     <div className="rounded-2xl border p-5 flex flex-col gap-3" style={{ background: 'var(--t-surface)', borderColor: sColor + '40' }}>
       <div className="flex items-center justify-between">
-        <span className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--t-muted)' }}>Kualitas Air</span>
+        <span className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--t-muted)' }}>
+          {lang === 'id' ? 'Kualitas Air' : 'Water Quality'}
+        </span>
         {!connected && (
           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: STATUS_BG.offline, color: STATUS_COLOR.offline }}>
-            Sensor Offline
+            {lang === 'id' ? 'Sensor Offline' : 'Sensor Offline'}
           </span>
         )}
       </div>
@@ -199,13 +203,13 @@ function WaterQualityCard({ status, values, connected }: { status: Status; value
         </div>
         <div>
           <div className="font-extrabold text-lg leading-tight" style={{ color: 'var(--t-text)' }}>
-            {status === 'offline'  ? 'Tidak Ada Data'
-              : status === 'normal'  ? 'Kondisi Aman'
-              : status === 'warning' ? 'Kondisi Waspada'
-              :                        'Kondisi Bahaya'}
+            {status === 'offline'  ? (lang === 'id' ? 'Tidak Ada Data' : 'No Data Available')
+              : status === 'normal'  ? (lang === 'id' ? 'Kondisi Aman' : 'Safe Condition')
+              : status === 'warning' ? (lang === 'id' ? 'Kondisi Waspada' : 'Caution Condition')
+              :                        (lang === 'id' ? 'Kondisi Bahaya' : 'Danger Condition')}
           </div>
           <div className="text-xs px-2.5 py-0.5 rounded-full inline-block mt-0.5 font-bold" style={{ background: sBg, color: sColor }}>
-            ● {STATUS_LABEL[status].id.toUpperCase()}
+            ● {STATUS_LABEL[status].id[lang].toUpperCase()}
           </div>
         </div>
       </div>
@@ -225,12 +229,13 @@ function WaterQualityCard({ status, values, connected }: { status: Status; value
 function SystemPanelCard({ netOpen, filterOn, onNetToggle, onFilterToggle }: {
   netOpen: boolean; filterOn: boolean; onNetToggle: () => void; onFilterToggle: () => void
 }) {
+  const { lang } = useLang()
   const Toggle = ({ label, active, onToggle }: { label: string; active: boolean; onToggle: () => void }) => (
     <div className="flex items-center justify-between py-3 border-b last:border-0" style={{ borderColor: 'var(--t-border)' }}>
       <span className="text-sm font-semibold" style={{ color: 'var(--t-text)' }}>{label}</span>
       <div className="flex items-center gap-2">
         <span className="text-[10px] font-bold" style={{ color: active ? '#22C55E' : '#EF4444' }}>
-          {active ? 'AKTIF' : 'MATI'}
+          {active ? (lang === 'id' ? 'AKTIF' : 'ACTIVE') : (lang === 'id' ? 'MATI' : 'OFF')}
         </span>
         <button
           onClick={onToggle}
@@ -245,23 +250,28 @@ function SystemPanelCard({ netOpen, filterOn, onNetToggle, onFilterToggle }: {
 
   return (
     <div className="rounded-2xl border p-5 flex flex-col gap-0" style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)' }}>
-      <div className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: 'var(--t-muted)' }}>Sistem Pengolahan</div>
-      <Toggle label="Jaring (Net)" active={netOpen}  onToggle={onNetToggle} />
-      <Toggle label="Filter Aktif" active={filterOn} onToggle={onFilterToggle} />
+      <div className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: 'var(--t-muted)' }}>
+        {lang === 'id' ? 'Sistem Pengolahan' : 'Processing System'}
+      </div>
+      <Toggle label={lang === 'id' ? 'Jaring (Net)' : 'Net System'} active={netOpen}  onToggle={onNetToggle} />
+      <Toggle label={lang === 'id' ? 'Filter Aktif' : 'Active Filter'} active={filterOn} onToggle={onFilterToggle} />
     </div>
   )
 }
 
 /* ─── Battery card ─── */
 function BatteryCard({ batteryA, batteryB }: { batteryA: number | null; batteryB: number | null }) {
+  const { lang } = useLang()
   const packs = [
-    { label: 'Pack A · Propulsi',   pct: batteryA, volt: '14.8V' },
-    { label: 'Pack B · Elektronik', pct: batteryB, volt: '11.1V' },
+    { label: lang === 'id' ? 'Pack A · Propulsi' : 'Pack A · Propulsion',   pct: batteryA, volt: '14.8V' },
+    { label: lang === 'id' ? 'Pack B · Elektronik' : 'Pack B · Electronics', pct: batteryB, volt: '11.1V' },
   ]
   return (
     <div className="rounded-2xl border p-5 flex flex-col gap-3" style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)' }}>
       <div className="flex items-center justify-between">
-        <span className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--t-muted)' }}>Baterai</span>
+        <span className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--t-muted)' }}>
+          {lang === 'id' ? 'Baterai' : 'Battery'}
+        </span>
         <BatteryMedium size={14} style={{ color: 'var(--t-muted)' }} />
       </div>
       {packs.map(p => {
@@ -291,6 +301,7 @@ function BatteryCard({ batteryA, batteryB }: { batteryA: number | null; batteryB
 function SensorChartCard({ histories }: {
   histories: Record<string, number[]>
 }) {
+  const { lang } = useLang()
   const [active, setActive] = useState<string[]>(['ph', 'tds', 'turbidity', 'temperature'])
   const colors: Record<string,string> = { ph:'#1A56DB', tds:'#F59E0B', turbidity:'#F05A22', temperature:'#22C55E' }
 
@@ -301,7 +312,9 @@ function SensorChartCard({ histories }: {
   return (
     <div className="rounded-2xl border p-5 flex flex-col gap-4" style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)' }}>
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <span className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--t-muted)' }}>Grafik Sensor</span>
+        <span className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--t-muted)' }}>
+          {lang === 'id' ? 'Grafik Sensor' : 'Sensor Chart'}
+        </span>
         <div className="flex gap-2 flex-wrap">
           {SENSOR_CONFIGS.map(cfg => (
             <button
@@ -315,7 +328,7 @@ function SensorChartCard({ histories }: {
               }}
             >
               <span className="w-2 h-2 rounded-full" style={{ background: colors[cfg.key] }} />
-              {cfg.label}
+              {typeof cfg.label === 'string' ? cfg.label : cfg.label[lang]}
             </button>
           ))}
         </div>
@@ -351,9 +364,9 @@ function SensorChartCard({ histories }: {
       {/* Legend */}
       <div className="flex flex-wrap gap-3">
         {[
-          { color: '#22C55E', label: `Aman: pH 6.5–8.5` },
-          { color: '#F59E0B', label: `Waspada: 5.0–6.5 / 8.5–9.0` },
-          { color: '#EF4444', label: `Bahaya: <5.0 / >9.0` },
+          { color: '#22C55E', label: lang === 'id' ? 'Aman: pH 6.5–8.5' : 'Safe: pH 6.5–8.5' },
+          { color: '#F59E0B', label: lang === 'id' ? 'Waspada: 5.0–6.5 / 8.5–9.0' : 'Caution: 5.0–6.5 / 8.5–9.0' },
+          { color: '#EF4444', label: lang === 'id' ? 'Bahaya: <5.0 / >9.0' : 'Danger: <5.0 / >9.0' },
         ].map((l, i) => (
           <div key={i} className="flex items-center gap-1.5 text-[10px]" style={{ color: 'var(--t-muted)' }}>
             <span className="w-2.5 h-2.5 rounded-full" style={{ background: l.color }} />
@@ -388,7 +401,7 @@ export default function DashboardPage() {
     closed:  { id: 'TERTUTUP',  en: 'CLOSED' },
     active:  { id: 'AKTIF',     en: 'ACTIVE' },
     off:     { id: 'NONAKTIF',  en: 'OFF' },
-    temp:    { id: 'Suhu',      en: 'Temp' },
+    temp:    { id: 'Suhu',      en: 'Temperature' },
     depth:   { id: 'Kedalaman', en: 'Depth' },
     safe:    { id: 'Kondisi Aman',    en: 'Safe Condition' },
     warn:    { id: 'Kondisi Waspada', en: 'Caution' },
@@ -409,8 +422,6 @@ export default function DashboardPage() {
     : statuses.includes('danger')  ? 'danger'
     : statuses.includes('warning') ? 'warning'
     : 'normal'
-
-  const fmt = (v: number | null, decimals = 1) => v !== null ? v.toFixed(decimals) : '--'
 
   return (
     <div className="p-4 lg:p-6 flex flex-col gap-5 max-w-screen-2xl">
@@ -454,63 +465,29 @@ export default function DashboardPage() {
         })}
       </div>
 
-      {/* ── Middle row ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4">
-        {/* Left: water quality + depth chart */}
-        <div className="flex flex-col gap-4">
-          <WaterQualityCard
-            status={overallStatus}
-            connected={connected}
-            values={{
-              'pH':             fmt(values.ph, 2),
-              'TDS':            values.tds !== null ? `${Math.round(values.tds)} ppm` : '--',
-              'Turbidity':      values.turbidity !== null ? `${values.turbidity.toFixed(1)} NTU` : '--',
-              [T.temp[lang]]:   values.temperature !== null ? `${values.temperature.toFixed(1)}°C` : '--',
-              [T.depth[lang]]:  depth !== null ? `${depth.toFixed(1)} m` : '--',
-            }}
-          />
-          <DepthChart depth={depth ?? 0} tick={tick} />
+      {/* ── Middle section ── */}
+      <div className="grid lg:grid-cols-3 gap-5">
+        <WaterQualityCard status={overallStatus} values={{
+          pH: values.ph !== null ? `${values.ph.toFixed(2)}` : '--',
+          TDS: values.tds !== null ? `${Math.round(values.tds)} ppm` : '--',
+          [lang === 'id' ? 'Kekeruhan' : 'Turbidity']: values.turbidity !== null ? `${values.turbidity.toFixed(1)} NTU` : '--',
+          [lang === 'id' ? 'Suhu' : 'Temp']: values.temperature !== null ? `${values.temperature.toFixed(1)} °C` : '--',
+          [lang === 'id' ? 'Kedalaman' : 'Depth']: depth !== null ? `${depth.toFixed(1)} m` : '--',
+        }} connected={connected} />
+        <SystemPanelCard netOpen={netOpen} filterOn={filterOn} onNetToggle={toggleNet} onFilterToggle={toggleFilter} />
+        <BatteryCard batteryA={batteryA} batteryB={batteryB} />
+      </div>
+
+      {/* ── Bottom section: chart + depth gauge ── */}
+      <div className="grid lg:grid-cols-3 gap-5">
+        <div className="lg:col-span-2">
+          <SensorChartCard histories={history} />
         </div>
-
-        {/* Right: system panel + battery */}
-        <div className="flex flex-col gap-4">
-          <SystemPanelCard
-            netOpen={netOpen}   filterOn={filterOn}
-            onNetToggle={toggleNet} onFilterToggle={toggleFilter}
-          />
-          <BatteryCard batteryA={batteryA} batteryB={batteryB} />
-
-          {/* Net/filter status chips */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-xl p-3 border flex items-center gap-2" style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)' }}>
-              <Anchor size={14} style={{ color: 'var(--t-muted)' }} />
-              <div>
-                <div className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--t-muted)' }}>{T.net[lang]}</div>
-                <div className="text-xs font-bold" style={{ color: netOpen ? '#22C55E' : 'var(--t-muted)' }}>
-                  {netOpen ? T.open[lang] : T.closed[lang]}
-                </div>
-              </div>
-            </div>
-            <div className="rounded-xl p-3 border flex items-center gap-2" style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)' }}>
-              <Filter size={14} className="text-[#1A56DB]" />
-              <div>
-                <div className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--t-muted)' }}>Filter</div>
-                <div className="text-xs font-bold" style={{ color: filterOn ? '#1A56DB' : 'var(--t-muted)' }}>
-                  {filterOn ? 'AKTIF' : 'NONAKTIF'}
-                </div>
-              </div>
-            </div>
-          </div>
+        <div>
+          <DepthChart depth={depth ?? 0} tick={tick} />
         </div>
       </div>
 
-      {/* ── Grafik Sensor ── */}
-      <SensorChartCard histories={history} />
-
-      {/* Footer */}
-      <p className="text-center text-[10px] pb-2" style={{ color: 'var(--t-muted)', opacity: 0.45, fontFamily: 'var(--font-mono)' }}>
-        Hydrone · IID INNOPA 2026 · Live Telemetry
-      </p>
     </div>
   )
 }
