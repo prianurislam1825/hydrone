@@ -96,7 +96,6 @@ export default function HeroSection() {
     tag:     { id: 'Bertenaga AI', en: 'AI Powered' },
     h1a:     { id: 'Membersihkan Sungai,', en: 'Cleaning Rivers,' },
     h1b:     { id: 'Membaca Air.', en: 'Reading Water.' },
-    h1c:     { id: 'Karya Siswa.', en: 'Built by Students.' },
     sub: {
       id: 'ROV bawah air untuk koleksi makroplastik dan penyaringan mikroplastik hingga 0.1 mikron, memantau kualitas air secara real-time — dibangun oleh lima pelajar SMA.',
       en: 'Underwater ROV for macroplastic collection and microplastic filtration down to 0.1 microns, streaming real-time water quality data — built by five high school students.',
@@ -135,19 +134,18 @@ export default function HeroSection() {
             {/* H1 — clamp font size so it never overflows on mobile */}
             <h1 className="font-extrabold leading-tight tracking-tight mb-6"
               style={{ fontSize: 'clamp(1.75rem, 5.5vw, 3.4rem)', overflowWrap: 'break-word', wordBreak: 'break-word' }}>
-              <span className="block" style={{ color: 'var(--t-text)' }}>{T.h1a[lang]}</span>
               <span className="block" style={{
                 display: 'inline-block',
                 background: 'linear-gradient(135deg, #1A56DB 0%, #00B4D8 60%, #1A56DB 100%)',
                 WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
                 paddingRight: '4px', paddingBottom: '4px',
-              }}>{T.h1b[lang]}</span>
+              }}>{T.h1a[lang]}</span>
               <span className="block" style={{
                 display: 'inline-block',
                 background: 'linear-gradient(135deg, #F05A22 0%, #F59E0B 100%)',
                 WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
                 paddingRight: '4px', paddingBottom: '4px',
-              }}>{T.h1c[lang]}</span>
+              }}>{T.h1b[lang]}</span>
             </h1>
 
             <p className="text-sm sm:text-base max-w-lg leading-relaxed mb-10" style={{ color: 'var(--t-muted)' }}>
