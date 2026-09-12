@@ -47,10 +47,17 @@ export default function LandingNav() {
   }, [])
 
   const handleInstall = async () => {
-    if (!installPrompt) return
-    await installPrompt.prompt()
-    const { outcome } = await installPrompt.userChoice
-    if (outcome === 'accepted') setInstallPrompt(null)
+    if (installPrompt) {
+      await installPrompt.prompt()
+      const { outcome } = await installPrompt.userChoice
+      if (outcome === 'accepted') setInstallPrompt(null)
+    } else {
+      alert(
+        lang === 'id'
+          ? 'Untuk menginstal aplikasi Hydrone di HP:\n\n1. Buka menu browser (titik 3 di kanan atas / tombol Share di Safari)\n2. Pilih "Tambahkan ke Layar Utama" / "Add to Home Screen".'
+          : 'To install the Hydrone app on mobile:\n\n1. Open browser menu (three dots or Share button in Safari)\n2. Select "Add to Home Screen".'
+      )
+    }
   }
 
   return (
@@ -159,22 +166,33 @@ export default function LandingNav() {
               {lang === 'id' ? 'Masuk' : 'Sign In'}
             </a>
 
-            {/* Install App — shows when browser allows install */}
-            {installPrompt && !isInstalled && (
+            {/* Install App button (Desktop) */}
+            {!isInstalled && (
               <button
                 onClick={handleInstall}
                 className="h-9 px-3 flex items-center gap-1.5 rounded-lg text-xs font-semibold border transition-all hover:opacity-80"
                 style={{ borderColor: 'rgba(26,86,219,0.3)', color: '#1A56DB', background: 'rgba(26,86,219,0.06)' }}
-                title={lang === 'id' ? 'Install sebagai App' : 'Install App'}
+                title={lang === 'id' ? 'Pasang sebagai Aplikasi' : 'Install App'}
               >
                 <Download size={13} />
-                {lang === 'id' ? 'Install' : 'Install'}
+                {lang === 'id' ? 'Install App' : 'Install App'}
               </button>
             )}
           </div>
 
           {/* ── Mobile right ─────────────────────────── */}
           <div className="md:hidden flex items-center gap-1.5">
+            {!isInstalled && (
+              <button
+                onClick={handleInstall}
+                className="h-8 px-2.5 flex items-center gap-1.5 rounded-lg text-xs font-semibold border transition-all"
+                style={{ borderColor: 'rgba(26,86,219,0.3)', color: '#1A56DB', background: 'rgba(26,86,219,0.08)' }}
+                title={lang === 'id' ? 'Install App' : 'Install App'}
+              >
+                <Download size={12} />
+                <span>{lang === 'id' ? 'Install' : 'Install'}</span>
+              </button>
+            )}
             {mounted && (
               <button onClick={toggleTheme} className="theme-toggle" aria-label="Toggle theme">
                 {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
@@ -194,7 +212,7 @@ export default function LandingNav() {
 
       {/* ── Mobile menu ─────────────────────────────── */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-[480px]' : 'max-h-0'}`}
+        className={`md:hidden overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-[520px]' : 'max-h-0'}`}
       >
         <div className="border-t px-4 py-3 flex flex-col gap-0.5"
           style={{ background: 'var(--t-nav-bg)', borderColor: 'var(--t-nav-border)' }}>
@@ -209,6 +227,18 @@ export default function LandingNav() {
               {link.label[lang]}
             </a>
           ))}
+          {!isInstalled && (
+            <div className="pt-2 pb-1 border-t" style={{ borderColor: 'var(--t-border)' }}>
+              <button
+                onClick={() => { handleInstall(); setIsOpen(false) }}
+                className="w-full h-10 rounded-lg text-xs font-semibold border transition-all flex items-center justify-center gap-2"
+                style={{ borderColor: 'rgba(26,86,219,0.3)', color: '#1A56DB', background: 'rgba(26,86,219,0.08)' }}
+              >
+                <Download size={14} />
+                {lang === 'id' ? 'Install Aplikasi Hydrone' : 'Install Hydrone App'}
+              </button>
+            </div>
+          )}
           <div className="flex items-center gap-2 pt-2 mt-1 border-t" style={{ borderColor: 'var(--t-border)' }}>
             <button
               onClick={() => { toggleLang(); setIsOpen(false) }}
