@@ -31,12 +31,11 @@ export default function Sidebar() {
 
   return (
     <aside
-      className="hidden lg:flex flex-col shrink-0 border-r transition-all duration-300 relative"
+      className="hidden lg:flex flex-col shrink-0 border-r transition-all duration-300 relative sticky top-0 h-screen overflow-y-auto"
       style={{
         width:           collapsed ? 64 : 220,
         background:      'var(--t-surface)',
         borderColor:     'var(--t-border)',
-        minHeight:       '100vh',
       }}
     >
       {/* ── Logo ─────────────────────────────────────── */}
