@@ -26,7 +26,7 @@ function fmt(v: number | null, d = 1) { return v !== null ? v.toFixed(d) : '--' 
 const A = '#00B4D8'
 
 /* ── E-STOP overlay ─────────────────────────────────── */
-function EStopOverlay({ onConfirm, onCancel }: { onConfirm(): void; onCancel(): void }) {
+function EStopOverlay({ onConfirm, onCancel, lang }: { onConfirm(): void; onCancel(): void; lang: 'id' | 'en' }) {
   return (
     <div className="fixed inset-0 z-[300] flex items-center justify-center p-4"
       style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)' }}>
@@ -34,12 +34,18 @@ function EStopOverlay({ onConfirm, onCancel }: { onConfirm(): void; onCancel(): 
         style={{ background: 'var(--t-surface)', border: '2px solid #EF4444', boxShadow: '0 0 60px rgba(239,68,68,0.4)' }}>
         <TriangleAlert size={32} className="text-[#EF4444] mx-auto mb-3" />
         <div className="text-sm font-black text-[#EF4444] mb-1 tracking-widest">EMERGENCY STOP</div>
-        <div className="text-xs mb-4" style={{ color: 'var(--t-muted)' }}>All motors halted immediately.</div>
+        <div className="text-xs mb-4" style={{ color: 'var(--t-muted)' }}>
+          {lang === 'id' ? 'Semua motor dihentikan seketika.' : 'All motors halted immediately.'}
+        </div>
         <div className="flex gap-2">
           <button onClick={onCancel} className="flex-1 py-2.5 rounded-xl text-sm font-bold border"
-            style={{ borderColor: 'var(--t-border)', color: 'var(--t-muted)' }}>Cancel</button>
+            style={{ borderColor: 'var(--t-border)', color: 'var(--t-muted)' }}>
+            {lang === 'id' ? 'Batal' : 'Cancel'}
+          </button>
           <button onClick={onConfirm} className="flex-1 py-2.5 rounded-xl text-sm font-black text-white"
-            style={{ background: 'linear-gradient(135deg,#EF4444,#B91C1C)' }}>CONFIRM</button>
+            style={{ background: 'linear-gradient(135deg,#EF4444,#B91C1C)' }}>
+            {lang === 'id' ? 'KONFIRMASI' : 'CONFIRM'}
+          </button>
         </div>
       </div>
     </div>
@@ -82,7 +88,7 @@ export default function ControlPage() {
     return () => clearInterval(t)
   }, [])
 
-  /* Orientation + joystick size detection via matchMedia — works on all browsers */
+  /* Orientation + joystick size detection via matchMedia */
   useEffect(() => {
     function update() {
       const land = window.matchMedia('(orientation: landscape)').matches
@@ -121,7 +127,7 @@ export default function ControlPage() {
 
   const handleStop = () => {
     setNavState('STANDBY'); setSpeed(0)
-    showToast('STOP — All movement halted.')
+    showToast(lang === 'id' ? 'STOP — Semua gerakan dihentikan.' : 'STOP — All movement halted.')
     setTimeout(() => setSpeed(50), 1500)
   }
 
@@ -129,12 +135,12 @@ export default function ControlPage() {
   const spdColor = speed > 70 ? '#EF4444' : speed > 40 ? '#F59E0B' : A
 
   const sensors = [
-    { label: 'Temp',  value: fmt(values.temperature, 1), unit: '°C',  color: '#F05A22', icon: <Thermometer size={11} /> },
-    { label: 'pH',    value: fmt(values.ph, 2),          unit: 'pH',  color: '#1A56DB', icon: <Droplets    size={11} /> },
-    { label: 'TDS',   value: values.tds !== null ? String(Math.round(values.tds)) : '--', unit: 'ppm', color: A, icon: <Layers size={11} /> },
-    { label: 'Turb',  value: fmt(values.turbidity, 1),   unit: 'NTU', color: '#F59E0B', icon: <Wind        size={11} /> },
-    { label: 'Depth', value: fmt(depth, 1),              unit: 'm',   color: '#22C55E', icon: <Gauge       size={11} /> },
-    { label: 'Bat',   value: batteryA !== null ? String(batteryA) : '--', unit: '%', color: '#F59E0B', icon: <BatteryMedium size={11} /> },
+    { label: lang === 'id' ? 'Suhu' : 'Temp',     value: fmt(values.temperature, 1), unit: '°C',  color: '#F05A22', icon: <Thermometer size={11} /> },
+    { label: 'pH',                                  value: fmt(values.ph, 2),          unit: 'pH',  color: '#1A56DB', icon: <Droplets    size={11} /> },
+    { label: 'TDS',                                 value: values.tds !== null ? String(Math.round(values.tds)) : '--', unit: 'ppm', color: A, icon: <Layers size={11} /> },
+    { label: lang === 'id' ? 'Kekeruhan' : 'Turb', value: fmt(values.turbidity, 1),   unit: 'NTU', color: '#F59E0B', icon: <Wind        size={11} /> },
+    { label: lang === 'id' ? 'Kedalaman' : 'Depth',value: fmt(depth, 1),              unit: 'm',   color: '#22C55E', icon: <Gauge       size={11} /> },
+    { label: lang === 'id' ? 'Baterai' : 'Bat',    value: batteryA !== null ? String(batteryA) : '--', unit: '%', color: '#F59E0B', icon: <BatteryMedium size={11} /> },
   ]
 
   /* ── E-STOP button ── */
@@ -153,10 +159,9 @@ export default function ControlPage() {
     </button>
   )
 
-  /* ── HUD top bar (shared) ── */
+  /* ── HUD top bar ── */
   const HudBar = () => (
     <div style={{ flexShrink: 0, background: 'var(--t-surface)', borderBottom: '1px solid var(--t-border)' }}>
-      {/* Single centered row — semua elemen ditengah */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '6px 8px', gap: 6, flexWrap: 'wrap' }}>
 
         {/* Exit / Back button */}
@@ -193,7 +198,7 @@ export default function ControlPage() {
           <Radio size={8} />{mode}
         </div>
 
-        <button onClick={() => { setMode(m => m === 'MANUAL' ? 'AUTO' : 'MANUAL'); showToast('Mode changed') }}
+        <button onClick={() => { setMode(m => m === 'MANUAL' ? 'AUTO' : 'MANUAL'); showToast(lang === 'id' ? 'Mode diubah' : 'Mode changed') }}
           style={{ padding: '4px 7px', borderRadius: 7, fontSize: 9, fontWeight: 700, cursor: 'pointer',
             background: 'var(--t-surface-2)', border: '1px solid var(--t-border)', color: 'var(--t-muted)' }}>
           {mode === 'MANUAL' ? 'AUTO' : 'MANUAL'}
@@ -209,7 +214,7 @@ export default function ControlPage() {
         <div style={{ width: 1, height: 18, background: 'var(--t-border)', flexShrink: 0 }} />
 
         {/* SPD bar */}
-        <span style={{ fontSize: 8, fontWeight: 700, color: 'var(--t-muted)', flexShrink: 0 }}>SPD</span>
+        <span style={{ fontSize: 8, fontWeight: 700, color: 'var(--t-muted)', flexShrink: 0 }}>{lang === 'id' ? 'KEC' : 'SPD'}</span>
         <div style={{ width: 80, height: 5, borderRadius: 99, overflow: 'hidden', background: 'var(--t-bg)', border: '1px solid var(--t-border)', flexShrink: 0 }}>
           <div style={{ height: '100%', width: `${speed}%`, background: `linear-gradient(to right,${A},${spdColor})`, borderRadius: 99, transition: 'width 0.4s' }} />
         </div>
@@ -253,7 +258,7 @@ export default function ControlPage() {
         <Camera size={28} style={{ color: A, opacity: 0.25 }} />
         <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.12em', color: `${A}88` }}>ESP32-CAM · LIVE FEED</div>
         <div style={{ fontSize: 9, color: 'var(--t-muted)', opacity: 0.6, fontFamily: 'var(--font-jetbrains-mono)' }}>
-          Connecting camera{camDots}
+          {lang === 'id' ? 'Menghubungkan kamera' : 'Connecting camera'}{camDots}
         </div>
         <div style={{ display: 'flex', gap: 6 }}>
           {[0, 1, 2].map(i => <div key={i} style={{ width: 6, height: 6, borderRadius: '50%', background: A, opacity: 0.5, animation: `live-pulse 1.2s ease-in-out ${i * 0.2}s infinite` }} />)}
@@ -289,14 +294,14 @@ export default function ControlPage() {
   if (!isLandscape) {
     return (
       <>
-        {showConfirm && <EStopOverlay onConfirm={() => { setShowConfirm(false); setEStop(true); setNavState('STANDBY'); setSpeed(0); showToast('⚠ E-STOP ACTIVE!'); setTimeout(() => { setEStop(false); setSpeed(50) }, 5000) }} onCancel={() => setShowConfirm(false)} />}
+        {showConfirm && <EStopOverlay lang={lang} onConfirm={() => { setShowConfirm(false); setEStop(true); setNavState('STANDBY'); setSpeed(0); showToast(lang === 'id' ? '⚠ E-STOP AKTIF!' : '⚠ E-STOP ACTIVE!'); setTimeout(() => { setEStop(false); setSpeed(50) }, 5000) }} onCancel={() => setShowConfirm(false)} />}
         {toast && <Toast msg={toast} />}
-        {eStopActive && <div className="fixed top-0 left-0 right-0 z-[150] py-1.5 text-center text-xs font-black text-white" style={{ background: 'linear-gradient(135deg,#EF4444,#B91C1C)', animation: 'live-pulse 0.5s ease-in-out infinite' }}>⚠ E-STOP ACTIVE</div>}
+        {eStopActive && <div className="fixed top-0 left-0 right-0 z-[150] py-1.5 text-center text-xs font-black text-white" style={{ background: 'linear-gradient(135deg,#EF4444,#B91C1C)', animation: 'live-pulse 0.5s ease-in-out infinite' }}>{lang === 'id' ? '⚠ E-STOP AKTIF' : '⚠ E-STOP ACTIVE'}</div>}
 
         <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: 'var(--t-bg)', overflow: 'hidden', touchAction: 'none' }}>
           <HudBar />
 
-          {/* Sensor strip — horizontal scroll */}
+          {/* Sensor strip */}
           <div style={{ flexShrink: 0, overflowX: 'auto', background: 'var(--t-surface)', borderBottom: '1px solid var(--t-border)' }}>
             <div style={{ display: 'flex', gap: 6, padding: '6px 10px', width: 'max-content' }}>
               {sensors.map((s, i) => (
@@ -313,14 +318,14 @@ export default function ControlPage() {
             </div>
           </div>
 
-          {/* Camera — fills remaining space */}
+          {/* Camera */}
           <CameraFeed />
 
           {/* Bottom controls */}
           <div style={{ flexShrink: 0, background: 'var(--t-surface)', borderTop: '1px solid var(--t-border)', padding: '8px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
             {/* Left: nav + filter */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, flexShrink: 0 }}>
-              <VirtualJoystick label="NAVIGASI" size={jsSize} onChange={handleNav} accentColor={A} />
+              <VirtualJoystick label={lang === 'id' ? 'NAVIGASI' : 'NAVIGATE'} size={jsSize} onChange={handleNav} accentColor={A} />
               <button onClick={() => { setFilterOn(v => !v); showToast(`Filter ${filterOn ? 'OFF' : 'ON'}`) }}
                 style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 8, fontSize: 9, fontWeight: 900, cursor: 'pointer',
                   background: filterOn ? `${A}18` : 'var(--t-surface-2)', border: `1px solid ${filterOn ? `${A}55` : 'var(--t-border)'}`, color: filterOn ? A : 'var(--t-muted)' }}>
@@ -332,14 +337,16 @@ export default function ControlPage() {
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, flex: 1, maxWidth: 140 }}>
               {/* Depth bar */}
               <div style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 5 }}>
-                <span style={{ fontSize: 8, fontWeight: 700, color: 'var(--t-muted)', flexShrink: 0 }}>DEPTH</span>
+                <span style={{ fontSize: 8, fontWeight: 700, color: 'var(--t-muted)', flexShrink: 0 }}>{lang === 'id' ? 'KEDALAMAN' : 'DEPTH'}</span>
                 <div style={{ flex: 1, height: 5, borderRadius: 99, overflow: 'hidden', background: 'var(--t-bg)', border: '1px solid var(--t-border)' }}>
                   <div style={{ height: '100%', width: `${Math.min((depthVal / 10) * 100, 100)}%`, background: 'linear-gradient(to right,#22C55E,#1A56DB)', borderRadius: 99 }} />
                 </div>
                 <span style={{ fontSize: 8, fontWeight: 700, color: '#22C55E', flexShrink: 0, fontFamily: 'var(--font-jetbrains-mono)' }}>{depthVal.toFixed(1)}m</span>
               </div>
               <EStopBtn size={Math.max(64, jsSize * 0.85)} />
-              <span style={{ fontSize: 7, color: 'var(--t-muted)', opacity: 0.5, textAlign: 'center' }}>DEMO · NOT TRANSMITTED</span>
+              <span style={{ fontSize: 7, color: 'var(--t-muted)', opacity: 0.5, textAlign: 'center' }}>
+                {lang === 'id' ? 'DEMO · TIDAK DIKIRIM' : 'DEMO · NOT TRANSMITTED'}
+              </span>
             </div>
 
             {/* Right: throttle */}
@@ -355,14 +362,14 @@ export default function ControlPage() {
   /* ══ LANDSCAPE layout ═════════════════════════════════════════ */
   return (
     <>
-      {showConfirm && <EStopOverlay onConfirm={() => { setShowConfirm(false); setEStop(true); setNavState('STANDBY'); setSpeed(0); showToast('⚠ E-STOP ACTIVE!'); setTimeout(() => { setEStop(false); setSpeed(50) }, 5000) }} onCancel={() => setShowConfirm(false)} />}
+      {showConfirm && <EStopOverlay lang={lang} onConfirm={() => { setShowConfirm(false); setEStop(true); setNavState('STANDBY'); setSpeed(0); showToast(lang === 'id' ? '⚠ E-STOP AKTIF!' : '⚠ E-STOP ACTIVE!'); setTimeout(() => { setEStop(false); setSpeed(50) }, 5000) }} onCancel={() => setShowConfirm(false)} />}
       {toast && <Toast msg={toast} />}
-      {eStopActive && <div className="fixed top-0 left-0 right-0 z-[150] py-1.5 text-center text-xs font-black text-white" style={{ background: 'linear-gradient(135deg,#EF4444,#B91C1C)', animation: 'live-pulse 0.5s ease-in-out infinite' }}>⚠ E-STOP ACTIVE</div>}
+      {eStopActive && <div className="fixed top-0 left-0 right-0 z-[150] py-1.5 text-center text-xs font-black text-white" style={{ background: 'linear-gradient(135deg,#EF4444,#B91C1C)', animation: 'live-pulse 0.5s ease-in-out infinite' }}>{lang === 'id' ? '⚠ E-STOP AKTIF' : '⚠ E-STOP ACTIVE'}</div>}
 
       <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: 'var(--t-bg)', overflow: 'hidden', touchAction: 'none' }}>
         <HudBar />
 
-        {/* Main row: [sidebar] + camera + [joystick panel] */}
+        {/* Main row */}
         <div style={{ flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0 }}>
 
           {/* Slide-in sensor sidebar */}
@@ -397,17 +404,17 @@ export default function ControlPage() {
             </div>
           </div>
 
-          {/* Camera — fullscreen center */}
+          {/* Camera */}
           <CameraFeed />
 
         </div>
 
-        {/* Landscape bottom: joystick KIRI | depth+ESTOP tengah | joystick KANAN */}
+        {/* Landscape bottom */}
         <div style={{ flexShrink: 0, background: 'var(--t-surface)', borderTop: '1px solid var(--t-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: `${Math.max(6, jsSize * 0.08)}px 16px` }}>
 
           {/* LEFT joystick NAVIGASI */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, flexShrink: 0 }}>
-            <VirtualJoystick label="NAVIGASI" size={jsSize} onChange={handleNav} accentColor={A} />
+            <VirtualJoystick label={lang === 'id' ? 'NAVIGASI' : 'NAVIGATE'} size={jsSize} onChange={handleNav} accentColor={A} />
             <button onClick={() => { setFilterOn(v => !v); showToast(`Filter ${filterOn ? 'OFF' : 'ON'}`) }}
               style={{ display: 'flex', alignItems: 'center', gap: 3, padding: '3px 7px', borderRadius: 7, fontSize: 9, fontWeight: 900, cursor: 'pointer',
                 background: filterOn ? `${A}18` : 'var(--t-surface-2)', border: `1px solid ${filterOn ? `${A}55` : 'var(--t-border)'}`, color: filterOn ? A : 'var(--t-muted)' }}>
@@ -418,14 +425,16 @@ export default function ControlPage() {
           {/* CENTER: depth bar + E-STOP */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, flex: 1, maxWidth: 180 }}>
             <div style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 5 }}>
-              <span style={{ fontSize: 8, fontWeight: 700, color: 'var(--t-muted)', flexShrink: 0 }}>DEPTH</span>
+              <span style={{ fontSize: 8, fontWeight: 700, color: 'var(--t-muted)', flexShrink: 0 }}>{lang === 'id' ? 'KEDALAMAN' : 'DEPTH'}</span>
               <div style={{ flex: 1, height: 5, borderRadius: 99, overflow: 'hidden', background: 'var(--t-bg)', border: '1px solid var(--t-border)' }}>
                 <div style={{ height: '100%', width: `${Math.min((depthVal / 10) * 100, 100)}%`, background: 'linear-gradient(to right,#22C55E,#1A56DB)', borderRadius: 99 }} />
               </div>
               <span style={{ fontSize: 8, fontWeight: 700, color: '#22C55E', flexShrink: 0, fontFamily: 'var(--font-jetbrains-mono)' }}>{depthVal.toFixed(1)}m</span>
             </div>
             <EStopBtn size={Math.max(56, jsSize * 0.8)} />
-            <span style={{ fontSize: 6, color: 'var(--t-muted)', opacity: 0.4 }}>DEMO · NOT TRANSMITTED</span>
+            <span style={{ fontSize: 6, color: 'var(--t-muted)', opacity: 0.4 }}>
+              {lang === 'id' ? 'DEMO · TIDAK DIKIRIM' : 'DEMO · NOT TRANSMITTED'}
+            </span>
           </div>
 
           {/* RIGHT joystick THROTTLE */}
