@@ -46,18 +46,20 @@ export default function LandingNav() {
     return () => window.removeEventListener('beforeinstallprompt', handler)
   }, [])
 
+  const [showInstallModal, setShowInstallModal] = useState(false)
+
   const handleInstall = async () => {
     if (installPrompt) {
-      await installPrompt.prompt()
-      const { outcome } = await installPrompt.userChoice
-      if (outcome === 'accepted') setInstallPrompt(null)
-    } else {
-      alert(
-        lang === 'id'
-          ? 'Untuk menginstal aplikasi Hydrone di HP:\n\n1. Buka menu browser (titik 3 di kanan atas / tombol Share di Safari)\n2. Pilih "Tambahkan ke Layar Utama" / "Add to Home Screen".'
-          : 'To install the Hydrone app on mobile:\n\n1. Open browser menu (three dots or Share button in Safari)\n2. Select "Add to Home Screen".'
-      )
+      try {
+        await installPrompt.prompt()
+        const { outcome } = await installPrompt.userChoice
+        if (outcome === 'accepted') setInstallPrompt(null)
+        return
+      } catch {
+        // Fallback to modal if browser blocks prompt
+      }
     }
+    setShowInstallModal(true)
   }
 
   return (
@@ -258,6 +260,81 @@ export default function LandingNav() {
           </div>
         </div>
       </div>
+
+      {/* ── Universal Install Modal for All Browsers & Platforms ────────── */}
+      {showInstallModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div
+            className="relative w-full max-w-md rounded-2xl p-6 border shadow-2xl overflow-hidden"
+            style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)', color: 'var(--t-text)' }}
+          >
+            <button
+              onClick={() => setShowInstallModal(false)}
+              className="absolute top-4 right-4 p-1.5 rounded-lg border transition-all hover:opacity-80"
+              style={{ borderColor: 'var(--t-border)', color: 'var(--t-muted)' }}
+              aria-label="Close modal"
+            >
+              <X size={18} />
+            </button>
+
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#1A56DB]/10 border border-[#1A56DB]/20 text-[#1A56DB]">
+                <Download size={20} />
+              </div>
+              <div>
+                <h3 className="font-extrabold text-base leading-tight">
+                  {lang === 'id' ? 'Install Aplikasi Hydrone' : 'Install Hydrone App'}
+                </h3>
+                <p className="text-xs mt-0.5" style={{ color: 'var(--t-muted)' }}>
+                  {lang === 'id' ? 'Panduan pemasangan untuk semua HP & Browser' : 'Installation guide for all devices & browsers'}
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-3 my-5 text-xs">
+              {/* Android (Chrome, Edge, Samsung Internet, Firefox) */}
+              <div className="p-3.5 rounded-xl border" style={{ background: 'var(--t-bg)', borderColor: 'var(--t-border)' }}>
+                <div className="font-bold text-sm mb-1.5 flex items-center gap-2 text-[#1A56DB]">
+                  <span>Android (Chrome / Edge / Samsung / Firefox)</span>
+                </div>
+                <ol className="list-decimal list-inside space-y-1" style={{ color: 'var(--t-muted)' }}>
+                  <li>{lang === 'id' ? 'Ketuk menu browser (titik 3 ⋮ di kanan atas)' : 'Tap browser menu (three dots ⋮ at top right)'}</li>
+                  <li>{lang === 'id' ? 'Pilih "Install aplikasi" / "Tambahkan ke Layar Utama"' : 'Select "Install app" or "Add to Home screen"'}</li>
+                </ol>
+              </div>
+
+              {/* iPhone / iPad (Safari, Chrome, Edge) */}
+              <div className="p-3.5 rounded-xl border" style={{ background: 'var(--t-bg)', borderColor: 'var(--t-border)' }}>
+                <div className="font-bold text-sm mb-1.5 flex items-center gap-2 text-[#00B4D8]">
+                  <span>iOS iPhone / iPad (Safari & Chrome)</span>
+                </div>
+                <ol className="list-decimal list-inside space-y-1" style={{ color: 'var(--t-muted)' }}>
+                  <li>{lang === 'id' ? 'Ketuk tombol Bagikan / Share (ikon petak dengan panah)' : 'Tap Share button (square icon with arrow)'}</li>
+                  <li>{lang === 'id' ? 'Gulir ke bawah lalu pilih "Tambahkan ke Layar Utama"' : 'Scroll down & select "Add to Home Screen"'}</li>
+                </ol>
+              </div>
+
+              {/* Desktop / Laptop */}
+              <div className="p-3.5 rounded-xl border" style={{ background: 'var(--t-bg)', borderColor: 'var(--t-border)' }}>
+                <div className="font-bold text-sm mb-1.5 flex items-center gap-2 text-[#F05A22]">
+                  <span>Desktop (Chrome / Edge / Opera)</span>
+                </div>
+                <ol className="list-decimal list-inside space-y-1" style={{ color: 'var(--t-muted)' }}>
+                  <li>{lang === 'id' ? 'Klik ikon Install (⊕) di kanan bilah alamat browser' : 'Click Install icon (⊕) in address bar'}</li>
+                </ol>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setShowInstallModal(false)}
+              className="w-full py-2.5 rounded-xl font-bold text-xs text-white transition-all shadow-md"
+              style={{ background: 'linear-gradient(135deg, #1A56DB, #0D3A9E)' }}
+            >
+              {lang === 'id' ? 'Saya Mengerti' : 'Got It'}
+            </button>
+          </div>
+        </div>
+      )}
     </nav>
   )
 }
