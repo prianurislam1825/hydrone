@@ -1,6 +1,7 @@
 import CtaSection from '@/components/landing/CtaSection'
 import LandingFooter from '@/components/landing/LandingFooter'
 import LandingNav from '@/components/landing/LandingNav'
+import PageHeader from '@/components/landing/PageHeader'
 import PartnersSection from '@/components/landing/PartnersSection'
 import TeamSection from '@/components/landing/TeamSection'
 import type { Metadata } from 'next'
@@ -12,8 +13,16 @@ export const metadata: Metadata = {
 
 export default function TeamPage() {
   return (
-    <div className="min-h-screen pt-20" style={{ background: 'var(--t-bg)', color: 'var(--t-text)' }}>
+    <div className="min-h-screen pt-[60px]" style={{ background: 'var(--t-bg)', color: 'var(--t-text)' }}>
       <LandingNav />
+      <PageHeader
+        badge={{ id: 'INOVATOR MUDA INDONESIA', en: 'INDONESIAN YOUNG INNOVATORS' }}
+        title={{ id: 'Tim Pelajar & Mitra HYDRONE', en: 'HYDRONE Student Team & Partners' }}
+        subtitle={{
+          id: 'Profil tim pengembang dari SMAN 1 Surakarta & SMA Muhammadiyah PK, beserta dukungan mitra riset IID INNOPA 2026.',
+          en: 'Developer team profile from SMAN 1 Surakarta & SMA Muhammadiyah PK, supported by IID INNOPA 2026 research partners.',
+        }}
+      />
       <main>
         <TeamSection />
         <PartnersSection />
