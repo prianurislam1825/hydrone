@@ -1,7 +1,7 @@
 'use client'
 
 import { useLang } from '@/lib/i18n/context'
-import { Anchor, Filter, Gauge, Mail, MessageCircle, MoveVertical, Radio, Ruler } from 'lucide-react'
+import { Anchor, Filter, Gauge, MoveVertical, Radio, Ruler } from 'lucide-react'
 
 const SUMMARY_STATS = [
   {
@@ -120,28 +120,6 @@ export default function SpecsSection() {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Doc card */}
-        <div className="glass rounded-2xl p-8 text-center" data-anim>
-          <p className="text-sm mb-6 max-w-lg mx-auto leading-relaxed" style={{ color: 'var(--t-muted)' }}>{T.docNote[lang]}</p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href="mailto:hydrone.id@gmail.com"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl transition-all min-h-[48px] text-sm font-semibold w-full sm:w-auto border hover:bg-white/5"
-              style={{ borderColor: 'var(--t-border)', color: 'var(--t-muted)' }}
-            >
-              <Mail size={18} />{T.contact[lang]}
-            </a>
-            <a
-              href="https://wa.me/6281548158100"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#22C55E]/10 border border-[#22C55E]/20 hover:border-[#22C55E] text-[#22C55E] hover:bg-[#22C55E]/20 font-semibold rounded-xl transition-all min-h-[48px] text-sm w-full sm:w-auto"
-            >
-              <MessageCircle size={18} />{T.contact[lang]}
-            </a>
-          </div>
         </div>
       </div>
     </section>
