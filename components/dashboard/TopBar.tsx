@@ -14,6 +14,7 @@ import {
     Sun,
     X
 } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
@@ -133,7 +134,7 @@ export default function TopBar() {
       <div className="flex items-center gap-2.5">
         <Link href="/dashboard" className="flex lg:hidden items-center gap-2 shrink-0 mr-1">
           <div className="w-7 h-7 rounded-lg overflow-hidden border relative" style={{ borderColor: 'rgba(26,86,219,0.25)' }}>
-            <img src="/pfp-hydrone.png" alt="Hydrone" className="w-full h-full object-contain" />
+            <Image src="/pfp-hydrone.png" alt="Hydrone" fill className="object-contain" />
           </div>
           <span className="font-extrabold text-sm tracking-tight" style={{ color: 'var(--t-text)' }}>Hydrone</span>
         </Link>

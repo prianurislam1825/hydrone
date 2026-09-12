@@ -6,11 +6,9 @@ import { useLang } from '@/lib/i18n/context'
 import {
   Activity,
   AlertTriangle,
-  Anchor,
   BatteryMedium,
   CheckCircle2,
   Droplets,
-  Filter,
   Layers,
   RefreshCw,
   Thermometer,

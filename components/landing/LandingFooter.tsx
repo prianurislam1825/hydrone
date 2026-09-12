@@ -3,12 +3,7 @@
 import { useLang } from '@/lib/i18n/context'
 import { Github, Mail, MessageCircle } from 'lucide-react'
 
-const NAV_LINKS = [
-  { label: { id: 'Beranda', en: 'Home' }, href: '#' },
-  { label: { id: 'Tentang', en: 'About' }, href: '#tentang' },
-  { label: { id: 'Spesifikasi', en: 'Specs' }, href: '#spesifikasi' },
-  { label: { id: 'Dashboard', en: 'Dashboard' }, href: '/dashboard' },
-]
+
 
 const CONTACT = [
   { icon: <Mail size={14} />,          href: 'mailto:hydrone.id@gmail.com',         label: 'hydrone.id@gmail.com' },
