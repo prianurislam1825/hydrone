@@ -1,5 +1,5 @@
 // Hydrone Service Worker — PWA support
-const CACHE_NAME = 'hydrone-v1'
+const CACHE_NAME = 'hydrone-v3'
 const OFFLINE_URL = '/'
 
 // Install — cache shell
