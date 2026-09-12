@@ -1,7 +1,6 @@
 'use client'
-
 import { useLang } from '@/lib/i18n/context'
-import { ArrowRight, Satellite } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
 const T = {
   badge:   { id: 'STREAM DATA LANGSUNG', en: 'LIVE DATA STREAM' },
@@ -55,7 +54,7 @@ export default function CtaSection() {
               {T.sub[lang]}
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="flex justify-center">
               <a
                 href="mailto:hydrone.id@gmail.com"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-white font-bold rounded-xl transition-all min-h-[52px] text-base hover:shadow-lg hover:-translate-y-0.5"
@@ -64,10 +63,6 @@ export default function CtaSection() {
                 {T.cta[lang]}
                 <ArrowRight size={18} />
               </a>
-              <div className="flex items-center gap-2 text-white/60 text-sm">
-                <Satellite size={14} />
-                <span>ESP32 · Firebase · Real-time</span>
-              </div>
             </div>
           </div>
         </div>
