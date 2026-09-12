@@ -1,5 +1,6 @@
 'use client'
 
+import { useLang } from '@/lib/i18n/context'
 import {
     Activity,
     AlertTriangle,
@@ -14,7 +15,7 @@ import {
 } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
-/* â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Types ─────────────────────────────────────────────────── */
 type FilterKey = 'all' | 'today' | 'week' | 'month'
 type RowStatus = 'NORMAL' | 'WARNING' | 'DANGER'
 
@@ -29,7 +30,7 @@ interface HistoryRow {
   status:      RowStatus
 }
 
-/* â”€â”€ Mock data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Mock data ───────────────────────────────────────────── */
 function generateRows(): HistoryRow[] {
   const rows: HistoryRow[] = []
   const now = Date.now()
@@ -47,26 +48,26 @@ function generateRows(): HistoryRow[] {
   return rows
 }
 
-const STATUS_META: Record<RowStatus, { color: string; bg: string; label: string; icon: React.ReactNode }> = {
-  NORMAL:  { color: '#22C55E', bg: 'rgba(34,197,94,0.1)',  label: 'Normal',   icon: <CheckCircle2 size={12} /> },
-  WARNING: { color: '#F59E0B', bg: 'rgba(245,158,11,0.1)', label: 'Waspada',  icon: <AlertTriangle size={12} /> },
-  DANGER:  { color: '#EF4444', bg: 'rgba(239,68,68,0.1)',  label: 'Bahaya',   icon: <XCircle size={12} /> },
+const STATUS_META: Record<RowStatus, { color: string; bg: string; label: { id: string; en: string }; icon: React.ReactNode }> = {
+  NORMAL:  { color: '#22C55E', bg: 'rgba(34,197,94,0.1)',  label: { id: 'Normal', en: 'Normal' },   icon: <CheckCircle2 size={12} /> },
+  WARNING: { color: '#F59E0B', bg: 'rgba(245,158,11,0.1)', label: { id: 'Waspada', en: 'Warning' },  icon: <AlertTriangle size={12} /> },
+  DANGER:  { color: '#EF4444', bg: 'rgba(239,68,68,0.1)',  label: { id: 'Bahaya', en: 'Danger' },   icon: <XCircle size={12} /> },
 }
 
-const FILTERS: { key: FilterKey; label: string }[] = [
-  { key: 'all',   label: 'Semua' },
-  { key: 'today', label: 'Hari ini' },
-  { key: 'week',  label: 'Minggu ini' },
-  { key: 'month', label: 'Bulan ini' },
+const FILTERS: { key: FilterKey; label: { id: string; en: string } }[] = [
+  { key: 'all',   label: { id: 'Semua', en: 'All' } },
+  { key: 'today', label: { id: 'Hari ini', en: 'Today' } },
+  { key: 'week',  label: { id: 'Minggu ini', en: 'This Week' } },
+  { key: 'month', label: { id: 'Bulan ini', en: 'This Month' } },
 ]
 
-/* â”€â”€ CSV export â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-function exportCSV(rows: HistoryRow[]) {
-  const header = ['No', 'Tanggal', 'Waktu', 'pH', 'TDS (ppm)', 'Turbidity (NTU)', 'Suhu (°C)', 'Kedalaman (m)', 'Status']
+/* ── CSV export ───────────────────────────────────────────── */
+function exportCSV(rows: HistoryRow[], lang: 'id' | 'en') {
+  const header = ['No', lang === 'id' ? 'Tanggal' : 'Date', lang === 'id' ? 'Waktu' : 'Time', 'pH', 'TDS (ppm)', 'Turbidity (NTU)', `Suhu (°C)`, lang === 'id' ? 'Kedalaman (m)' : 'Depth (m)', 'Status']
   const body   = rows.map(r => [
     r.id,
-    r.timestamp.toLocaleDateString('id-ID'),
-    r.timestamp.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+    r.timestamp.toLocaleDateString(lang === 'id' ? 'id-ID' : 'en-US'),
+    r.timestamp.toLocaleTimeString(lang === 'id' ? 'id-ID' : 'en-US', { hour: '2-digit', minute: '2-digit' }),
     r.ph, r.tds, r.turbidity, r.temperature, r.depth, r.status,
   ])
   const csv  = [header, ...body].map(row => row.join(',')).join('\n')
@@ -77,7 +78,7 @@ function exportCSV(rows: HistoryRow[]) {
   a.click(); URL.revokeObjectURL(url)
 }
 
-/* â”€â”€ Trend sparkline â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Trend sparkline ──────────────────────────────────────── */
 function TrendLine({ data, color }: { data: number[]; color: string }) {
   if (data.length < 2) return null
   const max = Math.max(...data, 1); const min = Math.min(...data)
@@ -98,11 +99,12 @@ function TrendLine({ data, color }: { data: number[]; color: string }) {
   )
 }
 
-/* â”€â”€ Main â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ── Main ─────────────────────────────────────────────────── */
 /* allRows generated client-side only inside component to avoid hydration mismatch */
 
 export default function HistoryPage() {
-  // useState init runs only on client â†’ no Date.now() mismatch
+  const { lang }         = useLang()
+  // useState init runs only on client → no Date.now() mismatch
   const [allRows]        = useState<HistoryRow[]>(() => generateRows())
   const [filter, setFilter] = useState<FilterKey>('all')
   const [page,   setPage]   = useState(1)
@@ -127,9 +129,9 @@ export default function HistoryPage() {
     normal:  filtered.filter(r => r.status === 'NORMAL').length,
     warning: filtered.filter(r => r.status === 'WARNING').length,
     danger:  filtered.filter(r => r.status === 'DANGER').length,
-    avgPh:   filtered.length ? (filtered.reduce((s,r) => s + r.ph, 0) / filtered.length).toFixed(2) : 'â€”',
-    avgTurb: filtered.length ? (filtered.reduce((s,r) => s + r.turbidity, 0) / filtered.length).toFixed(1) : 'â€”',
-    avgTemp: filtered.length ? (filtered.reduce((s,r) => s + r.temperature, 0) / filtered.length).toFixed(1) : 'â€”',
+    avgPh:   filtered.length ? (filtered.reduce((s,r) => s + r.ph, 0) / filtered.length).toFixed(2) : '—',
+    avgTurb: filtered.length ? (filtered.reduce((s,r) => s + r.turbidity, 0) / filtered.length).toFixed(1) : '—',
+    avgTemp: filtered.length ? (filtered.reduce((s,r) => s + r.temperature, 0) / filtered.length).toFixed(1) : '—',
   }), [filtered])
 
   const recentPh   = [...filtered].slice(0,20).reverse().map(r => r.ph)
@@ -139,24 +141,26 @@ export default function HistoryPage() {
   return (
     <div className="p-4 lg:p-6 flex flex-col gap-5 max-w-screen-xl">
 
-      {/* â”€â”€ Header â”€â”€ */}
+      {/* ── Header ── */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-xl font-extrabold" style={{ color: 'var(--t-text)' }}>Riwayat Operasi</h1>
+          <h1 className="text-xl font-extrabold" style={{ color: 'var(--t-text)' }}>
+            {lang === 'id' ? 'Riwayat Operasi' : 'Operation History'}
+          </h1>
           <p className="text-xs mt-0.5" style={{ color: 'var(--t-muted)' }}>
-            Data sensor dan log pembersihan perairan Hydrone
+            {lang === 'id' ? 'Data sensor dan log pembersihan perairan Hydrone' : 'Hydrone sensor data and water cleaning log'}
           </p>
         </div>
         <button
-          onClick={() => exportCSV(filtered)}
+          onClick={() => exportCSV(filtered, lang)}
           className="flex items-center gap-2 h-9 px-4 rounded-xl text-sm font-semibold border transition-all hover:opacity-80"
           style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)', color: 'var(--t-text)' }}
         >
-          <Download size={14} /> Ekspor CSV
+          <Download size={14} /> {lang === 'id' ? 'Ekspor CSV' : 'Export CSV'}
         </button>
       </div>
 
-      {/* â”€â”€ Filter tabs â”€â”€ */}
+      {/* ── Filter tabs ── */}
       <div className="flex gap-2 flex-wrap">
         {FILTERS.map(f => (
           <button key={f.key} onClick={() => { setFilter(f.key); setPage(1) }}
@@ -166,7 +170,7 @@ export default function HistoryPage() {
               borderColor: filter === f.key ? '#1A56DB' : 'var(--t-border)',
               color:       filter === f.key ? '#fff'    : 'var(--t-muted)',
             }}>
-            {f.label}
+            {f.label[lang]}
           </button>
         ))}
       </div>
@@ -174,17 +178,17 @@ export default function HistoryPage() {
       {/* Summary stats */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {[
-          { icon: <Activity size={14} />,       label: 'Total Entri',   value: stats.total,   color: '#1A56DB' },
-          { icon: <CheckCircle2 size={14} />,   label: 'Normal',        value: stats.normal,  color: '#22C55E' },
-          { icon: <AlertTriangle size={14} />,  label: 'Waspada',       value: stats.warning, color: '#F59E0B' },
-          { icon: <XCircle size={14} />,        label: 'Bahaya',        value: stats.danger,  color: '#EF4444' },
-          { icon: <FlaskConical size={14} />,   label: 'Rata-rata pH',  value: stats.avgPh,   color: '#1A56DB' },
-          { icon: <Thermometer size={14} />,    label: 'Rata-rata Suhu',value: `${stats.avgTemp} °C`, color: '#22C55E' },
+          { icon: <Activity size={14} />,       label: { id: 'Total Entri', en: 'Total Entries' },    value: stats.total,   color: '#1A56DB' },
+          { icon: <CheckCircle2 size={14} />,   label: { id: 'Normal', en: 'Normal' },               value: stats.normal,  color: '#22C55E' },
+          { icon: <AlertTriangle size={14} />,  label: { id: 'Waspada', en: 'Warning' },              value: stats.warning, color: '#F59E0B' },
+          { icon: <XCircle size={14} />,        label: { id: 'Bahaya', en: 'Danger' },               value: stats.danger,  color: '#EF4444' },
+          { icon: <FlaskConical size={14} />,   label: { id: 'Rata-rata pH', en: 'Average pH' },     value: stats.avgPh,   color: '#1A56DB' },
+          { icon: <Thermometer size={14} />,    label: { id: 'Rata-rata Suhu', en: 'Average Temp' }, value: `${stats.avgTemp} °C`, color: '#22C55E' },
         ].map((s, i) => (
           <div key={i} className="rounded-2xl p-3.5 border text-center flex flex-col items-center justify-center gap-1" style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)' }}>
             <div className="flex justify-center" style={{ color: s.color }}>{s.icon}</div>
             <div className="text-lg font-extrabold leading-tight" style={{ color: s.color }}>{s.value}</div>
-            <div className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: 'var(--t-muted)' }}>{s.label}</div>
+            <div className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: 'var(--t-muted)' }}>{s.label[lang]}</div>
           </div>
         ))}
       </div>
@@ -193,14 +197,14 @@ export default function HistoryPage() {
       {filtered.length > 1 && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {[
-            { label: 'Tren pH',        data: recentPh,   color: '#1A56DB', icon: <FlaskConical size={12} /> },
-            { label: 'Tren Turbidity', data: recentTurb, color: '#F05A22', icon: <Wind         size={12} /> },
-            { label: 'Tren Suhu',      data: recentTemp, color: '#22C55E', icon: <Thermometer  size={12} /> },
+            { label: { id: 'Tren pH', en: 'pH Trend' },        data: recentPh,   color: '#1A56DB', icon: <FlaskConical size={12} /> },
+            { label: { id: 'Tren Turbidity', en: 'Turbidity Trend' }, data: recentTurb, color: '#F05A22', icon: <Wind         size={12} /> },
+            { label: { id: 'Tren Suhu', en: 'Temp Trend' },      data: recentTemp, color: '#22C55E', icon: <Thermometer  size={12} /> },
           ].map((c, i) => (
             <div key={i} className="rounded-2xl p-4 border" style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)' }}>
               <div className="flex items-center gap-1.5 mb-2 text-[10px] font-bold uppercase tracking-wider" style={{ color: 'var(--t-muted)' }}>
                 <span style={{ color: c.color }}>{c.icon}</span>
-                {c.label}
+                {c.label[lang]}
               </div>
               <TrendLine data={c.data} color={c.color} />
             </div>
@@ -221,12 +225,12 @@ export default function HistoryPage() {
               }}
             >
               <span>#</span>
-              <span>Waktu</span>
+              <span>{lang === 'id' ? 'Waktu' : 'Time'}</span>
               <span className="flex items-center gap-1"><FlaskConical size={9} />pH</span>
               <span className="flex items-center gap-1"><Droplets size={9} />TDS</span>
               <span className="flex items-center gap-1"><Wind size={9} />Turb.</span>
-              <span className="flex items-center gap-1"><Thermometer size={9} />Suhu</span>
-              <span className="flex items-center gap-1"><Layers size={9} />Depth</span>
+              <span className="flex items-center gap-1"><Thermometer size={9} />{lang === 'id' ? 'Suhu' : 'Temp'}</span>
+              <span className="flex items-center gap-1"><Layers size={9} />{lang === 'id' ? 'Kedalaman' : 'Depth'}</span>
               <span>Status</span>
             </div>
 
@@ -234,7 +238,7 @@ export default function HistoryPage() {
             <div style={{ background: 'var(--t-surface)' }}>
               {pageRows.length === 0 ? (
                 <div className="py-16 text-center text-sm" style={{ color: 'var(--t-muted)' }}>
-                  Tidak ada data untuk periode ini
+                  {lang === 'id' ? 'Tidak ada data untuk periode ini' : 'No data for this period'}
                 </div>
               ) : pageRows.map((row, i) => {
                 const sm = STATUS_META[row.status]
@@ -251,7 +255,7 @@ export default function HistoryPage() {
                   >
                     <span className="text-[10px] font-mono" style={{ color: 'var(--t-muted)' }}>#{row.id}</span>
                     <span className="text-[10px] font-mono" style={{ color: 'var(--t-muted)' }}>
-                      {row.timestamp.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+                      {row.timestamp.toLocaleTimeString(lang === 'id' ? 'id-ID' : 'en-US', { hour: '2-digit', minute: '2-digit' })}
                     </span>
                     <span className="font-bold font-mono tabular-nums" style={{ color: '#1A56DB' }}>{row.ph}</span>
                     <span className="font-mono tabular-nums" style={{ color: '#F59E0B' }}>{row.tds}</span>
@@ -259,7 +263,7 @@ export default function HistoryPage() {
                     <span className="font-mono tabular-nums" style={{ color: '#22C55E' }}>{row.temperature} °C</span>
                     <span className="font-mono tabular-nums" style={{ color: 'var(--t-text)' }}>{row.depth} m</span>
                     <span className="flex items-center gap-1 font-semibold" style={{ color: sm.color }}>
-                      {sm.icon}{sm.label}
+                      {sm.icon}{sm.label[lang]}
                     </span>
                   </div>
                 )
@@ -272,7 +276,7 @@ export default function HistoryPage() {
         <div className="flex items-center justify-between px-5 py-3 border-t"
           style={{ background: 'var(--t-surface-2)', borderColor: 'var(--t-border)' }}>
           <span className="text-[10px]" style={{ color: 'var(--t-muted)' }}>
-            {filtered.length} entri · halaman {page}/{totalPages || 1}
+            {filtered.length} {lang === 'id' ? 'entri · halaman' : 'entries · page'} {page}/{totalPages || 1}
           </span>
           <div className="flex items-center gap-2">
             <button
