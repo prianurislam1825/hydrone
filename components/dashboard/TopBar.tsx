@@ -71,13 +71,6 @@ export default function TopBar() {
           LIVE
         </span>
 
-        {/* Admin */}
-        <Link href="/dashboard/profile" className="flex items-center gap-2 px-2 py-1 rounded-lg hover:bg-[#1A56DB]/5 transition-all">
-          <div className="w-7 h-7 rounded-full bg-[#1A56DB] flex items-center justify-center">
-            <span className="text-white font-bold text-xs">A</span>
-          </div>
-          <span className="text-sm font-semibold" style={{ color: 'var(--t-text)' }}>Admin</span>
-        </Link>
       </div>
     </header>
   )

@@ -139,12 +139,12 @@ function SensorTopCard({ cfg, value, history, unit }: {
   return (
     <div className="rounded-2xl p-4 border flex flex-col gap-2 min-w-0" style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)' }}>
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1.5">
-          <span style={{ color: cfg.color }}>{cfg.icon}</span>
-          <span className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--t-muted)' }}>{cfg.label[lang]}</span>
+      <div className="flex items-center justify-between gap-1 min-w-0">
+        <div className="flex items-center gap-1.5 min-w-0 overflow-hidden">
+          <span className="shrink-0" style={{ color: cfg.color }}>{cfg.icon}</span>
+          <span className="text-xs font-bold uppercase tracking-wider truncate" style={{ color: 'var(--t-muted)' }}>{cfg.label[lang]}</span>
         </div>
-        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: sBg, color: sColor }}>
+        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ml-1" style={{ background: sBg, color: sColor }}>
           {sLabel.badge[lang]}
         </span>
       </div>
@@ -165,12 +165,12 @@ function SensorTopCard({ cfg, value, history, unit }: {
       )}
 
       {/* Status + range */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1">
+      <div className="flex items-center justify-between gap-1 min-w-0">
+        <div className="flex items-center gap-1 shrink-0">
           <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: sColor, boxShadow: value !== null ? `0 0 4px ${sColor}` : 'none' }} />
           <span className="text-[10px] font-semibold" style={{ color: sColor }}>{sLabel.id[lang]}</span>
         </div>
-        <span className="text-[10px]" style={{ color: 'var(--t-muted)' }}>{lang === 'id' ? 'Aman: ' : 'Safe: '}{cfg.ranges.ok}</span>
+        <span className="text-[10px] truncate" style={{ color: 'var(--t-muted)' }}>{lang === 'id' ? 'Aman: ' : 'Safe: '}{cfg.ranges.ok}</span>
       </div>
     </div>
   )

@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useRef, useState } from 'react'
 
@@ -14,10 +14,10 @@ export interface SensorConfig {
 }
 
 export const SENSOR_CONFIGS: SensorConfig[] = [
-  { key: 'ph',          label: 'pH',          unit: 'pH',  normalMin: 6.5, normalMax: 8.5,  normalLabel: '6.5 â€“ 8.5 pH', decimals: 2 },
+  { key: 'ph',          label: 'pH',          unit: 'pH',  normalMin: 6.5, normalMax: 8.5,  normalLabel: '6.5 - 8.5 pH', decimals: 2 },
   { key: 'tds',         label: 'TDS',         unit: 'ppm', normalMin: 0,   normalMax: 500,  normalLabel: '< 500 ppm',    decimals: 0 },
   { key: 'turbidity',   label: 'Turbidity',   unit: 'NTU', normalMin: 0,   normalMax: 50,   normalLabel: '< 50 NTU',     decimals: 1 },
-  { key: 'temperature', label: 'Temperature', unit: 'Â°C',  normalMin: 20,  normalMax: 32,   normalLabel: '20 â€“ 32Â°C',    decimals: 1 },
+  { key: 'temperature', label: 'Temperature', unit: '°C',  normalMin: 20,  normalMax: 32,   normalLabel: '20 - 32°C',    decimals: 1 },
 ]
 
 export type SensorKey     = 'ph' | 'tds' | 'turbidity' | 'temperature'

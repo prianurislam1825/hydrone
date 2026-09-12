@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import {
     Activity,
@@ -62,7 +62,7 @@ const FILTERS: { key: FilterKey; label: string }[] = [
 
 /* â”€â”€ CSV export â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function exportCSV(rows: HistoryRow[]) {
-  const header = ['No', 'Tanggal', 'Waktu', 'pH', 'TDS (ppm)', 'Turbidity (NTU)', 'Suhu (Â°C)', 'Kedalaman (m)', 'Status']
+  const header = ['No', 'Tanggal', 'Waktu', 'pH', 'TDS (ppm)', 'Turbidity (NTU)', 'Suhu (°C)', 'Kedalaman (m)', 'Status']
   const body   = rows.map(r => [
     r.id,
     r.timestamp.toLocaleDateString('id-ID'),
@@ -171,7 +171,7 @@ export default function HistoryPage() {
         ))}
       </div>
 
-      {/* â”€â”€ Summary stats â”€â”€ */}
+      {/* Summary stats */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {[
           { icon: <Activity size={14} />,       label: 'Total Entri',   value: stats.total,   color: '#1A56DB' },
@@ -179,17 +179,17 @@ export default function HistoryPage() {
           { icon: <AlertTriangle size={14} />,  label: 'Waspada',       value: stats.warning, color: '#F59E0B' },
           { icon: <XCircle size={14} />,        label: 'Bahaya',        value: stats.danger,  color: '#EF4444' },
           { icon: <FlaskConical size={14} />,   label: 'Rata-rata pH',  value: stats.avgPh,   color: '#1A56DB' },
-          { icon: <Thermometer size={14} />,    label: 'Rata-rata Suhu',value: `${stats.avgTemp}Â°C`, color: '#22C55E' },
+          { icon: <Thermometer size={14} />,    label: 'Rata-rata Suhu',value: `${stats.avgTemp} °C`, color: '#22C55E' },
         ].map((s, i) => (
-          <div key={i} className="rounded-2xl p-3.5 border text-center" style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)' }}>
-            <div className="flex justify-center mb-1.5" style={{ color: s.color }}>{s.icon}</div>
+          <div key={i} className="rounded-2xl p-3.5 border text-center flex flex-col items-center justify-center gap-1" style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)' }}>
+            <div className="flex justify-center" style={{ color: s.color }}>{s.icon}</div>
             <div className="text-lg font-extrabold leading-tight" style={{ color: s.color }}>{s.value}</div>
-            <div className="text-[10px] mt-0.5 font-semibold uppercase tracking-wide" style={{ color: 'var(--t-muted)' }}>{s.label}</div>
+            <div className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: 'var(--t-muted)' }}>{s.label}</div>
           </div>
         ))}
       </div>
 
-      {/* â”€â”€ Trend charts â”€â”€ */}
+      {/* Trend charts */}
       {filtered.length > 1 && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {[
@@ -208,67 +208,71 @@ export default function HistoryPage() {
         </div>
       )}
 
-      {/* â”€â”€ Data table â”€â”€ */}
+      {/* Data table */}
       <div className="rounded-2xl border overflow-hidden" style={{ borderColor: 'var(--t-border)' }}>
-        {/* Header */}
-        <div
-          className="grid px-5 py-3 border-b text-[10px] font-bold uppercase tracking-wider"
-          style={{
-            gridTemplateColumns: '44px 90px 1fr 1fr 1fr 1fr 80px 90px',
-            background: 'var(--t-surface-2)', borderColor: 'var(--t-border)', color: 'var(--t-muted)',
-          }}
-        >
-          <span>#</span>
-          <span>Waktu</span>
-          <span className="flex items-center gap-1"><FlaskConical size={9} />pH</span>
-          <span className="flex items-center gap-1"><Droplets size={9} />TDS</span>
-          <span className="flex items-center gap-1"><Wind size={9} />Turb.</span>
-          <span className="flex items-center gap-1"><Thermometer size={9} />Suhu</span>
-          <span className="flex items-center gap-1"><Layers size={9} />Depth</span>
-          <span>Status</span>
-        </div>
-
-        {/* Rows */}
-        <div style={{ background: 'var(--t-surface)' }}>
-          {pageRows.length === 0 ? (
-            <div className="py-16 text-center text-sm" style={{ color: 'var(--t-muted)' }}>
-              Tidak ada data untuk periode ini
+        <div className="overflow-x-auto">
+          <div className="min-w-[640px]">
+            {/* Header */}
+            <div
+              className="grid px-4 py-3 border-b text-[10px] font-bold uppercase tracking-wider"
+              style={{
+                gridTemplateColumns: '44px 80px 1fr 1fr 1fr 1fr 80px 90px',
+                background: 'var(--t-surface-2)', borderColor: 'var(--t-border)', color: 'var(--t-muted)',
+              }}
+            >
+              <span>#</span>
+              <span>Waktu</span>
+              <span className="flex items-center gap-1"><FlaskConical size={9} />pH</span>
+              <span className="flex items-center gap-1"><Droplets size={9} />TDS</span>
+              <span className="flex items-center gap-1"><Wind size={9} />Turb.</span>
+              <span className="flex items-center gap-1"><Thermometer size={9} />Suhu</span>
+              <span className="flex items-center gap-1"><Layers size={9} />Depth</span>
+              <span>Status</span>
             </div>
-          ) : pageRows.map((row, i) => {
-            const sm = STATUS_META[row.status]
-            return (
-              <div
-                key={row.id}
-                className="grid px-5 py-3 border-b last:border-0 text-xs items-center transition-colors hover:bg-[#1A56DB]/[0.02]"
-                style={{
-                  gridTemplateColumns: '44px 90px 1fr 1fr 1fr 1fr 80px 90px',
-                  borderColor: 'var(--t-border)',
-                  background:  i % 2 === 0 ? 'var(--t-surface)' : 'var(--t-bg)',
-                  borderLeft:  `3px solid ${sm.color}`,
-                }}
-              >
-                <span className="text-[10px] font-mono" style={{ color: 'var(--t-muted)' }}>#{row.id}</span>
-                <span className="text-[10px] font-mono" style={{ color: 'var(--t-muted)' }}>
-                  {row.timestamp.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
-                </span>
-                <span className="font-bold font-mono tabular-nums" style={{ color: '#1A56DB' }}>{row.ph}</span>
-                <span className="font-mono tabular-nums" style={{ color: '#F59E0B' }}>{row.tds}</span>
-                <span className="font-mono tabular-nums" style={{ color: '#F05A22' }}>{row.turbidity}</span>
-                <span className="font-mono tabular-nums" style={{ color: '#22C55E' }}>{row.temperature}Â°C</span>
-                <span className="font-mono tabular-nums" style={{ color: 'var(--t-text)' }}>{row.depth} m</span>
-                <span className="flex items-center gap-1 font-semibold" style={{ color: sm.color }}>
-                  {sm.icon}{sm.label}
-                </span>
-              </div>
-            )
-          })}
+
+            {/* Rows */}
+            <div style={{ background: 'var(--t-surface)' }}>
+              {pageRows.length === 0 ? (
+                <div className="py-16 text-center text-sm" style={{ color: 'var(--t-muted)' }}>
+                  Tidak ada data untuk periode ini
+                </div>
+              ) : pageRows.map((row, i) => {
+                const sm = STATUS_META[row.status]
+                return (
+                  <div
+                    key={row.id}
+                    className="grid px-4 py-3 border-b last:border-0 text-xs items-center transition-colors hover:bg-[#1A56DB]/[0.02]"
+                    style={{
+                      gridTemplateColumns: '44px 80px 1fr 1fr 1fr 1fr 80px 90px',
+                      borderColor: 'var(--t-border)',
+                      background:  i % 2 === 0 ? 'var(--t-surface)' : 'var(--t-bg)',
+                      borderLeft:  `3px solid ${sm.color}`,
+                    }}
+                  >
+                    <span className="text-[10px] font-mono" style={{ color: 'var(--t-muted)' }}>#{row.id}</span>
+                    <span className="text-[10px] font-mono" style={{ color: 'var(--t-muted)' }}>
+                      {row.timestamp.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                    <span className="font-bold font-mono tabular-nums" style={{ color: '#1A56DB' }}>{row.ph}</span>
+                    <span className="font-mono tabular-nums" style={{ color: '#F59E0B' }}>{row.tds}</span>
+                    <span className="font-mono tabular-nums" style={{ color: '#F05A22' }}>{row.turbidity}</span>
+                    <span className="font-mono tabular-nums" style={{ color: '#22C55E' }}>{row.temperature} °C</span>
+                    <span className="font-mono tabular-nums" style={{ color: 'var(--t-text)' }}>{row.depth} m</span>
+                    <span className="flex items-center gap-1 font-semibold" style={{ color: sm.color }}>
+                      {sm.icon}{sm.label}
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
         </div>
 
         {/* Footer / pagination */}
         <div className="flex items-center justify-between px-5 py-3 border-t"
           style={{ background: 'var(--t-surface-2)', borderColor: 'var(--t-border)' }}>
           <span className="text-[10px]" style={{ color: 'var(--t-muted)' }}>
-            {filtered.length} entri Â· halaman {page}/{totalPages || 1}
+            {filtered.length} entri · halaman {page}/{totalPages || 1}
           </span>
           <div className="flex items-center gap-2">
             <button
@@ -276,13 +280,13 @@ export default function HistoryPage() {
               disabled={page <= 1}
               className="h-7 px-3 rounded-lg text-xs font-semibold border transition-all disabled:opacity-40"
               style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)', color: 'var(--t-muted)' }}
-            >â† Prev</button>
+            >← Prev</button>
             <button
               onClick={() => setPage(p => Math.min(totalPages, p + 1))}
               disabled={page >= totalPages}
               className="h-7 px-3 rounded-lg text-xs font-semibold border transition-all disabled:opacity-40"
               style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)', color: 'var(--t-muted)' }}
-            >Next â†’</button>
+            >Next →</button>
           </div>
         </div>
       </div>
