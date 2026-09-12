@@ -79,7 +79,7 @@ export default function SpecsSection() {
         </div>
 
         {/* Summary cards with vibrant icons & gradients — 2 rows (3 top, 3 bottom) */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 max-w-4xl mx-auto mb-16" data-anim>
+        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-6 max-w-4xl mx-auto mb-16" data-anim>
           {SUMMARY_STATS.map((s, i) => (
             <div
               key={i}
