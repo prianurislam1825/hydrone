@@ -15,13 +15,14 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
-/* ── 5 Main Bottom Tabs ─────────────────────────────────── */
+/* ── 6 Bottom Tabs (Home, Riwayat, Kontroler, Perangkat, Profil, Menu) ── */
 const TABS = [
   { label: { id: 'Home', en: 'Home' },             href: '/dashboard',          icon: LayoutDashboard },
   { label: { id: 'Riwayat', en: 'History' },       href: '/dashboard/history',  icon: History },
   { label: { id: 'Kontroler', en: 'Controller' }, href: '/dashboard/control',  icon: Gamepad2, center: true },
   { label: { id: 'Perangkat', en: 'Devices' },     href: '/dashboard/devices',  icon: Cpu },
   { label: { id: 'Profil', en: 'Profile' },         href: '/dashboard/profile',  icon: User },
+  { label: { id: 'Menu', en: 'Menu' },             href: null,                  icon: LayoutGrid, gridTrigger: true },
 ]
 
 /* ── All menus for the grid sheet ─────────────────────────── */
@@ -140,34 +141,34 @@ export default function BottomNav() {
                 <button
                   key="menu-grid"
                   onClick={() => setSheetOpen(v => !v)}
-                  className="flex-1 flex flex-col items-center justify-center gap-1 py-3 min-h-[56px] transition-all"
+                  className="flex-1 flex flex-col items-center justify-center gap-0.5 py-2 px-0.5 min-h-[54px] transition-all"
                   style={{ color: sheetOpen ? '#1A56DB' : 'var(--t-muted)' }}
                   aria-label="Semua menu"
                   aria-expanded={sheetOpen}
                 >
                   {sheetOpen
-                    ? <X size={20} strokeWidth={2.5} style={{ color: '#1A56DB' }} />
-                    : <LayoutGrid size={20} strokeWidth={1.8} />
+                    ? <X size={18} strokeWidth={2.5} style={{ color: '#1A56DB' }} />
+                    : <LayoutGrid size={18} strokeWidth={1.8} />
                   }
-                  <span className="text-[10px] font-semibold tracking-wide">
+                  <span className="text-[9px] font-semibold tracking-tight">
                     {sheetOpen ? (lang === 'id' ? 'Tutup' : 'Close') : (lang === 'id' ? 'Menu' : 'Menu')}
                   </span>
                 </button>
               )
             }
 
-            /* ── Center elevated button (Kontrol) ── */
+            /* ── Center elevated button (Kontroler) ── */
             if ('center' in tab && tab.center && tab.href) {
               const isActive = pathname.startsWith(tab.href)
               return (
                 <Link
                   key={tab.href}
                   href={tab.href}
-                  className="flex-1 flex flex-col items-center justify-center relative -mt-3 pb-1"
+                  className="flex-1 flex flex-col items-center justify-center relative -mt-3 pb-0.5 px-0.5"
                   aria-current={isActive ? 'page' : undefined}
                 >
                   <div
-                    className="w-14 h-14 rounded-full flex items-center justify-center shadow-xl mb-1 transition-all duration-200"
+                    className="w-12 h-12 rounded-full flex items-center justify-center shadow-xl mb-0.5 transition-all duration-200"
                     style={{
                       background: isActive
                         ? 'linear-gradient(135deg, #1A56DB, #00B4D8)'
@@ -177,9 +178,9 @@ export default function BottomNav() {
                         : '0 4px 16px rgba(0,0,0,0.3), 0 0 0 3px var(--t-bg)',
                     }}
                   >
-                    <Icon size={22} color="#ffffff" strokeWidth={isActive ? 2.5 : 2} />
+                    <Icon size={20} color="#ffffff" strokeWidth={isActive ? 2.5 : 2} />
                   </div>
-                  <span className="text-[10px] font-bold tracking-wide" style={{ color: isActive ? '#1A56DB' : 'var(--t-muted)' }}>
+                  <span className="text-[9px] font-bold tracking-tight" style={{ color: isActive ? '#1A56DB' : 'var(--t-muted)' }}>
                     {tab.label[lang]}
                   </span>
                 </Link>
@@ -196,15 +197,15 @@ export default function BottomNav() {
               <Link
                 key={tab.href}
                 href={tab.href}
-                className="flex-1 flex flex-col items-center justify-center gap-1 py-3 min-h-[56px] relative transition-all"
+                className="flex-1 flex flex-col items-center justify-center gap-0.5 py-2 px-0.5 min-h-[54px] relative transition-all"
                 aria-current={isActive ? 'page' : undefined}
                 style={{ color: isActive ? '#1A56DB' : 'var(--t-muted)' }}
               >
                 {isActive && (
-                  <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 rounded-full bg-[#1A56DB]" />
+                  <span className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full bg-[#1A56DB]" />
                 )}
-                <Icon size={20} strokeWidth={isActive ? 2.5 : 1.8} />
-                <span className="text-[10px] font-semibold tracking-wide">{tab.label[lang]}</span>
+                <Icon size={18} strokeWidth={isActive ? 2.5 : 1.8} />
+                <span className="text-[9px] font-semibold tracking-tight">{tab.label[lang]}</span>
               </Link>
             )
           })}
