@@ -12,11 +12,11 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 const NAV_LINKS = [
-  { label: { id: 'Beranda',    en: 'Home'        }, href: '#'            },
-  { label: { id: 'Fitur',      en: 'Features'    }, href: '#fitur'       },
-  { label: { id: 'Cara Kerja', en: 'How It Works' }, href: '#cara-kerja' },
-  { label: { id: 'Tim Kami',   en: 'Our Team'    }, href: '#tim'         },
-  { label: { id: 'Kontak',     en: 'Contact'     }, href: '#spesifikasi' },
+  { label: { id: 'Beranda',    en: 'Home'        }, href: '/'             },
+  { label: { id: 'Fitur',      en: 'Features'    }, href: '/features'     },
+  { label: { id: 'Cara Kerja', en: 'How It Works' }, href: '/how-it-works' },
+  { label: { id: 'Tim Kami',   en: 'Our Team'    }, href: '/team'         },
+  { label: { id: 'Tentang',    en: 'About'       }, href: '/about'        },
 ]
 
 export default function LandingNav() {
