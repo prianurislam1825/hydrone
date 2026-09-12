@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useLang } from '@/lib/i18n/context'
 import { useTheme } from '@/lib/theme/useTheme'
@@ -13,8 +13,8 @@ interface BeforeInstallPromptEvent extends Event {
 
 const NAV_LINKS = [
   { label: { id: 'Beranda',    en: 'Home'        }, href: '#'            },
-  { label: { id: 'Cara Kerja', en: 'How It Works' }, href: '#cara-kerja' },
   { label: { id: 'Fitur',      en: 'Features'    }, href: '#fitur'       },
+  { label: { id: 'Cara Kerja', en: 'How It Works' }, href: '#cara-kerja' },
   { label: { id: 'Tim Kami',   en: 'Our Team'    }, href: '#tim'         },
   { label: { id: 'Kontak',     en: 'Contact'     }, href: '#spesifikasi' },
 ]
