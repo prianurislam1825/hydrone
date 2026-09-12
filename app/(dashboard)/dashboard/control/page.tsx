@@ -1,9 +1,11 @@
 'use client'
 
 import VirtualJoystick, { type JoystickVector } from '@/components/dashboard/VirtualJoystick'
+import { useLang } from '@/lib/i18n/context'
 import { useSensorData } from '@/lib/dashboard/useSensorData'
 import { useTheme } from '@/lib/theme/useTheme'
 import {
+  ArrowLeft,
   BatteryMedium, Camera, ChevronLeft, ChevronRight,
   Droplets, Filter, Gauge, Layers,
   Maximize2, Minimize2, Moon,
@@ -13,6 +15,7 @@ import {
   TriangleAlert,
   WifiOff, Wind
 } from 'lucide-react'
+import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 type ControlMode = 'MANUAL' | 'AUTO'
@@ -57,6 +60,7 @@ function Toast({ msg }: { msg: string }) {
 export default function ControlPage() {
   const { values, depth, batteryA, connected } = useSensorData()
   const { theme, toggle: toggleTheme, mounted } = useTheme()
+  const { lang }                                = useLang()
 
   const [mode, setMode]               = useState<ControlMode>('MANUAL')
   const [speed, setSpeed]             = useState(50)
@@ -154,6 +158,32 @@ export default function ControlPage() {
     <div style={{ flexShrink: 0, background: 'var(--t-surface)', borderBottom: '1px solid var(--t-border)' }}>
       {/* Single centered row — semua elemen ditengah */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '6px 8px', gap: 6, flexWrap: 'wrap' }}>
+
+        {/* Exit / Back button */}
+        <Link
+          href="/dashboard"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4,
+            padding: '4px 9px',
+            borderRadius: 8,
+            fontSize: 10,
+            fontWeight: 800,
+            background: 'rgba(239, 68, 68, 0.12)',
+            border: '1px solid rgba(239, 68, 68, 0.35)',
+            color: '#EF4444',
+            textDecoration: 'none',
+            flexShrink: 0,
+          }}
+          title={lang === 'id' ? 'Keluar / Kembali ke Dashboard' : 'Exit / Back to Dashboard'}
+        >
+          <ArrowLeft size={11} />
+          <span>{lang === 'id' ? 'KELUAR' : 'EXIT'}</span>
+        </Link>
+
+        {/* Divider */}
+        <div style={{ width: 1, height: 18, background: 'var(--t-border)', flexShrink: 0 }} />
 
         {/* Mode badge */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 8px', borderRadius: 8, fontSize: 10, fontWeight: 900,
