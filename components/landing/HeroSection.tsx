@@ -97,8 +97,8 @@ export default function HeroSection() {
     h1a:     { id: 'Membersihkan Sungai,', en: 'Cleaning Rivers,' },
     h1b:     { id: 'Membaca Air.', en: 'Reading Water.' },
     sub: {
-      id: 'ROV bawah air untuk koleksi makroplastik dan penyaringan mikroplastik hingga 0.1 mikron, memantau kualitas air secara real-time — dibangun oleh lima pelajar SMA.',
-      en: 'Underwater ROV for macroplastic collection and microplastic filtration down to 0.1 microns, streaming real-time water quality data — built by five high school students.',
+      id: 'Hydrone adalah ROV bawah air yang mengumpulkan sampah plastik sungai dan mengirim data kualitas air secara real-time, dibangun dari nol oleh tim pelajar SMA.',
+      en: 'Hydrone is an underwater ROV that collects river plastic waste and transmits water quality data in real-time, built from scratch by a high school student team.',
     },
     cta1: { id: 'Lihat Dashboard', en: 'View Dashboard' },
     cta2: { id: 'Pelajari Lebih',  en: 'Learn More' },
