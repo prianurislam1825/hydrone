@@ -11,10 +11,12 @@ const ADMIN_ACCOUNTS = [
 ]
 
 export const authConfig: NextAuthConfig = {
+  trustHost: true,
   providers: [
     Google({
       clientId:     process.env.GOOGLE_CLIENT_ID  ?? '',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
+      allowDangerousEmailAccountLinking: true,
     }),
     Credentials({
       name: 'credentials',
@@ -46,17 +48,23 @@ export const authConfig: NextAuthConfig = {
     }),
   ],
   callbacks: {
-    jwt({ token, user }) {
+    signIn() {
+      return true
+    },
+    jwt({ token, user, account }) {
       if (user && 'role' in user) token.role = user.role as string
+      if (account?.provider === 'google') {
+        token.role = (token.role as string) ?? 'OPERATOR'
+      }
       return token
     },
     session({ session, token }) {
       if (session.user) {
-        (session.user as typeof session.user & { role?: string }).role = token.role as string
+        (session.user as typeof session.user & { role?: string }).role = (token.role as string) ?? 'OPERATOR'
       }
       return session
     },
   },
   pages:  { signIn: '/login' },
-  secret: process.env.NEXTAUTH_SECRET ?? 'hydrone-local-secret',
+  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? 'hydrone-super-secret-key-2025-sman1-surakarta',
 }
