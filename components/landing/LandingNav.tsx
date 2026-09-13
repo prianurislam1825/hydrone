@@ -278,8 +278,13 @@ export default function LandingNav() {
             </button>
 
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#1A56DB]/10 border border-[#1A56DB]/20 text-[#1A56DB]">
-                <Download size={20} />
+              <div className="relative w-11 h-11 rounded-xl overflow-hidden border border-[#1A56DB]/20 shadow-sm shrink-0">
+                <Image
+                  src="/pfp-hydrone.png"
+                  alt="Hydrone App"
+                  fill
+                  className="object-contain"
+                />
               </div>
               <div>
                 <h3 className="font-extrabold text-base leading-tight">

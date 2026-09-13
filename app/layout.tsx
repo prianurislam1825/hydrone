@@ -27,6 +27,11 @@ export const metadata: Metadata = {
     'Hydrone is a student-built underwater ROV that collects river plastic and monitors water quality in real time. Built by Hydrone.',
   keywords: ['Hydrone', 'ROV', 'underwater', 'river', 'plastic', 'microplastic'],
   authors:  [{ name: 'Hydrone' }],
+  icons: {
+    icon: '/pfp-hydrone.png',
+    shortcut: '/pfp-hydrone.png',
+    apple: '/pfp-hydrone.png',
+  },
   other:    { 'theme-color': '#EEF2FF' },
 }
 
@@ -53,6 +58,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Hydrone" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/pfp-hydrone.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="apple-touch-icon" href="/pfp-hydrone.png" />
         <script dangerouslySetInnerHTML={{ __html: `
           if ('serviceWorker' in navigator) {
