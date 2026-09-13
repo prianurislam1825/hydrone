@@ -109,6 +109,21 @@
   --t-sensor-glow: rgba(26,86,219,0.18);
 }
 
+/* ── Theme-aware logo display ─────────────────────────────────────── */
+.logo-light {
+  display: block !important;
+}
+.logo-dark {
+  display: none !important;
+}
+
+[data-theme='dark'] .logo-light {
+  display: none !important;
+}
+[data-theme='dark'] .logo-dark {
+  display: block !important;
+}
+
 /* ── Base ────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
 

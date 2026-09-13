@@ -6,7 +6,7 @@ const OFFLINE_URL = '/'
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache =>
-      cache.addAll([OFFLINE_URL, '/manifest.json', '/pfp-hydrone.png', '/blue-logo-hydrone.png'])
+      cache.addAll([OFFLINE_URL, '/manifest.json', '/pfp-hydrone.png', '/blue-logo-hydrone.png', '/white-logo-hydrone.png'])
     )
   )
   self.skipWaiting()

@@ -25,11 +25,23 @@ export default function TopBar() {
     >
       {/* Left: Brand logo (mobile) + mode badge */}
       <div className="flex items-center gap-2.5">
-        <Link href="/dashboard" className="flex lg:hidden items-center gap-2 shrink-0 mr-1">
-          <div className="w-7 h-7 rounded-lg overflow-hidden border relative" style={{ borderColor: 'rgba(26,86,219,0.25)' }}>
-            <Image src="/pfp-hydrone.png" alt="Hydrone" fill className="object-contain" />
-          </div>
-          <span className="font-extrabold text-sm tracking-tight" style={{ color: 'var(--t-text)' }}>Hydrone</span>
+        <Link href="/dashboard" className="flex lg:hidden items-center shrink-0 mr-1 py-0.5" aria-label="Hydrone Dashboard">
+          <Image
+            src="/blue-logo-hydrone.png"
+            alt="Hydrone"
+            width={120}
+            height={35}
+            className="h-7 w-auto object-contain logo-light"
+            priority
+          />
+          <Image
+            src="/white-logo-hydrone.png"
+            alt="Hydrone"
+            width={120}
+            height={35}
+            className="h-7 w-auto object-contain logo-dark"
+            priority
+          />
         </Link>
 
         <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold border"

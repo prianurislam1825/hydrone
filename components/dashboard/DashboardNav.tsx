@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useLang } from '@/lib/i18n/context'
 import { useTheme } from '@/lib/theme/useTheme'
@@ -32,27 +32,23 @@ export default function DashboardNav() {
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group shrink-0">
-            <div className="relative w-8 h-8 rounded-full overflow-hidden ring-1 ring-[#1A56DB]/30">
-              <Image
-                src="/pfp-hydrone.png"
-                alt="Hydrone"
-                fill
-                className="object-contain"
-                onError={e => {
-                  const t = e.target as HTMLImageElement
-                  t.style.display = 'none'
-                  const p = t.parentElement
-                  if (p) p.innerHTML = '<span class="flex items-center justify-center w-8 h-8 rounded-full bg-[#1A56DB]/20 text-[#1A56DB] font-bold text-sm">H</span>'
-                }}
-              />
-            </div>
-            <span
-              className="font-bold text-lg tracking-wide font-[family-name:var(--font-plus-jakarta)] group-hover:text-[#1A56DB] transition-colors"
-              style={{ color: 'var(--t-text)' }}
-            >
-              Hydrone
-            </span>
+          <Link href="/" className="flex items-center group shrink-0 py-1" aria-label="Hydrone Home">
+            <Image
+              src="/blue-logo-hydrone.png"
+              alt="Hydrone"
+              width={140}
+              height={41}
+              className="h-8 sm:h-9 w-auto object-contain logo-light transition-opacity duration-200"
+              priority
+            />
+            <Image
+              src="/white-logo-hydrone.png"
+              alt="Hydrone"
+              width={140}
+              height={41}
+              className="h-8 sm:h-9 w-auto object-contain logo-dark transition-opacity duration-200"
+              priority
+            />
           </Link>
 
           {/* Desktop nav links */}

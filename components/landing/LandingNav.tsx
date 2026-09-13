@@ -79,25 +79,23 @@ export default function LandingNav() {
         <div className="flex items-center justify-between h-[60px]">
 
           {/* ── Logo ──────────────────────────────────── */}
-          <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-            <div className="relative w-8 h-8 rounded-lg overflow-hidden border"
-              style={{ borderColor: 'rgba(26,86,219,0.2)' }}>
-              <Image
-                src="/pfp-hydrone.png"
-                alt="Hydrone"
-                fill
-                className="object-contain"
-                onError={e => {
-                  const t = e.target as HTMLImageElement
-                  t.style.display = 'none'
-                  const p = t.parentElement
-                  if (p) p.innerHTML = '<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:linear-gradient(135deg,#1A56DB,#00B4D8);color:#fff;font-weight:800;font-size:13px">H</span>'
-                }}
-              />
-            </div>
-            <span className="font-extrabold text-base tracking-tight" style={{ color: 'var(--t-text)' }}>
-              Hydrone
-            </span>
+          <Link href="/" className="flex items-center group shrink-0 py-1" aria-label="Hydrone Home">
+            <Image
+              src="/blue-logo-hydrone.png"
+              alt="Hydrone"
+              width={140}
+              height={41}
+              className="h-8 sm:h-9 w-auto object-contain logo-light transition-opacity duration-200"
+              priority
+            />
+            <Image
+              src="/white-logo-hydrone.png"
+              alt="Hydrone"
+              width={140}
+              height={41}
+              className="h-8 sm:h-9 w-auto object-contain logo-dark transition-opacity duration-200"
+              priority
+            />
           </Link>
 
           {/* ── Desktop nav links ─────────────────────── */}
