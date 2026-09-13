@@ -20,7 +20,7 @@
 | Product name | **Hydrone** |
 | Category | Underwater ROV (Remotely Operated Vehicle) |
 | Mission | River debris collection + real-time water quality monitoring |
-| Target environment | Shallow river (0–10m depth), specifically Sungai Dengkeng, Central Java |
+| Target environment | Shallow river (0–10m depth), Central Java |
 | Built by | 5-person high school team, Mersiflab |
 | Competition | IID INNOPA (International Invention, Innovation, and Technology Exhibition) |
 | Competition deadline | August 31, 2026 |
@@ -314,7 +314,7 @@ Numbers in `Space Grotesk 700`, large (48–64px). Labels in `--brand-muted` 12p
 **Layout:** Wide image (the ChatGPT render with ROV underwater), with caption overlay at bottom:
 
 ```
-"Collecting microplastics at depth. Sungai Dengkeng, Central Java."
+"Collecting microplastics at depth. Central Java."
 ```
 
 Aspect ratio ~16:5 crop of the full image. Image should have an orange accent line/glow on the left edge (1px, `--brand-orange`).

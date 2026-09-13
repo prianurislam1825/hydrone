@@ -80,7 +80,7 @@ const T = {
     id: 'Dibangun menggunakan PETG cetak 3D dan sensor off-the-shelf, dikembangkan melalui berbagai iterasi desain tidak hanya sebagai prototipe, tetapi sebagai solusi yang dapat diterapkan di berbagai sungai dan komunitas, membuka peluang kolaborasi dengan pemerintah daerah.',
     en: 'Built using 3D-printed PETG and off-the-shelf sensors, developed through multiple design iterations not just as a prototype, but as a scalable solution deployable across rivers and communities, opening collaboration opportunities with local governments.',
   },
-  caption:  { id: 'Sungai Dengkeng, Jawa Tengah.', en: 'Sungai Dengkeng, Central Java.' },
+  caption:  { id: 'Dokumentasi Operasi Lapangan Hydrone.', en: 'Hydrone Field Operation Documentation.' },
 
   /* Control Center block */
   ccEyebrow: { id: 'PUSAT KENDALI', en: 'CONTROL CENTER' },
@@ -242,7 +242,7 @@ export default function AboutSection() {
                   <div className="absolute bottom-0 left-0 right-0 z-30 flex items-center justify-between px-4 py-2"
                     style={{ background: 'linear-gradient(to top, rgba(3,8,16,0.85), transparent)', backdropFilter: 'blur(4px)' }}>
                     <span className="text-[9px] font-mono" style={{ color: 'rgba(0,180,216,0.7)' }}>HYDRONE · ROV-01</span>
-                    <span className="text-[9px] font-mono" style={{ color: 'rgba(0,180,216,0.7)' }}>{{ id: 'Sungai Dengkeng · Jawa Tengah', en: 'Dengkeng River · Central Java' }[lang]}</span>
+                    <span className="text-[9px] font-mono" style={{ color: 'rgba(0,180,216,0.7)' }}>{{ id: 'Uji Operasi Lapangan · Jawa Tengah', en: 'Field Operation · Central Java' }[lang]}</span>
                   </div>
                 </div>
 
