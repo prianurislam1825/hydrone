@@ -1,7 +1,7 @@
 # HYDRONE — Autonomous Underwater Plastic & Microplastic Collection System
 
 > ROV bawah air untuk membersihkan sampah plastik makro dan mikroplastik di perairan Indonesia.
-> Dikembangkan oleh tim pelajar SMA Negeri 1 Surakarta untuk kompetisi IID INNOPA, dengan dukungan Mersiflab.
+> Dikembangkan oleh tim pelajar SMA Negeri 1 Surakarta, dengan dukungan Mersiflab.
 
 ---
 

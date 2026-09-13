@@ -152,7 +152,6 @@ export default function ProfilePage() {
             {[
               { label: lang === 'id' ? 'Versi Aplikasi' : 'App Version', value: '1.0.0' },
               { label: lang === 'id' ? 'Perangkat' : 'Device',           value: 'Hydrone ROV' },
-              { label: lang === 'id' ? 'Kompetisi' : 'Competition',      value: 'IID INNOPA 2026' },
               { label: lang === 'id' ? 'Tim' : 'Team',                  value: 'Hydrone' },
             ].map((item, i) => (
               <div key={i} className="flex items-center justify-between px-4 py-3 border-b last:border-0" style={{ borderColor: 'var(--t-border)' }}>
@@ -174,7 +173,7 @@ export default function ProfilePage() {
         </a>
 
         <p className="text-center text-[10px] pb-2 font-[family-name:var(--font-jetbrains-mono)]" style={{ color: 'var(--t-muted)', opacity: 0.4 }}>
-          Hydrone · IID INNOPA 2026
+          Hydrone
         </p>
       </div>
     </div>

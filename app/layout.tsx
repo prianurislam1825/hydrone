@@ -24,8 +24,8 @@ export const metadata: Metadata = {
     template: '%s | Hydrone',
   },
   description:
-    'Hydrone is a student-built underwater ROV that collects river plastic and monitors water quality in real time. Built for IID INNOPA 2026 by Hydrone.',
-  keywords: ['Hydrone', 'ROV', 'underwater', 'river', 'plastic', 'microplastic', 'IID INNOPA'],
+    'Hydrone is a student-built underwater ROV that collects river plastic and monitors water quality in real time. Built by Hydrone.',
+  keywords: ['Hydrone', 'ROV', 'underwater', 'river', 'plastic', 'microplastic'],
   authors:  [{ name: 'Hydrone' }],
   other:    { 'theme-color': '#EEF2FF' },
 }

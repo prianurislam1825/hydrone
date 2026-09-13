@@ -223,7 +223,7 @@ export default function HeroSection() {
   const { lang } = useLang()
 
   const T = {
-    eyebrow: { id: 'RIVER ROV · IID INNOPA 2026', en: 'RIVER ROV · IID INNOPA 2026' },
+    eyebrow: { id: 'RIVER ROV', en: 'RIVER ROV' },
     tag:     { id: 'Bertenaga AI & IoT', en: 'AI & IoT Powered' },
     h1a:     { id: 'Membersihkan Sungai,', en: 'Cleaning Rivers,' },
     h1b:     { id: 'Membaca Air.', en: 'Reading Water.' },

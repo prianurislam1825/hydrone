@@ -19,8 +19,8 @@ export default function TeamPage() {
         badge={{ id: 'INOVATOR MUDA INDONESIA', en: 'INDONESIAN YOUNG INNOVATORS' }}
         title={{ id: 'Tim Pelajar & Mitra HYDRONE', en: 'HYDRONE Student Team & Partners' }}
         subtitle={{
-          id: 'Profil tim pengembang dari SMAN 1 Surakarta & SMA Muhammadiyah PK, beserta dukungan mitra riset IID INNOPA 2026.',
-          en: 'Developer team profile from SMAN 1 Surakarta & SMA Muhammadiyah PK, supported by IID INNOPA 2026 research partners.',
+          id: 'Profil tim pengembang dari SMAN 1 Surakarta & SMA Muhammadiyah PK, beserta dukungan mitra riset.',
+          en: 'Developer team profile from SMAN 1 Surakarta & SMA Muhammadiyah PK, supported by research partners.',
         }}
       />
       <main>

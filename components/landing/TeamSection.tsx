@@ -186,8 +186,7 @@ export default function TeamSection() {
           <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: 'linear-gradient(to right, #1A56DB, #00B4D8, #F05A22)' }} />
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12">
             {[
-              { label: lang === 'id' ? 'Dibangun di bawah' : 'Built under', value: 'Hydrone', gradient: 'linear-gradient(135deg, #1A56DB, #00B4D8)' },
-              { label: lang === 'id' ? 'Untuk kompetisi' : 'For competition', value: 'IID INNOPA 2026', gradient: 'linear-gradient(135deg, #F05A22, #F59E0B)' },
+              { label: lang === 'id' ? 'Dibangun oleh' : 'Built by', value: 'Hydrone', gradient: 'linear-gradient(135deg, #1A56DB, #00B4D8)' },
               { label: { id: 'Berbasis di', en: 'Based in' }[lang], value: { id: 'Surakarta, Jawa Tengah', en: 'Surakarta, Central Java' }[lang], color: 'var(--t-text)' },
             ].map((item, i) => (
               <div key={i} className="text-center">

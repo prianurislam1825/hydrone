@@ -14,7 +14,7 @@ export default function LandingFooter() {
 
   const T = {
     tagline: { id: 'Membersihkan Sungai. Membaca Air.', en: 'Cleaning Rivers. Reading Water.' },
-    desc:    { id: 'Proyek ROV bawah air untuk pembersihan makroplastik dan pemantauan kualitas air sungai — oleh Hydrone untuk IID INNOPA 2026.', en: 'Underwater ROV project for macroplastic collection and river water quality monitoring — by Hydrone for IID INNOPA 2026.' },
+    desc:    { id: 'Proyek ROV bawah air untuk pembersihan makroplastik dan pemantauan kualitas air sungai — oleh Hydrone.', en: 'Underwater ROV project for macroplastic collection and river water quality monitoring — by Hydrone.' },
     contact: { id: 'Kontak', en: 'Contact' },
     rights:  { id: `© ${year} Tim Hydrone · Hydrone. Semua hak cipta dilindungi.`, en: `© ${year} Hydrone Team · Hydrone. All rights reserved.` },
     school:  { id: 'SMAN 1 Surakarta & SMA Muhammadiyah PK', en: 'SMAN 1 Surakarta & SMA Muhammadiyah PK' },

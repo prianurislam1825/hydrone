@@ -250,11 +250,6 @@ export const translations = {
         label: { id: 'SMA Negeri 1 Surakarta', en: 'SMA Negeri 1 Surakarta' },
       },
       {
-        name: 'IID INNOPA',
-        logo: '/partners/innopa.png',
-        label: { id: 'IID INNOPA', en: 'IID INNOPA' },
-      },
-      {
         name: 'Hydrone',
         logo: '/partners/mersiflab.png',
         label: { id: 'Hydrone', en: 'Hydrone' },
@@ -322,8 +317,7 @@ export const translations = {
       { id: 'ROV Bawah Air', en: 'Underwater ROV' },
       { id: 'Filter 5µm', en: '5µm Filter' },
       { id: 'ESP32 IoT', en: 'ESP32 IoT' },
-      { id: 'Dual Mode', en: 'Dual Mode' },
-      { id: 'IID INNOPA', en: 'IID INNOPA' }
+      { id: 'Dual Mode', en: 'Dual Mode' }
     ],
   },
   footer: {
@@ -345,7 +339,7 @@ export const translations = {
       { label: { id: 'Visi & Misi', en: 'Vision & Mission' }, href: '#visi-misi' },
     ],
     compTitle: { id: 'Kompetisi', en: 'Competition' },
-    copy: { id: '© 2025 HYDRONE | SMA Negeri 1 Surakarta | IID INNOPA', en: '© 2025 HYDRONE | SMA Negeri 1 Surakarta | IID INNOPA' },
+    copy: { id: '© 2025 HYDRONE | SMA Negeri 1 Surakarta', en: '© 2025 HYDRONE | SMA Negeri 1 Surakarta' },
   },
   login: {
     title: { id: 'Masuk ke Dashboard', en: 'Sign in to Dashboard' },
