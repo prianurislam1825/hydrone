@@ -25,7 +25,7 @@ const TEAM: TeamMember[] = [
     desc: { id: 'Brand & Strategi Eksekutif', en: 'Brand & Executive Strategy' },
     color: '#F05A22', gradient: 'linear-gradient(135deg, #F05A22, #F59E0B)',
     email: 'hydrone.id@gmail.com', phone: '081548158100', initials: 'DZ',
-    photo: '/Dzikron.JPG',
+    photo: '/Dzikron.JPG?v=2',
   },
   {
     name: 'Farid Wimbadi Nugraha',
@@ -33,7 +33,7 @@ const TEAM: TeamMember[] = [
     desc: { id: 'Mekanikal & Teknologi', en: 'Mechanical & Technology' },
     color: '#22C55E', gradient: 'linear-gradient(135deg, #22C55E, #00B4D8)',
     email: 'f.wimbadi@gmail.com', phone: '085868383180', initials: 'FW',
-    photo: '/Farid.JPG',
+    photo: '/Farid.JPG?v=2',
   },
   {
     name: 'Evan Fadillah Nur Santosa',
@@ -41,7 +41,7 @@ const TEAM: TeamMember[] = [
     desc: { id: 'Produk & Firmware', en: 'Product & Firmware' },
     color: '#8B5CF6', gradient: 'linear-gradient(135deg, #8B5CF6, #1A56DB)',
     email: 'evanfadillah445@gmail.com', phone: '081228662047', initials: 'EF',
-    photo: '/Evan.JPG',
+    photo: '/Evan.JPG?v=2',
   },
   {
     name: 'Raisa Qarira Santosa',
@@ -49,7 +49,7 @@ const TEAM: TeamMember[] = [
     desc: { id: 'Riset & Data', en: 'Research & Data' },
     color: '#1A56DB', gradient: 'linear-gradient(135deg, #1A56DB, #00B4D8)',
     email: 'raisasa.qs@gmail.com', phone: '085727178769', initials: 'RQ',
-    photo: '/Raisa.JPG',
+    photo: '/Raisa.JPG?v=2',
   },
   {
     name: 'Marsya Razanah',
@@ -57,7 +57,7 @@ const TEAM: TeamMember[] = [
     desc: { id: 'Pemasaran & Visi', en: 'Marketing & Vision' },
     color: '#F59E0B', gradient: 'linear-gradient(135deg, #F59E0B, #F05A22)',
     email: 'marsyarazanah10@gmail.com', phone: '081227917676', initials: 'MR',
-    photo: '/Marsya.JPG',
+    photo: '/Marsya.JPG?v=2',
   },
 ]
 
@@ -87,7 +87,16 @@ function MemberCard({ member, lang, index }: { member: TeamMember; lang: Lang; i
       <div className="relative mx-4 mt-4 rounded-xl overflow-hidden shrink-0"
         style={{ aspectRatio: '1/1', background: 'var(--t-surface-2)' }}>
         {member.photo && !imgError ? (
-          <Image src={member.photo} alt={member.name} fill className="object-cover object-top" onError={() => setImgError(true)} />
+          <Image
+            src={member.photo}
+            alt={member.name}
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+            className="object-cover"
+            priority={index < 2}
+            unoptimized
+            onError={() => setImgError(true)}
+          />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center"
             style={{ background: `linear-gradient(135deg, ${member.color}18, ${member.color}06)` }}>

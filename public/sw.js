@@ -1,5 +1,5 @@
 // Hydrone Service Worker — PWA support
-const CACHE_NAME = 'hydrone-v3'
+const CACHE_NAME = 'hydrone-v4'
 const OFFLINE_URL = '/'
 
 // Install — cache shell
@@ -30,10 +30,19 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     fetch(event.request)
       .then(response => {
-        const clone = response.clone()
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone))
+        if (response.status === 200) {
+          const clone = response.clone()
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone))
+        }
         return response
       })
-      .catch(() => caches.match(event.request).then(r => r || caches.match(OFFLINE_URL)))
+      .catch(async () => {
+        const cached = await caches.match(event.request)
+        if (cached) return cached
+        if (event.request.destination === 'document' || event.request.mode === 'navigate') {
+          return caches.match(OFFLINE_URL)
+        }
+        return new Response('Network error', { status: 408, statusText: 'Request timed out' })
+      })
   )
 })
