@@ -52,15 +52,17 @@ export const authConfig: NextAuthConfig = {
       return true
     },
     jwt({ token, user, account }) {
-      if (user && 'role' in user) token.role = user.role as string
-      if (account?.provider === 'google') {
-        token.role = (token.role as string) ?? 'OPERATOR'
+      if (user) {
+        token.role = ('role' in user && user.role) ? (user.role as string) : 'ADMIN'
+      }
+      if (account?.provider === 'google' && !token.role) {
+        token.role = 'ADMIN'
       }
       return token
     },
     session({ session, token }) {
       if (session.user) {
-        (session.user as typeof session.user & { role?: string }).role = (token.role as string) ?? 'OPERATOR'
+        (session.user as typeof session.user & { role?: string }).role = (token.role as string) ?? 'ADMIN'
       }
       return session
     },
