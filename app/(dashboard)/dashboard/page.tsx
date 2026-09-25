@@ -119,8 +119,8 @@ function Sparkline({ data, color, min, max }: { data: number[]; color: string; m
 }
 
 /* ─── Top sensor card ─── */
-function SensorTopCard({ cfg, value, history, unit }: {
-  cfg: typeof TOP_CARDS[0]; value: number | null; history: number[]; unit: string
+function SensorTopCard({ cfg, value, history, unit, isRefreshing }: {
+  cfg: typeof TOP_CARDS[0]; value: number | null; history: number[]; unit: string; isRefreshing?: boolean
 }) {
   const { lang } = useLang()
   const status   = getStatus(value, cfg.normalMin, cfg.normalMax)
@@ -149,8 +149,8 @@ function SensorTopCard({ cfg, value, history, unit }: {
         </span>
       </div>
 
-      {/* Value */}
-      <div className="flex items-end gap-1">
+      {/* Value with refresh blink effect */}
+      <div className={`flex items-end gap-1 transition-all duration-300 ${isRefreshing ? 'opacity-20 scale-95 blur-[1px]' : 'opacity-100 scale-100'}`}>
         <span className="font-extrabold tabular-nums leading-none" style={{ fontSize: 'clamp(1.6rem,3vw,2.2rem)', color: value !== null ? cfg.color : 'var(--t-muted)' }}>
           {display}
         </span>
@@ -384,10 +384,17 @@ export default function DashboardPage() {
   const [netOpen,  setNetOpen]  = useState(false)
   const [filterOn, setFilterOn] = useState(true)
   const [refreshKey, setRefreshKey] = useState(0)
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const now = new Date()
 
   const toggleNet    = useCallback(() => setNetOpen(v => !v),  [])
   const toggleFilter = useCallback(() => setFilterOn(v => !v), [])
+
+  const handleRefresh = useCallback(() => {
+    setIsRefreshing(true)
+    setRefreshKey(k => k + 1)
+    setTimeout(() => setIsRefreshing(false), 500)
+  }, [])
 
   const T = {
     title:   { id: 'Hydrone Monitoring Dashboard',      en: 'Hydrone Monitoring Dashboard' },
@@ -440,12 +447,13 @@ export default function DashboardPage() {
           </p>
         </div>
         <button
-          onClick={() => setRefreshKey(k => k + 1)}
-          className="flex items-center gap-1.5 h-9 px-4 rounded-xl text-sm font-semibold border transition-all hover:opacity-80"
+          onClick={handleRefresh}
+          disabled={isRefreshing}
+          className="flex items-center gap-1.5 h-9 px-4 rounded-xl text-sm font-semibold border transition-all hover:opacity-80 active:scale-95 disabled:opacity-50"
           style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)', color: 'var(--t-muted)' }}
           aria-label="Refresh"
         >
-          <RefreshCw size={14} />
+          <RefreshCw size={14} className={isRefreshing ? 'animate-spin text-[#1A56DB]' : ''} />
           {T.refresh[lang]}
         </button>
       </div>
@@ -457,7 +465,7 @@ export default function DashboardPage() {
           const hist = cfg.key === '_depth' ? [] : history[cfg.key as keyof typeof history]
           return (
             <div key={cfg.key} className={cfg.key === '_depth' ? 'col-span-2 sm:col-span-1' : ''}>
-              <SensorTopCard cfg={cfg} value={val} history={hist} unit={cfg.unit} />
+              <SensorTopCard cfg={cfg} value={val} history={hist} unit={cfg.unit} isRefreshing={isRefreshing} />
             </div>
           )
         })}

@@ -1,3 +1,4 @@
+import AuthProvider from '@/components/providers/AuthProvider'
 import { LangProvider } from '@/lib/i18n/context'
 import type { Metadata } from 'next'
 import { JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google'
@@ -85,7 +86,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           MozOsxFontSmoothing: 'grayscale',
         } as React.CSSProperties}
       >
-        <LangProvider>{children}</LangProvider>
+        <AuthProvider>
+          <LangProvider>{children}</LangProvider>
+        </AuthProvider>
       </body>
     </html>
   )

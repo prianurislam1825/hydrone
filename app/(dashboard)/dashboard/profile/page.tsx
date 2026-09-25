@@ -4,6 +4,7 @@ import { useLang } from '@/lib/i18n/context'
 import { useTheme } from '@/lib/theme/useTheme'
 import { Bell, ChevronRight, Clock, Globe, LogIn, LogOut, Mail, Moon, Shield, Sun, User } from 'lucide-react'
 import { useState } from 'react'
+import { useSession } from 'next-auth/react'
 
 function ToggleRow({
   icon, label, sublabel, active, onToggle,
@@ -47,7 +48,13 @@ function InfoRow({ icon, label, value }: { icon: React.ReactNode; label: string;
 export default function ProfilePage() {
   const { theme, toggle: toggleTheme } = useTheme()
   const { lang, toggle: toggleLang }   = useLang()
+  const { data: session }              = useSession()
   const [notif, setNotif]              = useState(true)
+
+  const userName    = session?.user?.name  || 'HYDRONE Admin'
+  const userEmail   = session?.user?.email || 'admin@hydrone.local'
+  const userImage   = session?.user?.image
+  const loginMethod = userImage ? 'Google OAuth' : 'Credentials'
 
   return (
     <div className="min-h-full" style={{ background: 'var(--t-bg)' }}>
@@ -67,12 +74,17 @@ export default function ProfilePage() {
         <div className="rounded-2xl overflow-hidden border" style={{ borderColor: 'var(--t-border)' }}>
           {/* Gradient header */}
           <div className="px-5 pt-6 pb-10 flex flex-col items-center gap-2" style={{ background: 'linear-gradient(135deg, #1A56DB, #0D3A9E)' }}>
-            <div className="w-20 h-20 rounded-full flex items-center justify-center shadow-xl border-4 border-white/20" style={{ background: 'rgba(255,255,255,0.15)' }}>
-              <User size={36} className="text-white" />
+            <div className="w-20 h-20 rounded-full flex items-center justify-center shadow-xl border-4 border-white/20 overflow-hidden relative" style={{ background: 'rgba(255,255,255,0.15)' }}>
+              {userImage ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img src={userImage} alt={userName} className="w-full h-full object-cover" />
+              ) : (
+                <User size={36} className="text-white" />
+              )}
             </div>
             <div className="text-center mt-1">
-              <div className="text-lg font-bold text-white">HYDRONE Admin</div>
-              <div className="text-xs text-white/70">admin@hydrone.local</div>
+              <div className="text-lg font-bold text-white">{userName}</div>
+              <div className="text-xs text-white/70">{userEmail}</div>
             </div>
             <div className="flex gap-2 mt-1">
               <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-white/15 text-white border border-white/25">ADMIN</span>
@@ -84,10 +96,10 @@ export default function ProfilePage() {
 
           {/* Info rows */}
           <div className="-mt-4 mx-4 rounded-2xl border overflow-hidden" style={{ background: 'var(--t-surface)', borderColor: 'var(--t-border)' }}>
-            <InfoRow icon={<Mail size={15} />}   label="Email"         value="admin@hydrone.local" />
+            <InfoRow icon={<Mail size={15} />}   label="Email"         value={userEmail} />
             <InfoRow icon={<Clock size={15} />}  label={lang === 'id' ? 'Anggota Sejak' : 'Member Since'} value={lang === 'id' ? 'Juli 2026' : 'July 2026'} />
-            <InfoRow icon={<LogIn size={15} />}  label={lang === 'id' ? 'Login Terakhir' : 'Last Login'}  value={lang === 'id' ? '31 Agustus 2026, 13:00' : 'August 31, 2026, 13:00'} />
-            <InfoRow icon={<Shield size={15} />} label={lang === 'id' ? 'Metode Login' : 'Login Method'}  value="Credentials" />
+            <InfoRow icon={<LogIn size={15} />}  label={lang === 'id' ? 'Login Terakhir' : 'Last Login'}  value={lang === 'id' ? 'Hari ini' : 'Today'} />
+            <InfoRow icon={<Shield size={15} />} label={lang === 'id' ? 'Metode Login' : 'Login Method'}  value={loginMethod} />
           </div>
           <div className="h-4" />
         </div>
