@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HYDRONE — 3D Portfolio Mockup Showcase</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&display=swap');
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background-color: #090D16;
+      color: #F8FAFF;
+      overflow-x: hidden;
+    }
+
+    /* 3D Scene Perspective setup */
+    .viewport-3d {
+      perspective: 1400px;
+      perspective-origin: 50% 38%;
+    }
+
+    .scene-3d {
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Glassmorphism effects */
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(26, 86, 219, 0.15);
+    }
+
+    /* Custom Floating Animations */
+    @keyframes float1 {
+      0%, 100% { transform: translateZ(90px) translateY(0px) rotateY(-5deg); }
+      50% { transform: translateZ(105px) translateY(-12px) rotateY(-2deg); }
+    }
+    @keyframes float2 {
+      0%, 100% { transform: translateZ(110px) translateY(0px) rotateY(6deg); }
+      50% { transform: translateZ(125px) translateY(-14px) rotateY(3deg); }
+    }
+    @keyframes float3 {
+      0%, 100% { transform: translateZ(70px) translateY(0px); }
+      50% { transform: translateZ(85px) translateY(-10px); }
+    }
+
+    .animate-float-left {
+      animation: float1 6s ease-in-out infinite;
+    }
+    .animate-float-right {
+      animation: float2 7s ease-in-out infinite 0.5s;
+    }
+    .animate-float-bottom {
+      animation: float3 5.5s ease-in-out infinite 1s;
+    }
+
+    /* Mockup laptop keyboard keys */
+    .kb-key {
+      background: #151C2C;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      box-shadow: inset 0 -1px 2px rgba(0,0,0,0.8);
+    }
+
+    /* Page ribbon bending effect */
+    .ribbon-bend {
+      transform-origin: top center;
+      transform-style: preserve-3d;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#070A12] text-white flex flex-col selection:bg-[#1A56DB] selection:text-white">
+
+  <!-- Top Navigation Controls -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-[#090D16]/80 backdrop-blur-md border-b border-white/10 px-6 py-3.5 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#1A56DB] to-[#00B4D8] flex items-center justify-center font-extrabold text-white text-base shadow-lg shadow-[#1A56DB]/30">
+        H
+      </div>
+      <div>
+        <h1 class="font-bold text-sm leading-tight text-white">HYDRONE 3D Showcase</h1>
+        <p class="text-[11px] text-gray-400">Interactive Portfolio Mockup Generator</p>
+      </div>
+    </div>
+
+    <!-- View Preset Controls -->
+    <div class="flex items-center gap-2 bg-[#121827] p-1 rounded-xl border border-white/10 text-xs font-semibold">
+      <button onclick="setPreset('isometric')" id="btn-isometric" class="px-3 py-1.5 rounded-lg bg-[#1A56DB] text-white transition-all shadow-sm">
+        3D Isometric
+      </button>
+      <button onclick="setPreset('front')" id="btn-front" class="px-3 py-1.5 rounded-lg text-gray-400 hover:text-white transition-all">
+        Front View
+      </button>
+      <button onclick="setPreset('ribbon')" id="btn-ribbon" class="px-3 py-1.5 rounded-lg text-gray-400 hover:text-white transition-all">
+        Curved Ribbon
+      </button>
+      <button onclick="setPreset('topdown')" id="btn-topdown" class="px-3 py-1.5 rounded-lg text-gray-400 hover:text-white transition-all">
+        Top Angle
+      </button>
+    </div>
+
+    <!-- Right Actions -->
+    <div class="flex items-center gap-3">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30">
+        <span class="w-2 h-2 rounded-full bg-[#22C55E] animate-pulse"></span>
+        Portfolio Ready
+      </span>
+      <button onclick="window.print()" class="px-4 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-semibold transition-all">
+        Export / Print PDF
+      </button>
+    </div>
+  </header>
+
+  <!-- Main 3D Stage Area -->
+  <main class="flex-1 relative pt-24 pb-20 overflow-hidden flex flex-col items-center justify-center min-h-[90vh]">
+    
+    <!-- Background Ambient Lighting Glows -->
+    <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-[#1A56DB]/20 rounded-full blur-[140px] pointer-events-none"></div>
+    <div class="absolute top-2/3 left-1/3 w-[450px] h-[450px] bg-[#00B4D8]/15 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute top-1/2 right-1/4 w-[380px] h-[380px] bg-[#F05A22]/10 rounded-full blur-[100px] pointer-events-none"></div>
+    
+    <!-- Grid floor pattern -->
+    <div class="absolute inset-0 bg-[radial-gradient(#1E293B_1px,transparent_1px)] [background-size:32px_32px] opacity-25 pointer-events-none"></div>
+
+    <!-- 3D Viewport Container -->
+    <div class="viewport-3d w-full max-w-6xl h-full flex items-center justify-center py-10 relative">
+      
+      <!-- 3D Transform Scene -->
+      <div id="scene3d" class="scene-3d relative w-[860px] flex flex-col items-center" style="transform: rotateX(28deg) rotateY(-14deg) rotateZ(6deg) scale(0.92);">
+        
+        <!-- ==================== LAPTOP TOP DISPLAY FRAME ==================== -->
+        <div class="relative w-[760px] bg-[#1E2638] rounded-t-[24px] p-[14px] pt-[14px] shadow-2xl border border-white/20 border-b-0" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.8);">
+          
+          <!-- Webcam & Speaker dot -->
+          <div class="absolute top-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-20">
+            <div class="w-2 h-2 rounded-full bg-[#0D131F] border border-white/10 flex items-center justify-center">
+              <div class="w-1 h-1 rounded-full bg-[#152545]"></div>
+            </div>
+          </div>
+
+          <!-- Laptop Screen Frame -->
+          <div class="w-full bg-[#0A111E] rounded-t-[14px] overflow-hidden border border-white/10 relative shadow-inner" style="height: 440px;">
+            
+            <!-- Browser Bar inside Screen -->
+            <div class="bg-[#0D1627] px-4 py-2 flex items-center justify-between border-b border-white/10 text-xs">
+              <div class="flex items-center gap-1.5">
+                <div class="w-2.5 h-2.5 rounded-full bg-[#EF4444]"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-[#F59E0B]"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-[#22C55E]"></div>
+              </div>
+              <div class="bg-[#152136] px-10 py-1 rounded-md text-[10px] text-gray-400 font-mono border border-white/5 flex items-center gap-1">
+                <span class="text-[#22C55E]">https://</span>hydrone.vercel.app
+              </div>
+              <div class="text-[10px] text-gray-400 font-bold">ROV v1.0</div>
+            </div>
+
+            <!-- Website Header & Hero inside Screen -->
+            <div class="p-6 bg-gradient-to-b from-[#0A1628] via-[#0D1F3C] to-[#0A1628] h-full overflow-hidden relative text-white">
+              
+              <!-- Floating background bubble graphics inside screen -->
+              <div class="absolute top-10 right-10 w-48 h-48 rounded-full bg-[#00B4D8]/10 blur-xl"></div>
+              <div class="absolute bottom-10 left-10 w-64 h-64 rounded-full bg-[#1A56DB]/15 blur-2xl"></div>
+
+              <!-- Navbar -->
+              <div class="flex items-center justify-between mb-8 relative z-10 border-b border-white/10 pb-4">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-lg bg-[#1A56DB] flex items-center justify-center font-black text-white text-xs">H</div>
+                  <span class="font-extrabold text-base tracking-tight text-white">Hydrone</span>
+                </div>
+                <div class="flex items-center gap-5 text-xs text-gray-300 font-semibold">
+                  <span class="text-[#00B4D8] font-bold">Home</span>
+                  <span>Features</span>
+                  <span>How It Works</span>
+                  <span>Specs</span>
+                  <span>Our Team</span>
+                </div>
+                <div class="px-3.5 py-1.5 rounded-lg bg-[#1A56DB] text-white text-xs font-bold shadow-md shadow-[#1A56DB]/40">
+                  Sign In
+                </div>
+              </div>
+
+              <!-- Hero Content -->
+              <div class="grid grid-cols-12 gap-6 items-center relative z-10 pt-2">
+                <div class="col-span-7">
+                  <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold bg-[#1A56DB]/20 text-[#00B4D8] border border-[#00B4D8]/30 mb-3">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#00B4D8] animate-pulse"></span>
+                    AI-POWERED UNDERWATER ROV
+                  </div>
+                  <h2 class="text-3xl font-black tracking-tight leading-tight mb-3">
+                    Cleaning Rivers.<br />
+                    <span class="bg-gradient-to-r from-[#00B4D8] via-[#1A56DB] to-[#F05A22] bg-clip-text text-transparent">Reading Water.</span>
+                  </h2>
+                  <p class="text-xs text-gray-300 leading-relaxed mb-5 max-w-sm">
+                    Autonomous underwater plastic collector and real-time river water quality monitoring system built for IID INNOPA 2026.
+                  </p>
+                  <div class="flex items-center gap-3">
+                    <button class="px-4 py-2 rounded-xl bg-gradient-to-r from-[#1A56DB] to-[#00B4D8] text-white text-xs font-extrabold shadow-lg shadow-[#1A56DB]/30">
+                      Explore Tech Specs
+                    </button>
+                    <button class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-xs font-bold">
+                      Watch Video
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Right Visual Hero Box -->
+                <div class="col-span-5 flex justify-center">
+                  <div class="relative w-44 h-44 rounded-2xl bg-gradient-to-br from-[#1B3A6B] to-[#0A1628] border border-[#00B4D8]/40 shadow-2xl p-4 flex flex-col items-center justify-center text-center">
+                    <div class="w-14 h-14 rounded-full bg-[#00B4D8]/20 border border-[#00B4D8]/60 flex items-center justify-center text-[#00B4D8] font-black text-xl mb-2 shadow-inner">
+                      H
+                    </div>
+                    <div class="font-extrabold text-xs text-white">HYDRONE ROV</div>
+                    <div class="text-[9px] text-[#00B4D8] font-mono">Autonomous Mode</div>
+                    <div class="mt-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#22C55E]/20 text-[#22C55E] text-[9px] font-bold">
+                      <span class="w-1 h-1 rounded-full bg-[#22C55E]"></span> ACTIVE
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ==================== LAPTOP HINGE & KEYBOARD DECK ==================== -->
+        <div class="w-[840px] bg-gradient-to-b from-[#2A344A] via-[#1E2638] to-[#151C2B] rounded-b-[20px] p-4 pt-2 shadow-2xl border border-white/15 relative z-20" style="transform: rotateX(68deg) translateY(-28px); transform-origin: top center; box-shadow: 0 30px 60px rgba(0,0,0,0.9);">
+          
+          <!-- Hinge bar -->
+          <div class="w-48 h-2.5 mx-auto bg-[#101622] rounded-full mb-3 border border-white/10 shadow-inner"></div>
+
+          <!-- Keyboard Layout Simulation -->
+          <div class="w-[720px] mx-auto bg-[#0E131F] rounded-xl p-3 border border-white/10 shadow-inner flex flex-col gap-1.5 mb-3">
+            <div class="grid grid-cols-14 gap-1 h-4">
+              <div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-2"></div>
+            </div>
+            <div class="grid grid-cols-12 gap-1 h-5">
+              <div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div>
+            </div>
+            <div class="grid grid-cols-12 gap-1 h-5">
+              <div class="kb-key col-span-2"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-2"></div>
+            </div>
+            <div class="grid grid-cols-12 gap-1 h-5">
+              <div class="kb-key col-span-2"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-4 bg-[#1B2436]"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div><div class="kb-key col-span-1"></div>
+            </div>
+          </div>
+
+          <!-- Trackpad -->
+          <div class="w-48 h-20 mx-auto bg-[#131A29] rounded-xl border border-white/10 shadow-inner"></div>
+
+        </div>
+
+        <!-- ==================== CONTINUOUS SCROLLING WEBPAGE RIBBON ==================== -->
+        <div id="ribbonCanvas" class="ribbon-bend w-[760px] -mt-[170px] z-10 relative shadow-2xl rounded-b-3xl overflow-hidden border border-white/20 border-t-0" style="transform: rotateX(32deg) translateY(-20px); box-shadow: 0 40px 100px rgba(0,0,0,0.85);">
+          
+          <!-- SECTION 1: 5 STAT CARDS -->
+          <div class="bg-white text-gray-900 p-8 border-b border-gray-100">
+            <div class="text-center mb-6">
+              <span class="text-[10px] font-extrabold uppercase tracking-widest text-[#1A56DB]">ROV TECHNICAL PARAMETERS</span>
+              <h3 class="text-2xl font-extrabold text-gray-900 mt-1">At a Glance</h3>
+            </div>
+            <div class="grid grid-cols-3 gap-4 max-w-2xl mx-auto">
+              <div class="bg-gray-50 rounded-2xl p-4 text-center border border-blue-100 shadow-sm">
+                <div class="text-xl font-black text-[#1A56DB]">500 mm</div>
+                <div class="text-[11px] font-bold text-gray-500 uppercase mt-0.5">Length</div>
+              </div>
+              <div class="bg-gray-50 rounded-2xl p-4 text-center border border-cyan-100 shadow-sm">
+                <div class="text-xl font-black text-[#00B4D8]">120 mm</div>
+                <div class="text-[11px] font-bold text-gray-500 uppercase mt-0.5">Height</div>
+              </div>
+              <div class="bg-gray-50 rounded-2xl p-4 text-center border border-orange-100 shadow-sm">
+                <div class="text-xl font-black text-[#F05A22]">4 Units</div>
+                <div class="text-[11px] font-bold text-gray-500 uppercase mt-0.5">Thrusters</div>
+              </div>
+              <div class="bg-gray-50 rounded-2xl p-4 text-center border border-purple-100 shadow-sm">
+                <div class="text-xl font-black text-[#8B5CF6]">0.1 µm</div>
+                <div class="text-[11px] font-bold text-gray-500 uppercase mt-0.5">Filter Precision</div>
+              </div>
+              <div class="bg-gray-50 rounded-2xl p-4 text-center border border-green-100 shadow-sm">
+                <div class="text-xl font-black text-[#22C55E]">20 Meter</div>
+                <div class="text-[11px] font-bold text-gray-500 uppercase mt-0.5">Tether Length</div>
+              </div>
+              <div class="bg-gray-50 rounded-2xl p-4 text-center border border-amber-100 shadow-sm">
+                <div class="text-xl font-black text-[#F59E0B]">10 Meter</div>
+                <div class="text-[11px] font-bold text-gray-500 uppercase mt-0.5">Max Depth</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 2: PRODUCT HIGHLIGHTS & FEATURES -->
+          <div class="bg-[#1B3A6B] text-white p-8 border-b border-white/10">
+            <div class="grid grid-cols-12 gap-6 items-center">
+              <div class="col-span-7">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-[#00B4D8]">OUR SYSTEM</span>
+                <h3 class="text-2xl font-black text-white mt-1 mb-2">HYDRONE ROV</h3>
+                <p class="text-xs text-gray-300 leading-relaxed mb-4">
+                  Integrated water cleaning system handling macroplastics & microplastics with real-time sensor analytics.
+                </p>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                  <div class="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-xl border border-white/15">
+                    <span class="w-2 h-2 rounded-full bg-[#22C55E]"></span> 5µm Micro Filter
+                  </div>
+                  <div class="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-xl border border-white/15">
+                    <span class="w-2 h-2 rounded-full bg-[#00B4D8]"></span> Dual Mode Control
+                  </div>
+                </div>
+              </div>
+              <div class="col-span-5 flex justify-center">
+                <div class="w-36 h-36 rounded-2xl bg-gradient-to-br from-[#0A1628] to-[#1565C0] border border-[#00B4D8]/30 shadow-xl flex items-center justify-center text-center p-3">
+                  <div>
+                    <div class="text-[#00B4D8] font-black text-2xl">HYDRONE</div>
+                    <div class="text-[10px] text-gray-300">River Plastic Collector</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 3: TEAM MEMBERS SHOWCASE -->
+          <div class="bg-[#0A1628] text-white p-8">
+            <div class="text-center mb-6">
+              <span class="text-[10px] font-extrabold uppercase tracking-widest text-[#00B4D8]">HYDRONE INNOVATORS</span>
+              <h3 class="text-xl font-extrabold text-white mt-1">Our Team & Mentors</h3>
+            </div>
+            <div class="grid grid-cols-5 gap-3 text-center">
+              <div class="bg-white/5 p-3 rounded-xl border border-white/10">
+                <div class="w-10 h-10 mx-auto rounded-full bg-[#D4A017] flex items-center justify-center text-white font-bold text-xs mb-2">M</div>
+                <div class="text-xs font-bold truncate">Marsya Razanah</div>
+                <div class="text-[9px] text-[#D4A017] font-semibold">Project Leader</div>
+              </div>
+              <div class="bg-white/5 p-3 rounded-xl border border-white/10">
+                <div class="w-10 h-10 mx-auto rounded-full bg-[#1565C0] flex items-center justify-center text-white font-bold text-xs mb-2">F</div>
+                <div class="text-xs font-bold truncate">Farid Wimbadi</div>
+                <div class="text-[9px] text-[#00B4D8] font-semibold">Hardware Eng.</div>
+              </div>
+              <div class="bg-white/5 p-3 rounded-xl border border-white/10">
+                <div class="w-10 h-10 mx-auto rounded-full bg-[#43A047] flex items-center justify-center text-white font-bold text-xs mb-2">E</div>
+                <div class="text-xs font-bold truncate">Evan Fadillah</div>
+                <div class="text-[9px] text-[#43A047] font-semibold">Software Eng.</div>
+              </div>
+              <div class="bg-white/5 p-3 rounded-xl border border-white/10">
+                <div class="w-10 h-10 mx-auto rounded-full bg-[#00B4D8] flex items-center justify-center text-white font-bold text-xs mb-2">R</div>
+                <div class="text-xs font-bold truncate">Raisa Qarira</div>
+                <div class="text-[9px] text-[#00B4D8] font-semibold">Research Officer</div>
+              </div>
+              <div class="bg-white/5 p-3 rounded-xl border border-white/10">
+                <div class="w-10 h-10 mx-auto rounded-full bg-[#9C27B0] flex items-center justify-center text-white font-bold text-xs mb-2">D</div>
+                <div class="text-xs font-bold truncate">Dzikron Zaidan</div>
+                <div class="text-[9px] text-[#9C27B0] font-semibold">Systems Integrator</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ==================== FLOATING 3D GLASS CARDS ==================== -->
+        
+        <!-- Left Floating Card 1: Sensor Live Stream -->
+        <div class="absolute -left-20 top-24 glass-card p-4 rounded-2xl w-60 animate-float-left z-30">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">LIVE WATER MONITOR</span>
+            <span class="w-2 h-2 rounded-full bg-[#22C55E] animate-pulse"></span>
+          </div>
+          <div class="flex items-baseline gap-2 mb-1">
+            <span class="text-2xl font-extrabold text-[#00B4D8]">7.17</span>
+            <span class="text-xs text-gray-400">pH Level</span>
+          </div>
+          <div class="w-full bg-white/10 h-1.5 rounded-full overflow-hidden mb-3">
+            <div class="bg-gradient-to-r from-[#1A56DB] to-[#00B4D8] h-full w-[72%]"></div>
+          </div>
+          <div class="flex justify-between text-[10px] text-gray-300 font-semibold">
+            <span>Turbidity: <strong class="text-white">12 NTU</strong></span>
+            <span class="text-[#22C55E]">Safe Condition</span>
+          </div>
+        </div>
+
+        <!-- Right Floating Card 2: Control & Battery -->
+        <div class="absolute -right-24 top-36 glass-card p-4 rounded-2xl w-64 animate-float-right z-30">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-7 h-7 rounded-lg bg-[#1A56DB]/20 border border-[#1A56DB]/40 flex items-center justify-center text-[#00B4D8]">
+              ⚡
+            </div>
+            <div>
+              <div class="text-xs font-bold text-white">ROV Telemetry</div>
+              <div class="text-[10px] text-gray-400">20m Tether Connected</div>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-center text-xs">
+            <div class="bg-white/5 p-2 rounded-xl border border-white/10">
+              <div class="text-[10px] text-gray-400">Pack A (Propulsion)</div>
+              <div class="font-bold text-[#22C55E] text-sm">95%</div>
+            </div>
+            <div class="bg-white/5 p-2 rounded-xl border border-white/10">
+              <div class="text-[10px] text-gray-400">Pack B (Electronics)</div>
+              <div class="font-bold text-[#22C55E] text-sm">92%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Floating Card 3: Award Badge -->
+        <div class="absolute -left-12 bottom-12 glass-card p-4 rounded-2xl w-56 animate-float-bottom z-30">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#D4A017] to-[#F59E0B] flex items-center justify-center text-white font-black text-lg shadow-lg">
+              🏆
+            </div>
+            <div>
+              <div class="text-xs font-extrabold text-white">IID INNOPA 2026</div>
+              <div class="text-[10px] text-[#D4A017] font-semibold">SMA Negeri 1 Surakarta</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Interactive Control Panel (Sliders at Bottom) -->
+  <footer class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-[#0F172A]/90 backdrop-blur-xl border border-white/15 px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-6 text-xs">
+    <div class="flex items-center gap-3">
+      <span class="text-gray-400 font-semibold">Rotate X:</span>
+      <input type="range" id="rotX" min="0" max="60" value="28" oninput="updateScene()" class="w-24 accent-[#1A56DB]">
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="text-gray-400 font-semibold">Rotate Y:</span>
+      <input type="range" id="rotY" min="-45" max="45" value="-14" oninput="updateScene()" class="w-24 accent-[#1A56DB]">
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="text-gray-400 font-semibold">Zoom Scale:</span>
+      <input type="range" id="scale" min="0.6" max="1.3" step="0.05" value="0.92" oninput="updateScene()" class="w-24 accent-[#1A56DB]">
+    </div>
+  </footer>
+
+  <script>
+    function updateScene() {
+      const x = document.getElementById('rotX').value;
+      const y = document.getElementById('rotY').value;
+      const s = document.getElementById('scale').value;
+      const scene = document.getElementById('scene3d');
+      scene.style.transform = `rotateX(${x}deg) rotateY(${y}deg) rotateZ(4deg) scale(${s})`;
+    }
+
+    function setPreset(preset) {
+      const scene = document.getElementById('scene3d');
+      const rotX = document.getElementById('rotX');
+      const rotY = document.getElementById('rotY');
+      const scale = document.getElementById('scale');
+
+      // Reset button styles
+      ['isometric', 'front', 'ribbon', 'topdown'].forEach(id => {
+        const btn = document.getElementById('btn-' + id);
+        if (btn) {
+          btn.className = 'px-3 py-1.5 rounded-lg text-gray-400 hover:text-white transition-all';
+        }
+      });
+
+      const activeBtn = document.getElementById('btn-' + preset);
+      if (activeBtn) {
+        activeBtn.className = 'px-3 py-1.5 rounded-lg bg-[#1A56DB] text-white transition-all shadow-sm';
+      }
+
+      if (preset === 'isometric') {
+        rotX.value = 28; rotY.value = -14; scale.value = 0.92;
+      } else if (preset === 'front') {
+        rotX.value = 10; rotY.value = 0; scale.value = 1.0;
+      } else if (preset === 'ribbon') {
+        rotX.value = 42; rotY.value = -22; scale.value = 0.85;
+      } else if (preset === 'topdown') {
+        rotX.value = 55; rotY.value = -8; scale.value = 0.8;
+      }
+      updateScene();
+    }
+  </script>
+</body>
+</html>
