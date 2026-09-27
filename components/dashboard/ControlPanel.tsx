@@ -36,7 +36,8 @@ export default function ControlPanel() {
     setVirtualArmed, 
     setVirtualRelay, 
     setVirtualVector,
-    getVirtualState
+    getVirtualState,
+    activeCommand
   } = useRovControl(ipAddress);
 
   const [uiState, setUiState] = useState({
@@ -164,6 +165,18 @@ export default function ControlPanel() {
           </div>
         </div>
 
+      </div>
+
+      {/* Keyboard/Gamepad Status Feedback */}
+      <div className="px-4 py-2 border-t text-[10px] font-mono flex items-center justify-between" style={{ background: 'rgba(0,0,0,0.3)', borderColor: 'var(--t-border)', color: 'var(--t-muted)' }}>
+        <span>
+          Input Source: <span className="font-bold text-white uppercase">{activeCommand.source}</span>
+        </span>
+        <span className="flex gap-4">
+          <span>FWD: <span className={activeCommand.fwd !== 0 ? "text-[#00B4D8]" : ""}>{activeCommand.fwd}</span></span>
+          <span>YAW: <span className={activeCommand.yaw !== 0 ? "text-[#00B4D8]" : ""}>{activeCommand.yaw}</span></span>
+          <span>VERT: <span className={activeCommand.vert !== 0 ? "text-[#22C55E]" : ""}>{activeCommand.vert}</span></span>
+        </span>
       </div>
 
       {/* Raw Telemetry Debug (Optional) */}

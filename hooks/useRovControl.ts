@@ -18,6 +18,7 @@ interface Telemetry {
 export function useRovControl(ipAddress: string = '192.168.4.2') {
   const [telemetry, setTelemetry] = useState<Telemetry>({ raw: '', connected: false });
   const [gamepadConnected, setGamepadConnected] = useState(false);
+  const [activeCommand, setActiveCommand] = useState({ fwd: 0, yaw: 0, vert: 0, source: 'none' });
   
   // Virtual control state (controlled by UI)
   const virtualState = useRef<RovState>({
@@ -154,6 +155,19 @@ export function useRovControl(ipAddress: string = '192.168.4.2') {
         // but user can use mouse to click UI buttons.
       }
 
+      // Update UI state for visual feedback
+      let source = 'none';
+      if (fwd !== virtualState.current.fwd || yaw !== virtualState.current.yaw || vert !== virtualState.current.vert) {
+         if (pad && Math.abs(pad.axes[1] || 0) > 0.15 || Math.abs(pad.axes[0] || 0) > 0.15 || Math.abs(pad.axes[3] || 0) > 0.15) {
+             source = 'gamepad';
+         } else {
+             source = 'keyboard';
+         }
+      } else if (fwd !== 0 || yaw !== 0 || vert !== 0) {
+         source = 'virtual';
+      }
+      setActiveCommand({ fwd, yaw, vert, source });
+
       // Send to ESP32
       const url = `http://${ipAddress}/cmd?fwd=${fwd}&yaw=${yaw}&vert=${vert}&armed=${armed ? 1 : 0}&r1=${relays[0] ? 1 : 0}&r2=${relays[1] ? 1 : 0}&r3=${relays[2] ? 1 : 0}&r4=${relays[3] ? 1 : 0}`;
       
@@ -197,6 +211,7 @@ export function useRovControl(ipAddress: string = '192.168.4.2') {
       virtualState.current.vert = vert;
     },
     // Expose current states for UI re-rendering
-    getVirtualState: () => virtualState.current
+    getVirtualState: () => virtualState.current,
+    activeCommand
   };
 }
