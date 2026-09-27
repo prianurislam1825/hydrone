@@ -137,8 +137,8 @@ export function useRovControl(ipAddress: string = '192.168.4.2') {
       let kVert = 0;
       
       if (!gamepadConnected || (fwd === 0 && yaw === 0 && vert === 0)) {
-        if (keys.current.has('w')) kFwd = 100;
-        if (keys.current.has('s')) kFwd = -100;
+        if (keys.current.has('w')) kFwd = -100;
+        if (keys.current.has('s')) kFwd = 100;
         if (keys.current.has('d')) kYaw = 100;
         if (keys.current.has('a')) kYaw = -100;
         
