@@ -132,11 +132,11 @@ export function useRovControl(ipAddress: string = '192.168.4.2') {
 
       // --- Keyboard Fallback (if no physical gamepad axes override) ---
       // WASD for fwd/yaw. ArrowUp/Down for vert.
+      let kFwd = 0;
+      let kYaw = 0;
+      let kVert = 0;
+      
       if (!gamepadConnected || (fwd === 0 && yaw === 0 && vert === 0)) {
-        let kFwd = 0;
-        let kYaw = 0;
-        let kVert = 0;
-        
         if (keys.current.has('w')) kFwd = 100;
         if (keys.current.has('s')) kFwd = -100;
         if (keys.current.has('d')) kYaw = 100;
@@ -157,16 +157,18 @@ export function useRovControl(ipAddress: string = '192.168.4.2') {
 
       // Update UI state for visual feedback
       let source = 'none';
-      if (fwd !== virtualState.current.fwd || yaw !== virtualState.current.yaw || vert !== virtualState.current.vert) {
-         if (pad && (Math.abs(pad.axes[1] || 0) > 0.15 || Math.abs(pad.axes[0] || 0) > 0.15 || Math.abs(pad.axes[3] || 0) > 0.15)) {
-             source = 'gamepad';
-         } else {
-             source = 'keyboard';
-         }
+      if (kFwd !== 0 || kYaw !== 0 || kVert !== 0) {
+         source = 'keyboard';
+      } else if (pad && (Math.abs(pad.axes[1] || 0) > 0.15 || Math.abs(pad.axes[0] || 0) > 0.15 || Math.abs(pad.axes[3] || 0) > 0.15)) {
+         source = 'gamepad';
       } else if (fwd !== 0 || yaw !== 0 || vert !== 0) {
          source = 'virtual';
       }
-      setActiveCommand({ fwd, yaw, vert, source });
+      
+      setActiveCommand(prev => {
+         if (prev.fwd === fwd && prev.yaw === yaw && prev.vert === vert && prev.source === source) return prev;
+         return { fwd, yaw, vert, source };
+      });
 
       // Send to ESP32
       const url = `http://${ipAddress}/cmd?fwd=${fwd}&yaw=${yaw}&vert=${vert}&armed=${armed ? 1 : 0}&r1=${relays[0] ? 1 : 0}&r2=${relays[1] ? 1 : 0}&r3=${relays[2] ? 1 : 0}&r4=${relays[3] ? 1 : 0}`;
