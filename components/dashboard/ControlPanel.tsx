@@ -2,7 +2,7 @@
 
 import { Anchor, Filter, Power, TriangleAlert, Gamepad2, Wifi, Zap } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import VirtualJoystick, { JoystickVector } from './VirtualJoystick';
+import VirtualJoystick, { type JoystickVector } from './VirtualJoystick';
 import { useRovControl } from '@/hooks/useRovControl';
 
 function ToggleSwitch({ label, icon, active, onToggle, color = '#1A56DB' }: { label: string; icon: React.ReactNode; active: boolean; onToggle: () => void; color?: string }) {
