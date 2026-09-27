@@ -31,7 +31,15 @@ export function useRovControl(ipAddress: string = '192.168.4.2') {
   // Keep track of previous button states for edge detection (toggling)
   const prevButtons = useRef<boolean[]>(new Array(16).fill(false));
 
+  // Keyboard state
+  const keys = useRef<Set<string>>(new Set());
+
   useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => keys.current.add(e.key.toLowerCase());
+    const onKeyUp = (e: KeyboardEvent) => keys.current.delete(e.key.toLowerCase());
+    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
+
     // Listen for gamepad connections
     const onGamepadConnected = () => setGamepadConnected(true);
     const onGamepadDisconnected = () => setGamepadConnected(false);
@@ -121,6 +129,31 @@ export function useRovControl(ipAddress: string = '192.168.4.2') {
         setGamepadConnected(false);
       }
 
+      // --- Keyboard Fallback (if no physical gamepad axes override) ---
+      // WASD for fwd/yaw. ArrowUp/Down for vert.
+      if (!gamepadConnected || (fwd === 0 && yaw === 0 && vert === 0)) {
+        let kFwd = 0;
+        let kYaw = 0;
+        let kVert = 0;
+        
+        if (keys.current.has('w')) kFwd = 100;
+        if (keys.current.has('s')) kFwd = -100;
+        if (keys.current.has('d')) kYaw = 100;
+        if (keys.current.has('a')) kYaw = -100;
+        
+        if (keys.current.has('arrowup')) kVert = 100;
+        if (keys.current.has('arrowdown')) kVert = -100;
+
+        if (kFwd !== 0 || kYaw !== 0 || kVert !== 0) {
+          fwd = kFwd;
+          yaw = kYaw;
+          vert = kVert;
+        }
+
+        // We don't do toggle for keyboard relays here to avoid rapid firing, 
+        // but user can use mouse to click UI buttons.
+      }
+
       // Send to ESP32
       const url = `http://${ipAddress}/cmd?fwd=${fwd}&yaw=${yaw}&vert=${vert}&armed=${armed ? 1 : 0}&r1=${relays[0] ? 1 : 0}&r2=${relays[1] ? 1 : 0}&r3=${relays[2] ? 1 : 0}&r4=${relays[3] ? 1 : 0}`;
       
@@ -146,6 +179,8 @@ export function useRovControl(ipAddress: string = '192.168.4.2') {
       isPolling = false;
       clearInterval(cmdInterval);
       clearInterval(statusInterval);
+      window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('keyup', onKeyUp);
       window.removeEventListener('gamepadconnected', onGamepadConnected);
       window.removeEventListener('gamepaddisconnected', onGamepadDisconnected);
     };
