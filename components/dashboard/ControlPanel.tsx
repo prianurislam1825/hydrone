@@ -27,7 +27,7 @@ function ToggleSwitch({ label, icon, active, onToggle, color = '#1A56DB' }: { la
 }
 
 export default function ControlPanel() {
-  const [ipAddress, setIpAddress] = useState('192.168.4.1');
+  const [ipAddress, setIpAddress] = useState('192.168.4.2');
   const [editIp, setEditIp] = useState(false);
   
   const { 

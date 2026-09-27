@@ -15,7 +15,7 @@ interface Telemetry {
   connected: boolean;
 }
 
-export function useRovControl(ipAddress: string = '192.168.4.1') {
+export function useRovControl(ipAddress: string = '192.168.4.2') {
   const [telemetry, setTelemetry] = useState<Telemetry>({ raw: '', connected: false });
   const [gamepadConnected, setGamepadConnected] = useState(false);
   
