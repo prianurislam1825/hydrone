@@ -158,7 +158,7 @@ export function useRovControl(ipAddress: string = '192.168.4.2') {
       // Update UI state for visual feedback
       let source = 'none';
       if (fwd !== virtualState.current.fwd || yaw !== virtualState.current.yaw || vert !== virtualState.current.vert) {
-         if (pad && Math.abs(pad.axes[1] || 0) > 0.15 || Math.abs(pad.axes[0] || 0) > 0.15 || Math.abs(pad.axes[3] || 0) > 0.15) {
+         if (pad && (Math.abs(pad.axes[1] || 0) > 0.15 || Math.abs(pad.axes[0] || 0) > 0.15 || Math.abs(pad.axes[3] || 0) > 0.15)) {
              source = 'gamepad';
          } else {
              source = 'keyboard';
