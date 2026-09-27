@@ -170,9 +170,9 @@ export function useRovControl(ipAddress: string = '192.168.4.2') {
          return { fwd, yaw, vert, source };
       });
 
-      // Send to ESP32 via API proxy to bypass CORS
+      // Send to ESP32 via API proxy to bypass CORS (and proxy will send UDP to ESP32)
       const query = `fwd=${fwd}&yaw=${yaw}&vert=${vert}&armed=${armed ? 1 : 0}&r1=${relays[0] ? 1 : 0}&r2=${relays[1] ? 1 : 0}&r3=${relays[2] ? 1 : 0}&r4=${relays[3] ? 1 : 0}`;
-      fetch(`/api/rov?ip=${ipAddress}&type=cmd&q=${encodeURIComponent(query)}`).catch(() => {});
+      fetch(`/api/rov?ip=${ipAddress}&type=cmd&${query}`).catch(() => {});
 
     }, 100);
 
