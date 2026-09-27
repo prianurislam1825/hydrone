@@ -170,21 +170,24 @@ export function useRovControl(ipAddress: string = '192.168.4.2') {
          return { fwd, yaw, vert, source };
       });
 
-      // Send to ESP32
-      const url = `http://${ipAddress}/cmd?fwd=${fwd}&yaw=${yaw}&vert=${vert}&armed=${armed ? 1 : 0}&r1=${relays[0] ? 1 : 0}&r2=${relays[1] ? 1 : 0}&r3=${relays[2] ? 1 : 0}&r4=${relays[3] ? 1 : 0}`;
-      
-      fetch(url, { method: 'GET', mode: 'no-cors' }).catch(() => {
-        // Silently fail if ROV is unreachable
-      });
+      // Send to ESP32 via API proxy to bypass CORS
+      const query = `fwd=${fwd}&yaw=${yaw}&vert=${vert}&armed=${armed ? 1 : 0}&r1=${relays[0] ? 1 : 0}&r2=${relays[1] ? 1 : 0}&r3=${relays[2] ? 1 : 0}&r4=${relays[3] ? 1 : 0}`;
+      fetch(`/api/rov?ip=${ipAddress}&type=cmd&q=${encodeURIComponent(query)}`).catch(() => {});
 
     }, 100);
 
     // Telemetry polling (2Hz / 500ms)
     const statusInterval = setInterval(() => {
-      fetch(`http://${ipAddress}/status`, { signal: AbortSignal.timeout(400) })
-        .then(r => r.text())
-        .then(text => {
-          if (isPolling) setTelemetry({ raw: text, connected: true });
+      fetch(`/api/rov?ip=${ipAddress}&type=status`)
+        .then(r => r.json())
+        .then(json => {
+          if (isPolling) {
+            if (json.success && json.data) {
+              setTelemetry({ raw: json.data, connected: true });
+            } else {
+              setTelemetry(prev => ({ ...prev, connected: false }));
+            }
+          }
         })
         .catch(() => {
           if (isPolling) setTelemetry(prev => ({ ...prev, connected: false }));
