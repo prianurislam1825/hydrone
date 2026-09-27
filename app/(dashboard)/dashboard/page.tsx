@@ -1,6 +1,7 @@
 'use client'
 
 import DepthChart from '@/components/dashboard/DepthChart'
+import ControlPanel from '@/components/dashboard/ControlPanel'
 import { SENSOR_CONFIGS, useSensorData } from '@/lib/dashboard/useSensorData'
 import { useLang } from '@/lib/i18n/context'
 import {
@@ -492,6 +493,10 @@ export default function DashboardPage() {
         <div>
           <DepthChart depth={depth ?? 0} tick={tick} />
         </div>
+      </div>
+
+      <div className="mt-4">
+        <ControlPanel />
       </div>
 
     </div>
