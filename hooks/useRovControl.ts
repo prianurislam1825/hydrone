@@ -174,7 +174,7 @@ export function useRovControl(ipAddress: string = '192.168.4.2') {
       const query = `fwd=${fwd}&yaw=${yaw}&vert=${vert}&armed=${armed ? 1 : 0}&r1=${relays[0] ? 1 : 0}&r2=${relays[1] ? 1 : 0}&r3=${relays[2] ? 1 : 0}&r4=${relays[3] ? 1 : 0}`;
       fetch(`/api/rov?ip=${ipAddress}&type=cmd&${query}`).catch(() => {});
 
-    }, 100);
+    }, 50);
 
     // Telemetry polling (2Hz / 500ms)
     const statusInterval = setInterval(() => {
