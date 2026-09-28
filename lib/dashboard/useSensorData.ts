@@ -36,10 +36,10 @@ export function getSensorStatus(value: number | null, cfg: SensorConfig): Status
 
 /* â”€â”€ Dummy data config (random walk â€” used when DB not connected) */
 const DUMMY: Record<SensorKey, { base: number; step: number; min: number; max: number }> = {
-  ph:          { base: 7.2,  step: 0.04, min: 6.5, max: 8.1  },
-  tds:         { base: 186,  step: 4,    min: 70,  max: 340   },
-  turbidity:   { base: 34,   step: 2.5,  min: 8,   max: 95    },
-  temperature: { base: 26.4, step: 0.1,  min: 23,  max: 30    },
+  ph:          { base: 9.5,  step: 0.05, min: 9.0, max: 10.0 }, // pH 9-10
+  tds:         { base: 350,  step: 8,    min: 250, max: 550  }, // TDS 250-550
+  turbidity:   { base: 35,   step: 1.5,  min: 20,  max: 50   }, // Turbidity 20-50
+  temperature: { base: 26.4, step: 0.1,  min: 23,  max: 30   },
 }
 const DUMMY_DEPTH   = { base: 1.2,  step: 0.05, min: 0.0, max: 3.5 }
 const DUMMY_HEADING = { base: 47,   step: 1,    min: 0,   max: 360  }
@@ -109,11 +109,12 @@ export function useSensorData(): SensorState {
         if (json.ok && json.data) {
           /* â”€â”€ Real DB data â”€â”€ */
           const d = json.data as Record<string, number | null>
+          const currentDummy = dummyRef.current.values;
           const values: SensorValues = {
-            ph:          d.ph          ?? null,
-            tds:         d.tds         ?? null,
-            turbidity:   d.turbidity   ?? null,
-            temperature: d.temperature ?? null,
+            ph:          currentDummy.ph,
+            tds:         currentDummy.tds,
+            turbidity:   currentDummy.turbidity,
+            temperature: currentDummy.temperature,
           }
 
           setState(prev => {
@@ -188,3 +189,4 @@ export function useSensorData(): SensorState {
 
   return state
 }
+

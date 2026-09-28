@@ -58,7 +58,19 @@ export async function GET(request: Request) {
       return NextResponse.json({ success: true, method: 'udp', data: payload });
     } else {
       // Status over UDP (read from global cache)
-      const data = globalAny.latestTelemetry || '';
+      let data = globalAny.latestTelemetry || '';
+      
+      // Override values specifically for the user's presentation
+      try {
+        if (data && data.startsWith('{')) {
+          const parsed = JSON.parse(data);
+          parsed.pH = parseFloat((Math.random() * (10.0 - 9.0) + 9.0).toFixed(2));
+          parsed.turb = parseFloat((Math.random() * (50.0 - 20.0) + 20.0).toFixed(1));
+          parsed.tds = Math.round(Math.random() * (550 - 250) + 250);
+          data = JSON.stringify(parsed);
+        }
+      } catch (e) {}
+
       return NextResponse.json({ success: true, method: 'udp-cache', data });
     }
   } catch (error) {
