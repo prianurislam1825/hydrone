@@ -266,6 +266,7 @@ void setup() {
 
   // Sensor suhu
   suhuSensor.begin();
+  suhuSensor.setWaitForConversion(false); // <--- FIX: BIKIN NON-BLOCKING!
   Serial.print(F("Sensor DS18B20 terdeteksi: "));
   Serial.println(suhuSensor.getDeviceCount());
 
