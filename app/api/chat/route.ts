@@ -4,14 +4,8 @@ export async function POST(req: Request) {
   try {
     const { message, history } = await req.json();
     
-    // API Key from Environment Variable
-    const apiKey = process.env.CLAUDE_API_KEY;
-    if (!apiKey) {
-      return NextResponse.json({
-        success: true,
-        reply: "Sistem belum mendeteksi API Key Claude. Silakan tambahkan CLAUDE_API_KEY di Environment Variables Vercel Anda."
-      });
-    }
+    // API Key from the user
+    const apiKey = process.env.CLAUDE_API_KEY || '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';
 
     // Format the history for Anthropic Claude API
     // History from frontend is: { role: 'user' | 'assistant', content: string }
@@ -47,13 +41,15 @@ export async function POST(req: Request) {
       
       // FALLBACK MOCK (Biar widget tetap jalan buat demo walaupun saldo API kosong)
       const lowerMsg = message.toLowerCase();
-      let mockReply = 'Maaf, saya tidak mengerti. Ada yang bisa dibantu terkait Hydrone?';
+      let mockReply = 'Maaf, saya sedang dalam mode offline. Anda bisa bertanya tentang: "Apa itu Hydrone?", "Bagaimana cara kerjanya?", atau "Sensor apa saja yang ada?".';
       if (lowerMsg.includes('hydrone') || lowerMsg.includes('apa')) {
         mockReply = 'HYDRONE adalah sistem ROV otonom inovatif buatan SMA Negeri 1 Surakarta. Alat ini dirancang untuk membersihkan sampah plastik di perairan dangkal dan memonitor kualitas air (pH, Turbidity, TDS, Suhu) secara real-time melalui sensor IoT yang terintegrasi.';
-      } else if (lowerMsg.includes('sensor') || lowerMsg.includes('kualitas')) {
+      } else if (lowerMsg.includes('sensor') || lowerMsg.includes('kualitas') || lowerMsg.includes('data')) {
         mockReply = 'Hydrone dilengkapi sensor kualitas air real-time: pH meter, kekeruhan (Turbidity), total padatan terlarut (TDS), dan suhu. Data ini langsung dikirim ke Control Center untuk dianalisis.';
-      } else if (lowerMsg.includes('cara kerja')) {
+      } else if (lowerMsg.includes('cara kerja') || lowerMsg.includes('bagaimana')) {
         mockReply = 'Cara kerjanya: Hydrone bergerak menyusuri perairan (otonom/manual), menangkap sampah makroplastik menggunakan jaring, memfilter mikroplastik dengan filter 5um, lalu membaca data kualitas air dan mengirimkannya ke dashboard ini.';
+      } else if (lowerMsg.includes('halo') || lowerMsg.includes('hai') || lowerMsg.includes('hi')) {
+        mockReply = 'Halo! Saya AI Assistant khusus Hydrone (Mode Offline). Ada yang bisa saya bantu jelaskan tentang proyek ini?';
       }
 
       return NextResponse.json({ 
