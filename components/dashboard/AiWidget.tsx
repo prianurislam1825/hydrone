@@ -65,19 +65,59 @@ export default function AiWidget() {
     }
   }
 
+  // Dragging logic for the floating button
+  const [btnPos, setBtnPos] = useState({ x: 0, y: 0 })
+  const [isDraggingBtn, setIsDraggingBtn] = useState(false)
+  const dragStartBtn = useRef({ x: 0, y: 0 })
+  const btnStart = useRef({ x: 0, y: 0 })
+  const hasDragged = useRef(false)
+
+  const onBtnPointerDown = (e: React.PointerEvent) => {
+    setIsDraggingBtn(true)
+    hasDragged.current = false
+    dragStartBtn.current = { x: e.clientX, y: e.clientY }
+    btnStart.current = { x: btnPos.x, y: btnPos.y }
+    e.currentTarget.setPointerCapture(e.pointerId)
+  }
+
+  const onBtnPointerMove = (e: React.PointerEvent) => {
+    if (!isDraggingBtn) return
+    const dx = e.clientX - dragStartBtn.current.x
+    const dy = e.clientY - dragStartBtn.current.y
+    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) hasDragged.current = true
+    setBtnPos({
+      x: btnStart.current.x + dx,
+      y: btnStart.current.y + dy
+    })
+  }
+
+  const onBtnPointerUp = (e: React.PointerEvent) => {
+    setIsDraggingBtn(false)
+    e.currentTarget.releasePointerCapture(e.pointerId)
+  }
+
+  const onBtnClick = () => {
+    if (!hasDragged.current) setIsOpen(true)
+  }
+
   return (
     <>
       {/* Floating Button */}
       <button
-        onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 p-4 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 hover:scale-110 transition-all z-50 flex items-center justify-center ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
+        onPointerDown={onBtnPointerDown}
+        onPointerMove={onBtnPointerMove}
+        onPointerUp={onBtnPointerUp}
+        onPointerCancel={onBtnPointerUp}
+        onClick={onBtnClick}
+        style={{ transform: `translate(${btnPos.x}px, ${btnPos.y}px) ${isOpen ? 'scale(0)' : 'scale(1)'}` }}
+        className={`fixed bottom-20 md:bottom-6 right-6 p-4 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 hover:scale-110 transition-all z-[999] flex items-center justify-center touch-none ${isOpen ? 'opacity-0' : 'opacity-100'}`}
       >
         <Sparkles size={24} className="animate-pulse" />
       </button>
 
       {/* Chat Window */}
       <div 
-        className={`fixed bottom-6 right-6 w-[350px] sm:w-[400px] h-[500px] max-h-[80vh] bg-[#0A1628] border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50 transition-all duration-300 origin-bottom-right ${isOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0 pointer-events-none'}`}
+        className={`fixed bottom-20 md:bottom-6 right-4 md:right-6 w-[calc(100vw-32px)] md:w-[400px] h-[500px] max-h-[75vh] md:max-h-[80vh] bg-[#0A1628] border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-[999] transition-all duration-300 origin-bottom-right ${isOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0 pointer-events-none'}`}
       >
         {/* Header */}
         <div className="bg-[#1B3A6B] p-4 flex items-center justify-between border-b border-white/10">
