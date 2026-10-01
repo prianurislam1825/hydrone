@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { MessageSquare, X, Send, Bot, User, Sparkles } from 'lucide-react'
+import { X, Send, Bot, Sparkles } from 'lucide-react'
 import { useLang } from '@/lib/i18n/context'
 
 interface Message {
@@ -58,7 +58,7 @@ export default function AiWidget() {
       } else {
         setMessages(prev => [...prev, { id: Date.now().toString(), role: 'assistant', content: lang === 'id' ? 'Maaf, terjadi kesalahan saat menghubungi server AI.' : 'Sorry, an error occurred while contacting the AI server.' }])
       }
-    } catch (error) {
+    } catch {
       setMessages(prev => [...prev, { id: Date.now().toString(), role: 'assistant', content: lang === 'id' ? 'Maaf, jaringan terputus.' : 'Sorry, network error.' }])
     } finally {
       setIsLoading(false)

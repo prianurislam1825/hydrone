@@ -10,8 +10,8 @@ export async function POST(req: Request) {
     // Format the history for Anthropic Claude API
     // History from frontend is: { role: 'user' | 'assistant', content: string }
     const anthropicMessages = history
-      .filter((msg: any) => msg.id !== 'welcome') // Remove the local welcome message
-      .map((msg: any) => ({
+      .filter((msg: { id: string }) => msg.id !== 'welcome') // Remove the local welcome message
+      .map((msg: { role: string; content: string }) => ({
         role: msg.role,
         content: msg.content
       }));

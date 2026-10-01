@@ -3,7 +3,11 @@ import dgram from 'dgram';
 
 export const runtime = 'nodejs';
 
-const globalAny = global as any;
+const globalAny = global as { 
+  rovSocket?: dgram.Socket; 
+  latestTelemetry?: string; 
+  rovState?: Record<string, string|number> 
+};
 
 // Initialize UDP Server & State on first load
 if (!globalAny.rovSocket) {
@@ -29,8 +33,9 @@ if (!globalAny.rovSocket) {
   // bypassing any browser fetch lag, queues, or background throttling!
   setInterval(() => {
     const s = globalAny.rovState;
+    if (!s) return;
     const payload = `${s.fwd},${s.yaw},${s.vert},${s.armed},${s.r1},${s.r2},${s.r3},${s.r4}`;
-    globalAny.rovSocket.send(payload, 3333, s.ip);
+    globalAny.rovSocket?.send(payload, 3333, String(s.ip));
   }, 50);
 }
 
@@ -65,7 +70,9 @@ export async function GET(request: Request) {
           parsed.tds = Math.round(Math.random() * (550 - 250) + 250);
           data = JSON.stringify(parsed);
         }
-      } catch (e) {}
+      } catch {
+        // ignore
+      }
 
       return NextResponse.json({ success: true, method: 'udp-cache', data });
     }
