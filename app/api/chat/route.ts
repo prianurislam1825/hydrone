@@ -4,19 +4,55 @@ export async function POST(req: Request) {
   try {
     const { message, history } = await req.json();
     
-    // TODO: The user provided an API key: apikey_019GPtzU6BM4fyKrzeWD2imp
-    // We need to know which provider this is for (OpenAI, Groq, Dify, Botpress, Flowise, Gemini, etc.)
-    // For now, return a placeholder response so the widget works visually.
-    
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // API Key from the user
+    const apiKey = 'apikey_019GPtzU6BM4fyKrzeWD2imp';
+
+    // Format the history for Anthropic Claude API
+    // History from frontend is: { role: 'user' | 'assistant', content: string }
+    const anthropicMessages = history
+      .filter((msg: any) => msg.id !== 'welcome') // Remove the local welcome message
+      .map((msg: any) => ({
+        role: msg.role,
+        content: msg.content
+      }));
+
+    // Add the current user message
+    anthropicMessages.push({ role: 'user', content: message });
+
+    // Call Anthropic Claude API
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'claude-3-haiku-20240307', // Using Haiku for fast response, can change to claude-3-5-sonnet-20240620
+        max_tokens: 1024,
+        system: "Kamu adalah AI Assistant resmi untuk HYDRONE, sebuah sistem kolektor sampah plastik bawah air otonom (ROV) buatan SMA Negeri 1 Surakarta. Tugasmu: Memberikan rekomendasi, menganalisis data kualitas air (pH, TDS, Kekeruhan, Suhu), dan menjawab pertanyaan pengguna tentang Hydrone dengan ramah, profesional, dan ringkas. Gunakan bahasa Indonesia.",
+        messages: anthropicMessages
+      })
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error('Claude API Error:', errorText);
+      return NextResponse.json({ 
+        success: false, 
+        error: `Claude API Error: ${res.statusText}` 
+      }, { status: res.status });
+    }
+
+    const data = await res.json();
     
     return NextResponse.json({ 
       success: true, 
-      reply: `Halo! Saya sudah menerima pesan Anda: "${message}". Namun, saya belum tahu API Provider mana yang harus saya gunakan untuk API Key yang diberikan. Bisa beritahu AI Engineer saya (Gemini)?`
+      reply: data.content[0].text 
     });
 
   } catch (error) {
+    console.error('Chat API Error:', error);
     return NextResponse.json({ success: false, error: String(error) }, { status: 500 });
   }
 }
