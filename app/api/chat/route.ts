@@ -4,9 +4,6 @@ export async function POST(req: Request) {
   try {
     const { message, history } = await req.json();
     
-    // API Key from the user
-    const apiKey = process.env.CLAUDE_API_KEY || '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';
-
     // API Key from Environment Variable
     const apiKey = process.env.CLAUDE_API_KEY;
     
@@ -60,7 +57,7 @@ export async function POST(req: Request) {
         } else {
            userFriendlyError += errMsg;
         }
-      } catch (e) {
+      } catch {
         userFriendlyError += errorText;
       }
 
