@@ -4,71 +4,40 @@ export async function POST(req: Request) {
   try {
     const { message, history } = await req.json();
     
-    // API Key di-hardcode sesuai permintaan bosku (bypass github block)
-    const p1 = 'sk-ant-api03-t0tUpA' + 'DrWgxvS4HSdepz';
-    const p2 = 'Nuf7akI66iBOaDMD' + 'Wc4cH5AMEhw';
-    const p3 = 'tYp1F6IjF6dRcyelenW' + 'CW77TQObynkF2MA0n5-Q-e2Fj6QAA';
-    const apiKey = p1 + p2 + p3;
-
-
-    // Format the history for Anthropic Claude API
-    const anthropicMessages = history
+    // Menggunakan Pollinations.ai (Free OpenAI-compatible) demi kelancaran presentasi!
+    const openAIMessages = history
       .filter((msg: { id: string }) => msg.id !== 'welcome')
       .map((msg: { role: string; content: string }) => ({
         role: msg.role === 'assistant' ? 'assistant' : 'user',
         content: msg.content
       }));
 
-    anthropicMessages.push({ role: 'user', content: message });
+    openAIMessages.unshift({
+      role: 'system',
+      content: 'Kamu adalah AI Assistant resmi untuk HYDRONE, sebuah sistem kolektor sampah plastik bawah air otonom (ROV) buatan SMA Negeri 1 Surakarta. Tugasmu: Memberikan rekomendasi, menganalisis data kualitas air (pH, TDS, Kekeruhan, Suhu), dan menjawab pertanyaan pengguna tentang Hydrone dengan ramah, profesional, dan ringkas. Jawab menggunakan bahasa Indonesia.'
+    });
+    openAIMessages.push({ role: 'user', content: message });
 
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://text.pollinations.ai/', {
       method: 'POST',
-      headers: {
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-3-haiku-20240307', 
-        max_tokens: 1024,
-        system: "Kamu adalah AI Assistant resmi untuk HYDRONE, sebuah sistem kolektor sampah plastik bawah air otonom (ROV) buatan SMA Negeri 1 Surakarta. Tugasmu: Memberikan rekomendasi, menganalisis data kualitas air (pH, TDS, Kekeruhan, Suhu), dan menjawab pertanyaan pengguna tentang Hydrone dengan ramah, profesional, dan ringkas. Gunakan bahasa Indonesia.",
-        messages: anthropicMessages
+        messages: openAIMessages,
+        model: 'openai'
       })
     });
 
     if (!res.ok) {
-      const errorText = await res.text();
-      let userFriendlyError = `Error (${res.status}): `;
-      
-      try {
-        const errJson = JSON.parse(errorText);
-        const errMsg = errJson.error?.message || errorText;
-        const errType = errJson.error?.type || '';
-        
-        if (errType === 'authentication_error') {
-           userFriendlyError = "API Key Claude kamu DITOLAK (Invalid). Pastikan kodenya diawali 'sk-ant-api03-...', bukan 'sk-ant-usr-...'. Bikin kunci baru dari tombol 'Get API key' di web Claude.";
-        } else if (errType === 'not_found_error') {
-           userFriendlyError = "API Key kamu valid, TAPI server Claude menolak akses ke model AI. Ini terjadi karena akun API kamu belum diisi saldo/kredit ($0). Silakan 'Add funds' minimal $5 di Console Anthropic.";
-        } else if (errType === 'permission_error') {
-           userFriendlyError = "API Key kamu tidak punya izin untuk mengakses sistem Claude (Permission Error).";
-        } else {
-           userFriendlyError += errMsg;
-        }
-      } catch {
-        userFriendlyError += errorText;
-      }
-
-      console.error('Claude API Error:', errorText);
       return NextResponse.json({ 
         success: true, 
-        reply: `*(Sistem Claude Error)*\n\n${userFriendlyError}`
+        reply: "Maaf, server AI sedang sibuk. Silakan coba lagi."
       });
     }
 
-    const data = await res.json();
+    const responseText = await res.text();
     return NextResponse.json({ 
       success: true, 
-      reply: data.content[0].text 
+      reply: responseText 
     });
 
   } catch (error) {
