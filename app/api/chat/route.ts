@@ -4,8 +4,14 @@ export async function POST(req: Request) {
   try {
     const { message, history } = await req.json();
     
-    // API Key from the user
-    const apiKey = 'apikey_019GPtzU6BM4fyKrzeWD2imp';
+    // API Key from Environment Variable
+    const apiKey = process.env.CLAUDE_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json({
+        success: true,
+        reply: "Sistem belum mendeteksi API Key Claude. Silakan tambahkan CLAUDE_API_KEY di Environment Variables Vercel Anda."
+      });
+    }
 
     // Format the history for Anthropic Claude API
     // History from frontend is: { role: 'user' | 'assistant', content: string }
