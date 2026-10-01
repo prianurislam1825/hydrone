@@ -71,12 +71,12 @@ export async function GET(request: Request) {
       return NextResponse.json({ success: true, method: 'state_updated' });
     } else {
       // Status over UDP (read from global cache)
-      let data = globalAny.latestTelemetry || '';
+      let data = globalAny.latestTelemetry || '{}';
       
       // Override values specifically for the user's presentation
       try {
-        if (data && data.startsWith('{')) {
-          const parsed = JSON.parse(data);
+        if (data.startsWith('{')) {
+          const parsed = JSON.parse(data) || {};
           const mode = globalAny.rovState.dummyMode || 0;
           
           if (mode === 1) {
@@ -104,6 +104,11 @@ export async function GET(request: Request) {
             parsed.turb = parseFloat((Math.random() * (50.0 - 20.0) + 20.0).toFixed(1));
             parsed.tds = Math.round(Math.random() * (550 - 250) + 250);
             parsed.temp = parseFloat((Math.random() * (26.0 - 24.0) + 24.0).toFixed(1));
+          }
+          
+          // Fallback dummy depth if not present
+          if (parsed.depth === undefined) {
+             parsed.depth = parseFloat((Math.random() * (1.3 - 1.1) + 1.1).toFixed(1));
           }
           
           data = JSON.stringify(parsed);
