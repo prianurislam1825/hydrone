@@ -3,7 +3,7 @@ import dgram from 'dgram';
 
 export const runtime = 'nodejs';
 
-const globalAny = global as { 
+const globalAny = global as unknown as { 
   rovSocket?: dgram.Socket; 
   latestTelemetry?: string; 
   rovState: Record<string, string|number> 
