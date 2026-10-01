@@ -3,6 +3,7 @@ import { LangProvider } from '@/lib/i18n/context'
 import type { Metadata } from 'next'
 import { JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
+import AiWidget from '@/components/dashboard/AiWidget'
 
 // Plus Jakarta Sans — identical to SteriFlow font
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -87,9 +88,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         } as React.CSSProperties}
       >
         <AuthProvider>
-          <LangProvider>{children}</LangProvider>
+          <LangProvider>
+            {children}
+            <AiWidget />
+          </LangProvider>
         </AuthProvider>
       </body>
     </html>
   )
 }
+
