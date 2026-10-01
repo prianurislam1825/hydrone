@@ -6,7 +6,7 @@ export const runtime = 'nodejs';
 const globalAny = global as { 
   rovSocket?: dgram.Socket; 
   latestTelemetry?: string; 
-  rovState?: Record<string, string|number> 
+  rovState: Record<string, string|number> 
 };
 
 // Initialize UDP Server & State on first load
@@ -40,6 +40,13 @@ if (!globalAny.rovSocket) {
 }
 
 export async function GET(request: Request) {
+  if (!globalAny.rovState) {
+    globalAny.rovState = {
+      ip: '192.168.4.2', fwd: 0, yaw: 0, vert: 0, armed: 0,
+      r1: 0, r2: 0, r3: 0, r4: 0
+    };
+  }
+
   const { searchParams } = new URL(request.url);
   const type = searchParams.get('type') || 'status';
   
