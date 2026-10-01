@@ -41,20 +41,29 @@ export async function POST(req: Request) {
       
       // FALLBACK MOCK (Biar widget tetap jalan buat demo walaupun saldo API kosong)
       const lowerMsg = message.toLowerCase();
-      let mockReply = 'Maaf, saya sedang dalam mode offline. Anda bisa bertanya tentang: "Apa itu Hydrone?", "Bagaimana cara kerjanya?", atau "Sensor apa saja yang ada?".';
-      if (lowerMsg.includes('hydrone') || lowerMsg.includes('apa')) {
-        mockReply = 'HYDRONE adalah sistem ROV otonom inovatif buatan SMA Negeri 1 Surakarta. Alat ini dirancang untuk membersihkan sampah plastik di perairan dangkal dan memonitor kualitas air (pH, Turbidity, TDS, Suhu) secara real-time melalui sensor IoT yang terintegrasi.';
+      let mockReply = 'Maaf, karena keterbatasan server saat ini saya dalam Mode Offline. Namun Anda bisa bertanya tentang: "Apa itu Hydrone", "Cara kerja", "Sensor", "Spesifikasi", atau "Tim Pembuat".';
+      
+      if (lowerMsg.includes('hydrone') || lowerMsg.includes('apa itu') || lowerMsg.includes('robot apa')) {
+        mockReply = 'HYDRONE adalah robot pembersih perairan bawah air otonom yang dirancang untuk mengatasi dua masalah sekaligus: sampah plastik besar (makroplastik) dan mikroplastik berbahaya yang tersebar di dalam air. Alat ini dibuat oleh siswa SMA Negeri 1 Surakarta.';
       } else if (lowerMsg.includes('sensor') || lowerMsg.includes('kualitas') || lowerMsg.includes('data')) {
-        mockReply = 'Hydrone dilengkapi sensor kualitas air real-time: pH meter, kekeruhan (Turbidity), total padatan terlarut (TDS), dan suhu. Data ini langsung dikirim ke Control Center untuk dianalisis.';
-      } else if (lowerMsg.includes('cara kerja') || lowerMsg.includes('bagaimana')) {
-        mockReply = 'Cara kerjanya: Hydrone bergerak menyusuri perairan (otonom/manual), menangkap sampah makroplastik menggunakan jaring, memfilter mikroplastik dengan filter 5um, lalu membaca data kualitas air dan mengirimkannya ke dashboard ini.';
-      } else if (lowerMsg.includes('halo') || lowerMsg.includes('hai') || lowerMsg.includes('hi')) {
-        mockReply = 'Halo! Saya AI Assistant khusus Hydrone (Mode Offline). Ada yang bisa saya bantu jelaskan tentang proyek ini?';
+        mockReply = 'Hydrone dilengkapi sensor kualitas air real-time: pH meter, kekeruhan (Turbidity), total padatan terlarut (TDS), suhu, dan GPS. Semua data ini dikirim secara langsung ke Dashboard untuk memetakan tingkat pencemaran air.';
+      } else if (lowerMsg.includes('cara kerja') || lowerMsg.includes('bagaimana') || lowerMsg.includes('kerja nya')) {
+        mockReply = 'Cara kerjanya: Hydrone bergerak menyusuri perairan menggunakan sistem daya apung adaptif. Jaring nilon pasif akan otomatis menangkap sampah plastik besar, sementara sistem pompa hisap 2-tahap menyaring mikroplastik hingga ukuran 5 mikron secara bersamaan.';
+      } else if (lowerMsg.includes('tim') || lowerMsg.includes('pembuat') || lowerMsg.includes('siapa') || lowerMsg.includes('sma')) {
+        mockReply = 'HYDRONE dikembangkan oleh tim inovator dari SMA Negeri 1 Surakarta, yang terdiri dari: Marsya Razanah Khansa (Project Leader), Farid Wimbadi Nugraha (Hardware Engineer), Evan Fadillah Nur Santosa (Software Engineer), Raisa Qarira Santosa (Research Officer), dan Dzikron Zaidan Ahmad (Systems Integrator).';
+      } else if (lowerMsg.includes('spesifikasi') || lowerMsg.includes('kabel') || lowerMsg.includes('baterai') || lowerMsg.includes('spek')) {
+        mockReply = 'Spesifikasi Hydrone: Memiliki sistem propulsi pivot 6 arah (2 thruster brushless), kabel tether sepanjang 20 meter untuk komunikasi, sistem filter 10um & 5um, serta menggunakan otak utama ESP32 IoT. Dapat beroperasi secara Manual via Dashboard maupun Otonom.';
+      } else if (lowerMsg.includes('mikroplastik') || lowerMsg.includes('filter') || lowerMsg.includes('saring')) {
+        mockReply = 'Untuk mikroplastik, Hydrone menggunakan sistem "Dual-Stage Microplastic Suction". Pompa DC menyedot air melewati filter 10 mikron terlebih dahulu, kemudian dilanjutkan ke filter 5 mikron, sehingga partikel mikroplastik super halus berhasil ditangkap.';
+      } else if (lowerMsg.includes('halo') || lowerMsg.includes('hai') || lowerMsg.includes('hi') || lowerMsg.includes('pagi') || lowerMsg.includes('siang') || lowerMsg.includes('malam')) {
+        mockReply = 'Halo! Saya AI Assistant resmi HYDRONE (Mode Offline). Saya sudah dibekali data lengkap mengenai proyek ini. Silakan tanyakan apa saja seputar fungsi, sensor, cara kerja, atau tim pembuat Hydrone!';
+      } else if (lowerMsg.includes('visi') || lowerMsg.includes('misi') || lowerMsg.includes('tujuan')) {
+        mockReply = 'Visi HYDRONE adalah mewujudkan perairan Indonesia yang bebas dari sampah plastik dan mikroplastik. Tujuannya adalah mengumpulkan sampah sebelum terfragmentasi, dan menghasilkan data kualitas air untuk penelitian serta kebijakan lingkungan.';
       }
 
       return NextResponse.json({ 
         success: true, 
-        reply: `*(Mode Offline)* ${mockReply}`
+        reply: `*(Offline)* ${mockReply}`
       });
     }
 
