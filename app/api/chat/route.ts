@@ -44,9 +44,21 @@ export async function POST(req: Request) {
     if (!res.ok) {
       const errorText = await res.text();
       console.error('Claude API Error:', errorText);
+      
+      // FALLBACK MOCK (Biar widget tetap jalan buat demo walaupun saldo API kosong)
+      const lowerMsg = message.toLowerCase();
+      let mockReply = 'Maaf, saya tidak mengerti. Ada yang bisa dibantu terkait Hydrone?';
+      if (lowerMsg.includes('hydrone') || lowerMsg.includes('apa')) {
+        mockReply = 'HYDRONE adalah sistem ROV otonom inovatif buatan SMA Negeri 1 Surakarta. Alat ini dirancang untuk membersihkan sampah plastik di perairan dangkal dan memonitor kualitas air (pH, Turbidity, TDS, Suhu) secara real-time melalui sensor IoT yang terintegrasi.';
+      } else if (lowerMsg.includes('sensor') || lowerMsg.includes('kualitas')) {
+        mockReply = 'Hydrone dilengkapi sensor kualitas air real-time: pH meter, kekeruhan (Turbidity), total padatan terlarut (TDS), dan suhu. Data ini langsung dikirim ke Control Center untuk dianalisis.';
+      } else if (lowerMsg.includes('cara kerja')) {
+        mockReply = 'Cara kerjanya: Hydrone bergerak menyusuri perairan (otonom/manual), menangkap sampah makroplastik menggunakan jaring, memfilter mikroplastik dengan filter 5um, lalu membaca data kualitas air dan mengirimkannya ke dashboard ini.';
+      }
+
       return NextResponse.json({ 
         success: true, 
-        reply: `API Error (${res.status}): ${errorText}`
+        reply: `*(Mode Offline)* ${mockReply}`
       });
     }
 
