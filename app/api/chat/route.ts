@@ -39,9 +39,9 @@ export async function POST(req: Request) {
       const errorText = await res.text();
       console.error('Claude API Error:', errorText);
       return NextResponse.json({ 
-        success: false, 
-        error: `Claude API Error: ${res.statusText}` 
-      }, { status: res.status });
+        success: true, 
+        reply: `API Error (${res.status}): ${errorText}`
+      });
     }
 
     const data = await res.json();
