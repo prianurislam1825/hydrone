@@ -7,69 +7,74 @@ export async function POST(req: Request) {
     // API Key from the user
     const apiKey = process.env.CLAUDE_API_KEY || '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';
 
-    // Fallback to Free AI if user's API Key is invalid or empty
-    // Using Pollinations.ai (Free OpenAI-compatible endpoint without API key)
+    // API Key from Environment Variable
+    const apiKey = process.env.CLAUDE_API_KEY;
     
-    // Format history for OpenAI format
-    const openAIMessages = history
+    if (!apiKey) {
+      return NextResponse.json({
+        success: true,
+        reply: "Sistem belum mendeteksi API Key Claude. Tolong tambahkan CLAUDE_API_KEY di menu Environment Variables Vercel."
+      });
+    }
+
+    // Format the history for Anthropic Claude API
+    const anthropicMessages = history
       .filter((msg: { id: string }) => msg.id !== 'welcome')
       .map((msg: { role: string; content: string }) => ({
         role: msg.role === 'assistant' ? 'assistant' : 'user',
         content: msg.content
       }));
 
-    openAIMessages.unshift({
-      role: 'system',
-      content: 'Kamu adalah AI Assistant resmi untuk HYDRONE, sebuah sistem kolektor sampah plastik bawah air otonom (ROV) buatan SMA Negeri 1 Surakarta. Tugasmu: Memberikan rekomendasi, menganalisis data kualitas air (pH, TDS, Kekeruhan, Suhu), dan menjawab pertanyaan pengguna tentang Hydrone dengan ramah, profesional, dan ringkas. Jawab menggunakan bahasa Indonesia.'
-    });
-    openAIMessages.push({ role: 'user', content: message });
+    anthropicMessages.push({ role: 'user', content: message });
 
-    const res = await fetch('https://text.pollinations.ai/', {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json'
+      },
       body: JSON.stringify({
-        messages: openAIMessages,
-        model: 'openai', // or 'claude' if supported, but 'openai' works reliably
+        model: 'claude-3-haiku-20240307', 
+        max_tokens: 1024,
+        system: "Kamu adalah AI Assistant resmi untuk HYDRONE, sebuah sistem kolektor sampah plastik bawah air otonom (ROV) buatan SMA Negeri 1 Surakarta. Tugasmu: Memberikan rekomendasi, menganalisis data kualitas air (pH, TDS, Kekeruhan, Suhu), dan menjawab pertanyaan pengguna tentang Hydrone dengan ramah, profesional, dan ringkas. Gunakan bahasa Indonesia.",
+        messages: anthropicMessages
       })
     });
 
     if (!res.ok) {
       const errorText = await res.text();
-      console.error('Claude API Error:', errorText);
+      let userFriendlyError = `Error (${res.status}): `;
       
-      // FALLBACK MOCK (Biar widget tetap jalan buat demo walaupun saldo API kosong)
-      const lowerMsg = message.toLowerCase();
-      let mockReply = 'Maaf, karena keterbatasan server saat ini saya dalam Mode Offline. Namun Anda bisa bertanya tentang: "Apa itu Hydrone", "Cara kerja", "Sensor", "Spesifikasi", atau "Tim Pembuat".';
-      
-      if (lowerMsg.includes('hydrone') || lowerMsg.includes('apa itu') || lowerMsg.includes('robot apa')) {
-        mockReply = 'HYDRONE adalah robot pembersih perairan bawah air otonom yang dirancang untuk mengatasi dua masalah sekaligus: sampah plastik besar (makroplastik) dan mikroplastik berbahaya yang tersebar di dalam air. Alat ini dibuat oleh siswa SMA Negeri 1 Surakarta.';
-      } else if (lowerMsg.includes('sensor') || lowerMsg.includes('kualitas') || lowerMsg.includes('data')) {
-        mockReply = 'Hydrone dilengkapi sensor kualitas air real-time: pH meter, kekeruhan (Turbidity), total padatan terlarut (TDS), suhu, dan GPS. Semua data ini dikirim secara langsung ke Dashboard untuk memetakan tingkat pencemaran air.';
-      } else if (lowerMsg.includes('cara kerja') || lowerMsg.includes('bagaimana') || lowerMsg.includes('kerja nya')) {
-        mockReply = 'Cara kerjanya: Hydrone bergerak menyusuri perairan menggunakan sistem daya apung adaptif. Jaring nilon pasif akan otomatis menangkap sampah plastik besar, sementara sistem pompa hisap 2-tahap menyaring mikroplastik hingga ukuran 5 mikron secara bersamaan.';
-      } else if (lowerMsg.includes('tim') || lowerMsg.includes('pembuat') || lowerMsg.includes('siapa') || lowerMsg.includes('sma')) {
-        mockReply = 'HYDRONE dikembangkan oleh tim inovator dari SMA Negeri 1 Surakarta, yang terdiri dari: Marsya Razanah Khansa (Project Leader), Farid Wimbadi Nugraha (Hardware Engineer), Evan Fadillah Nur Santosa (Software Engineer), Raisa Qarira Santosa (Research Officer), dan Dzikron Zaidan Ahmad (Systems Integrator).';
-      } else if (lowerMsg.includes('spesifikasi') || lowerMsg.includes('kabel') || lowerMsg.includes('baterai') || lowerMsg.includes('spek')) {
-        mockReply = 'Spesifikasi Hydrone: Memiliki sistem propulsi pivot 6 arah (2 thruster brushless), kabel tether sepanjang 20 meter untuk komunikasi, sistem filter 10um & 5um, serta menggunakan otak utama ESP32 IoT. Dapat beroperasi secara Manual via Dashboard maupun Otonom.';
-      } else if (lowerMsg.includes('mikroplastik') || lowerMsg.includes('filter') || lowerMsg.includes('saring')) {
-        mockReply = 'Untuk mikroplastik, Hydrone menggunakan sistem "Dual-Stage Microplastic Suction". Pompa DC menyedot air melewati filter 10 mikron terlebih dahulu, kemudian dilanjutkan ke filter 5 mikron, sehingga partikel mikroplastik super halus berhasil ditangkap.';
-      } else if (lowerMsg.includes('halo') || lowerMsg.includes('hai') || lowerMsg.includes('hi') || lowerMsg.includes('pagi') || lowerMsg.includes('siang') || lowerMsg.includes('malam')) {
-        mockReply = 'Halo! Saya AI Assistant resmi HYDRONE (Mode Offline). Saya sudah dibekali data lengkap mengenai proyek ini. Silakan tanyakan apa saja seputar fungsi, sensor, cara kerja, atau tim pembuat Hydrone!';
-      } else if (lowerMsg.includes('visi') || lowerMsg.includes('misi') || lowerMsg.includes('tujuan')) {
-        mockReply = 'Visi HYDRONE adalah mewujudkan perairan Indonesia yang bebas dari sampah plastik dan mikroplastik. Tujuannya adalah mengumpulkan sampah sebelum terfragmentasi, dan menghasilkan data kualitas air untuk penelitian serta kebijakan lingkungan.';
+      try {
+        const errJson = JSON.parse(errorText);
+        const errMsg = errJson.error?.message || errorText;
+        const errType = errJson.error?.type || '';
+        
+        if (errType === 'authentication_error') {
+           userFriendlyError = "API Key Claude kamu DITOLAK (Invalid). Pastikan kodenya diawali 'sk-ant-api03-...', bukan 'sk-ant-usr-...'. Bikin kunci baru dari tombol 'Get API key' di web Claude.";
+        } else if (errType === 'not_found_error') {
+           userFriendlyError = "API Key kamu valid, TAPI server Claude menolak akses ke model AI. Ini terjadi karena akun API kamu belum diisi saldo/kredit ($0). Silakan 'Add funds' minimal $5 di Console Anthropic.";
+        } else if (errType === 'permission_error') {
+           userFriendlyError = "API Key kamu tidak punya izin untuk mengakses sistem Claude (Permission Error).";
+        } else {
+           userFriendlyError += errMsg;
+        }
+      } catch (e) {
+        userFriendlyError += errorText;
       }
 
+      console.error('Claude API Error:', errorText);
       return NextResponse.json({ 
         success: true, 
-        reply: `*(Offline)* ${mockReply}`
+        reply: `*(Sistem Claude Error)*\n\n${userFriendlyError}`
       });
     }
 
-    const responseText = await res.text();
-    
+    const data = await res.json();
     return NextResponse.json({ 
       success: true, 
-      reply: responseText 
+      reply: data.content[0].text 
     });
 
   } catch (error) {
