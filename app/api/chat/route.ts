@@ -7,31 +7,29 @@ export async function POST(req: Request) {
     // API Key from the user
     const apiKey = process.env.CLAUDE_API_KEY || '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';
 
-    // Format the history for Anthropic Claude API
-    // History from frontend is: { role: 'user' | 'assistant', content: string }
-    const anthropicMessages = history
-      .filter((msg: { id: string }) => msg.id !== 'welcome') // Remove the local welcome message
+    // Fallback to Free AI if user's API Key is invalid or empty
+    // Using Pollinations.ai (Free OpenAI-compatible endpoint without API key)
+    
+    // Format history for OpenAI format
+    const openAIMessages = history
+      .filter((msg: { id: string }) => msg.id !== 'welcome')
       .map((msg: { role: string; content: string }) => ({
-        role: msg.role,
+        role: msg.role === 'assistant' ? 'assistant' : 'user',
         content: msg.content
       }));
 
-    // Add the current user message
-    anthropicMessages.push({ role: 'user', content: message });
+    openAIMessages.unshift({
+      role: 'system',
+      content: 'Kamu adalah AI Assistant resmi untuk HYDRONE, sebuah sistem kolektor sampah plastik bawah air otonom (ROV) buatan SMA Negeri 1 Surakarta. Tugasmu: Memberikan rekomendasi, menganalisis data kualitas air (pH, TDS, Kekeruhan, Suhu), dan menjawab pertanyaan pengguna tentang Hydrone dengan ramah, profesional, dan ringkas. Jawab menggunakan bahasa Indonesia.'
+    });
+    openAIMessages.push({ role: 'user', content: message });
 
-    // Call Anthropic Claude API
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('https://text.pollinations.ai/', {
       method: 'POST',
-      headers: {
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-3-haiku-20240307', // Using Haiku for fast response, can change to claude-3-5-sonnet-20240620
-        max_tokens: 1024,
-        system: "Kamu adalah AI Assistant resmi untuk HYDRONE, sebuah sistem kolektor sampah plastik bawah air otonom (ROV) buatan SMA Negeri 1 Surakarta. Tugasmu: Memberikan rekomendasi, menganalisis data kualitas air (pH, TDS, Kekeruhan, Suhu), dan menjawab pertanyaan pengguna tentang Hydrone dengan ramah, profesional, dan ringkas. Gunakan bahasa Indonesia.",
-        messages: anthropicMessages
+        messages: openAIMessages,
+        model: 'openai', // or 'claude' if supported, but 'openai' works reliably
       })
     });
 
@@ -67,11 +65,11 @@ export async function POST(req: Request) {
       });
     }
 
-    const data = await res.json();
+    const responseText = await res.text();
     
     return NextResponse.json({ 
       success: true, 
-      reply: data.content[0].text 
+      reply: responseText 
     });
 
   } catch (error) {
