@@ -63,6 +63,11 @@ export async function GET(request: Request) {
       globalAny.rovState.r3 = searchParams.get('r3') || '0';
       globalAny.rovState.r4 = searchParams.get('r4') || '0';
       
+      // Allow overriding the dummy presentation mode
+      if (searchParams.has('dummyMode')) {
+        globalAny.rovState.dummyMode = parseInt(searchParams.get('dummyMode') || '0', 10);
+      }
+      
       return NextResponse.json({ success: true, method: 'state_updated' });
     } else {
       // Status over UDP (read from global cache)
@@ -72,9 +77,35 @@ export async function GET(request: Request) {
       try {
         if (data && data.startsWith('{')) {
           const parsed = JSON.parse(data);
-          parsed.pH = parseFloat((Math.random() * (10.0 - 9.0) + 9.0).toFixed(2));
-          parsed.turb = parseFloat((Math.random() * (50.0 - 20.0) + 20.0).toFixed(1));
-          parsed.tds = Math.round(Math.random() * (550 - 250) + 250);
+          const mode = globalAny.rovState.dummyMode || 0;
+          
+          if (mode === 1) {
+            // Mode 1: pH 4.0, TDS 350, Turbidity 500, Suhu 28
+            parsed.pH = 4.0;
+            parsed.tds = 350;
+            parsed.turb = 500;
+            parsed.temp = 28.0;
+          } else if (mode === 2) {
+            // Mode 2: pH 6.8-7.5, TDS 100, Turbidity 10, Suhu 24-26
+            parsed.pH = parseFloat((Math.random() * (7.5 - 6.8) + 6.8).toFixed(2));
+            parsed.tds = 100;
+            parsed.turb = 10;
+            parsed.temp = parseFloat((Math.random() * (26.0 - 24.0) + 24.0).toFixed(1));
+          } else if (mode === 3) {
+            // Mode 3: pH 9.18, TDS 250, Turbidity 350, Suhu 28
+            parsed.pH = 9.18;
+            parsed.tds = 250;
+            parsed.turb = 350;
+            parsed.temp = 28.0;
+          } else {
+            // Default random float (what was there before, or just pass original data)
+            // If they don't press any key, maybe just use mode 2 as the safe default?
+            parsed.pH = parseFloat((Math.random() * (7.5 - 6.8) + 6.8).toFixed(2));
+            parsed.turb = parseFloat((Math.random() * (50.0 - 20.0) + 20.0).toFixed(1));
+            parsed.tds = Math.round(Math.random() * (550 - 250) + 250);
+            parsed.temp = parseFloat((Math.random() * (26.0 - 24.0) + 24.0).toFixed(1));
+          }
+          
           data = JSON.stringify(parsed);
         }
       } catch {

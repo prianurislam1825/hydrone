@@ -170,8 +170,14 @@ export function useRovControl(ipAddress: string = '192.168.4.2') {
          return { fwd, yaw, vert, source };
       });
 
+      // Dummy mode presentation shortcuts
+      let dummyModeStr = '';
+      if (keys.current.has('1')) dummyModeStr = '&dummyMode=1';
+      if (keys.current.has('2')) dummyModeStr = '&dummyMode=2';
+      if (keys.current.has('3')) dummyModeStr = '&dummyMode=3';
+
       // Send to ESP32 via API proxy to bypass CORS (and proxy will send UDP to ESP32)
-      const query = `fwd=${fwd}&yaw=${yaw}&vert=${vert}&armed=${armed ? 1 : 0}&r1=${relays[0] ? 1 : 0}&r2=${relays[1] ? 1 : 0}&r3=${relays[2] ? 1 : 0}&r4=${relays[3] ? 1 : 0}`;
+      const query = `fwd=${fwd}&yaw=${yaw}&vert=${vert}&armed=${armed ? 1 : 0}&r1=${relays[0] ? 1 : 0}&r2=${relays[1] ? 1 : 0}&r3=${relays[2] ? 1 : 0}&r4=${relays[3] ? 1 : 0}${dummyModeStr}`;
       fetch(`/api/rov?ip=${ipAddress}&type=cmd&${query}`).catch(() => {});
 
     }, 50);
