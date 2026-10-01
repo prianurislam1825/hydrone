@@ -3,6 +3,7 @@
 import BottomNav from '@/components/dashboard/BottomNav'
 import Sidebar    from '@/components/dashboard/Sidebar'
 import TopBar     from '@/components/dashboard/TopBar'
+import AiWidget   from '@/components/dashboard/AiWidget'
 import { usePathname } from 'next/navigation'
 
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
@@ -28,6 +29,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         </main>
       </div>
       <BottomNav />
+      <AiWidget />
     </div>
   )
 }

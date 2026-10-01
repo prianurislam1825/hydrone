@@ -3,59 +3,55 @@ import dgram from 'dgram';
 
 export const runtime = 'nodejs';
 
-// Use global to preserve socket across hot reloads in dev
 const globalAny = global as any;
 
-if (!globalAny.udpServer) {
-  globalAny.udpServer = dgram.createSocket('udp4');
-  globalAny.latestTelemetry = '';
-  
-  globalAny.udpServer.on('message', (msg: Buffer, rinfo: any) => {
-    globalAny.latestTelemetry = msg.toString();
-  });
-  
-  globalAny.udpServer.on('error', (err: any) => {
-    console.error('UDP Server Error:', err);
-  });
-  
-  // Bind to any available port, or specific port if needed
-  // If we don't bind, the socket won't receive incoming packets
-  // But wait! ESP32 sends telemetry to `lastRemotePort`.
-  // So we MUST use the SAME socket for sending commands, so the OS binds a port
-  // and ESP32 sends replies to that port!
-}
-
-// We will use a dedicated socket for sending, which automatically binds to a port
-// and we listen on it to catch the ESP32's replies!
+// Initialize UDP Server & State on first load
 if (!globalAny.rovSocket) {
   globalAny.rovSocket = dgram.createSocket('udp4');
-  globalAny.rovSocket.on('message', (msg: Buffer, rinfo: any) => {
+  globalAny.rovSocket.bind(); // Bind to any port so ESP32 can reply to it
+
+  globalAny.latestTelemetry = '';
+  
+  // Store the active command state
+  globalAny.rovState = {
+    ip: '192.168.4.2',
+    fwd: 0, yaw: 0, vert: 0, armed: 0,
+    r1: 0, r2: 0, r3: 0, r4: 0
+  };
+
+  // Listen for telemetry replies
+  globalAny.rovSocket.on('message', (msg: Buffer) => {
     globalAny.latestTelemetry = msg.toString();
   });
-  // Bind to a random port
-  globalAny.rovSocket.bind();
+
+  // INTERNAL UDP BLASTER (20Hz)
+  // This guarantees the ESP32 receives commands exactly every 50ms,
+  // bypassing any browser fetch lag, queues, or background throttling!
+  setInterval(() => {
+    const s = globalAny.rovState;
+    const payload = `${s.fwd},${s.yaw},${s.vert},${s.armed},${s.r1},${s.r2},${s.r3},${s.r4}`;
+    globalAny.rovSocket.send(payload, 3333, s.ip);
+  }, 50);
 }
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const ip = searchParams.get('ip') || '192.168.4.2';
   const type = searchParams.get('type') || 'status';
   
   try {
     if (type === 'cmd') {
-      const fwd = searchParams.get('fwd') || '0';
-      const yaw = searchParams.get('yaw') || '0';
-      const vert = searchParams.get('vert') || '0';
-      const armed = searchParams.get('armed') || '0';
-      const r1 = searchParams.get('r1') || '0';
-      const r2 = searchParams.get('r2') || '0';
-      const r3 = searchParams.get('r3') || '0';
-      const r4 = searchParams.get('r4') || '0';
+      // Update the internal Node.js state, DO NOT block
+      globalAny.rovState.ip = searchParams.get('ip') || '192.168.4.2';
+      globalAny.rovState.fwd = searchParams.get('fwd') || '0';
+      globalAny.rovState.yaw = searchParams.get('yaw') || '0';
+      globalAny.rovState.vert = searchParams.get('vert') || '0';
+      globalAny.rovState.armed = searchParams.get('armed') || '0';
+      globalAny.rovState.r1 = searchParams.get('r1') || '0';
+      globalAny.rovState.r2 = searchParams.get('r2') || '0';
+      globalAny.rovState.r3 = searchParams.get('r3') || '0';
+      globalAny.rovState.r4 = searchParams.get('r4') || '0';
       
-      const payload = `${fwd},${yaw},${vert},${armed},${r1},${r2},${r3},${r4}`;
-      globalAny.rovSocket.send(payload, 3333, ip);
-      
-      return NextResponse.json({ success: true, method: 'udp', data: payload });
+      return NextResponse.json({ success: true, method: 'state_updated' });
     } else {
       // Status over UDP (read from global cache)
       let data = globalAny.latestTelemetry || '';
